@@ -12,10 +12,24 @@
       background: #ffffff;
       color: #111;
     }
-    h1 { text-align: center; margin-bottom: 6px; }
-    .subtitle { text-align: center; color: #555; margin-bottom: 26px; font-size: 15px; }
 
-    .top-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    h1 {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 26px;
+      font-size: 15px;
+    }
+
+    .top-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
 
     .panel {
       flex: 1 1 480px;
@@ -38,7 +52,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
+      background: #ffffff;
     }
 
     .image-box img {
@@ -60,6 +74,11 @@
     .radar-id {
       font-style: italic;
       color: #555;
+      white-space: nowrap;
+    }
+
+    select, button {
+      font-size: 13px;
     }
   </style>
 </head>
@@ -74,12 +93,14 @@
   <!-- SATELLITE (UNCHANGED) -->
   <div class="panel">
     <div class="panel-title">Satellite</div>
+
     <a id="satLink" target="_blank">
       <div class="image-box">
         <img id="satImage"
              src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
       </div>
     </a>
+
     <div class="controls">
       Region:
       <select id="satRegion" onchange="updateSatellite()">
@@ -88,6 +109,7 @@
         <option value="gwas">CONUS</option>
         <option value="psw">Southwest U.S.</option>
       </select>
+
       <button onclick="setSatMode('GEOCOLOR')">True Color</button>
       <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
     </div>
@@ -96,11 +118,16 @@
   <!-- RADAR -->
   <div class="panel">
     <div class="panel-title">Radar</div>
+
     <div class="image-box">
       <img id="radarImage"
            src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif">
     </div>
+
     <div class="controls">
+      Region:
+      <select id="regionSelect" onchange="populateStates()"></select>
+
       State:
       <select id="stateSelect" onchange="populateRadars()"></select>
 
@@ -131,83 +158,106 @@ function updateSatellite() {
 }
 function setSatMode(b) { satBand = b; updateSatellite(); }
 
-/* ---------- RADAR DATA (CONUS ONLY) ---------- */
-const radarSites = {
-  "AL":[["KBMX","Birmingham"],["KHTX","Huntsville"],["KMOB","Mobile"]],
-  "AR":[["KLZK","Little Rock"]],
-  "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"]],
-  "CA":[["KDAX","Sacramento"],["KMUX","San Jose"],["KHNX","Hanford"],["KSOX","Santa Ana"],["KVTX","Los Angeles"],["KNKX","San Diego"],["KVBX","Vandenberg"]],
-  "CO":[["KFTG","Denver"],["KPUX","Pueblo"],["KGJX","Grand Junction"]],
-  "CT":[["KBOX","Hartford"]],
-  "DE":[["KDOX","Dover"]],
-  "FL":[["KJAX","Jacksonville"],["KTBW","Tampa"],["KMLB","Melbourne"],["KAMX","Miami"]],
-  "GA":[["KFFC","Atlanta"]],
-  "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
-  "ID":[["KCBX","Boise"]],
-  "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
-  "IN":[["KIND","Indianapolis"],["KIWX","N. Indiana"]],
-  "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
-  "KY":[["KLVX","Louisville"],["KPAH","Paducah"]],
-  "LA":[["KLCH","Lake Charles"],["KSHV","Shreveport"]],
-  "MA":[["KBOX","Boston"]],
-  "MD":[["KLWX","Washington DC"]],
-  "ME":[["KGYX","Gray"],["KCAR","Caribou"]],
-  "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"],["KMQT","Marquette"]],
-  "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
-  "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"],["KSGF","Springfield"]],
-  "MS":[["KDGX","Jackson"]],
-  "MT":[["KTFX","Great Falls"],["KGGW","Glasgow"],["KMSX","Missoula"]],
-  "NC":[["KRAX","Raleigh"],["KLTX","Wilmington"]],
-  "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
-  "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
-  "NH":[["KGYX","Gray"]],
-  "NJ":[["KDIX","Mt Holly"]],
-  "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"]],
-  "NV":[["KRGX","Reno"],["KLRX","Elko"]],
-  "NY":[["KBUF","Buffalo"],["KOKX","NYC"],["KBGM","Binghamton"],["KENX","Albany"]],
-  "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]],
-  "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
-  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
-  "PA":[["KPBZ","Pittsburgh"],["KCCX","State College"]],
-  "SC":[["KCAE","Columbia"]],
-  "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"]],
-  "TN":[["KOHX","Nashville"],["KNQA","Memphis"]],
-  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"]],
-  "UT":[["KICX","Cedar City"]],
-  "VA":[["KAKQ","Wakefield"],["KFCX","Blacksburg"]],
-  "VT":[["KBTV","Burlington"]],
-  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
-  "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"]],
-  "WV":[["KRLX","Charleston"]],
-  "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]]
+/* ---------- RADAR REGIONS ---------- */
+const radarRegions = {
+  "Northwest": ["WA", "OR", "ID", "MT"],
+  "Southwest": ["CA", "NV", "AZ", "UT", "NM"],
+  "Northern Plains": ["ND", "SD", "NE", "WY"],
+  "Southern Plains": ["TX", "OK", "KS"],
+  "Midwest": ["MN", "IA", "MO", "WI", "IL", "IN", "MI", "OH"],
+  "Southeast": ["AR", "LA", "MS", "AL", "TN", "KY", "GA", "FL", "SC", "NC"],
+  "Northeast": ["PA", "NJ", "NY", "CT", "RI", "MA", "VT", "NH", "ME", "MD", "DE", "VA", "WV"]
 };
 
-/* ---------- RADAR LOGIC ---------- */
-function populateStates() {
-  Object.keys(radarSites).sort().forEach(s=>{
-    let o=document.createElement("option");
-    o.value=s; o.textContent=s;
-    stateSelect.appendChild(o);
+/* ---------- RADAR SITES (CONUS) ---------- */
+const radarSites = {
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "ID":[["KCBX","Boise"]],
+  "MT":[["KTFX","Great Falls"],["KGGW","Glasgow"],["KMSX","Missoula"]],
+  "CA":[["KDAX","Sacramento"],["KMUX","San Jose"],["KHNX","Hanford"],["KSOX","Santa Ana"],["KVTX","Los Angeles"],["KNKX","San Diego"],["KVBX","Vandenberg"]],
+  "NV":[["KRGX","Reno"],["KLRX","Elko"]],
+  "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"]],
+  "UT":[["KICX","Cedar City"]],
+  "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"]],
+  "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
+  "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"]],
+  "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
+  "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]],
+  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"]],
+  "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
+  "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
+  "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
+  "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
+  "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"]],
+  "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"]],
+  "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
+  "IN":[["KIND","Indianapolis"],["KIWX","N. Indiana"]],
+  "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"]],
+  "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]],
+  "AR":[["KLZK","Little Rock"]],
+  "LA":[["KLCH","Lake Charles"],["KSHV","Shreveport"]],
+  "MS":[["KDGX","Jackson"]],
+  "AL":[["KBMX","Birmingham"],["KHTX","Huntsville"],["KMOB","Mobile"]],
+  "TN":[["KOHX","Nashville"],["KNQA","Memphis"]],
+  "KY":[["KLVX","Louisville"],["KPAH","Paducah"]],
+  "GA":[["KFFC","Atlanta"]],
+  "FL":[["KJAX","Jacksonville"],["KTBW","Tampa"],["KMLB","Melbourne"],["KAMX","Miami"]],
+  "SC":[["KCAE","Columbia"]],
+  "NC":[["KRAX","Raleigh"],["KLTX","Wilmington"]],
+  "PA":[["KPBZ","Pittsburgh"],["KCCX","State College"]],
+  "NJ":[["KDIX","Mt Holly"]],
+  "NY":[["KBUF","Buffalo"],["KOKX","NYC"],["KENX","Albany"]],
+  "CT":[["KBOX","Hartford"]],
+  "MA":[["KBOX","Boston"]],
+  "VT":[["KBTV","Burlington"]],
+  "NH":[["KGYX","Gray"]],
+  "ME":[["KGYX","Gray"],["KCAR","Caribou"]],
+  "MD":[["KLWX","Washington DC"]],
+  "DE":[["KDOX","Dover"]],
+  "VA":[["KAKQ","Wakefield"],["KFCX","Blacksburg"]],
+  "WV":[["KRLX","Charleston"]]
+};
+
+/* ---------- RADAR FUNCTIONS ---------- */
+function populateRegions() {
+  Object.keys(radarRegions).forEach(r => {
+    let o = document.createElement("option");
+    o.value = r;
+    o.textContent = r;
+    regionSelect.appendChild(o);
   });
 }
 
+function populateStates() {
+  stateSelect.innerHTML = "";
+  radarRegions[regionSelect.value].forEach(s => {
+    let o = document.createElement("option");
+    o.value = s;
+    o.textContent = s;
+    stateSelect.appendChild(o);
+  });
+  populateRadars();
+}
+
 function populateRadars() {
-  radarSelect.innerHTML="";
-  radarSites[stateSelect.value].forEach(r=>{
-    let o=document.createElement("option");
-    o.value=r[0];
-    o.textContent=`${r[1]}, ${stateSelect.value}`;
+  radarSelect.innerHTML = "";
+  radarSites[stateSelect.value].forEach(r => {
+    let o = document.createElement("option");
+    o.value = r[0];
+    o.textContent = `${r[1]}, ${stateSelect.value}`;
     radarSelect.appendChild(o);
   });
   changeRadar(radarSelect.value);
 }
 
 function changeRadar(id) {
-  radarId.textContent=id;
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+  radarId.textContent = id;
+  radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
 }
 
-/* INIT */
+/* ---------- INIT ---------- */
+populateRegions();
 populateStates();
 populateRadars();
 updateSatellite();
