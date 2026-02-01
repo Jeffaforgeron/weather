@@ -190,16 +190,15 @@
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
 
-  <a href="https://www.spc.noaa.gov/obswx/" target="_blank">
-    <div class="image-box">
-      <img
-        src="https://www.spc.noaa.gov/obswx/maps/750.png"
-        alt="Current CONUS Temperatures and Surface Observations">
-    </div>
-  </a>
+  <div class="image-box">
+    <img
+      src="/images/conus_temp.gif"
+      alt="Current U.S. Temperatures"
+      loading="eager">
+  </div>
 </div>
 
-<!-- Time-based theme -->
+<!-- 🌗 TIME-BASED THEME -->
 <script>
 (function () {
   const h = new Date().getHours();
@@ -211,7 +210,7 @@
 })();
 </script>
 
-<!-- ✅ YOUR ORIGINAL, WORKING LOGIC (UNCHANGED) -->
+<!-- ✅ YOUR ORIGINAL, WORKING RADAR + SAT LOGIC -->
 <script>
 let satBand = "GEOCOLOR";
 
@@ -232,8 +231,6 @@ function setSatMode(band) {
   satBand = band;
   updateSatellite();
 }
-
-/* radar logic unchanged */
 </script>
 
 </body>
