@@ -65,6 +65,18 @@
       display: block;
       cursor: pointer;
     }
+
+    .controls {
+      padding: 8px 10px;
+      border-top: 1px solid #ddd;
+      background: #f7f7f7;
+      font-size: 13px;
+    }
+
+    select, button {
+      font-size: 13px;
+      margin-right: 6px;
+    }
   </style>
 </head>
 
@@ -77,35 +89,90 @@
 
   <div class="top-row">
 
-    <!-- SATELLITE (WORKING, STATIC, PNW) -->
+    <!-- SATELLITE -->
     <div class="panel">
-      <div class="panel-title">GOES-West True Color (Pacific Northwest)</div>
-      <a
-        href="https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=pnw&band=GEOCOLOR&length=12"
-        target="_blank">
+      <div class="panel-title">Satellite</div>
+
+      <a id="satLink" target="_blank">
         <div class="image-box">
-          <img
-            src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
-            alt="GOES-West True Color Pacific Northwest">
+          <img id="satImage"
+               src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
+               alt="GOES-West Satellite">
         </div>
       </a>
+
+      <div class="controls">
+        Region:
+        <select id="satRegion" onchange="updateSatellite()">
+          <option value="pnw">Pacific Northwest</option>
+          <option value="wus">West U.S.</option>
+          <option value="gwas">CONUS</option>
+        </select>
+
+        <button onclick="setSatMode('GEOCOLOR')">True Color</button>
+        <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
+      </div>
     </div>
 
-    <!-- RADAR (UNCHANGED) -->
+    <!-- RADAR -->
     <div class="panel">
-      <div class="panel-title">Radar - KRTX</div>
-      <a
-        href="https://radar.weather.gov/"
-        target="_blank">
-        <div class="image-box">
-          <img
-            src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
-            alt="KRTX Radar Loop">
-        </div>
-      </a>
+      <div class="panel-title">Radar</div>
+
+      <div class="image-box">
+        <img id="radarImage"
+             src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
+             alt="Radar Loop">
+      </div>
+
+      <div class="controls">
+        Site:
+        <select onchange="changeRadar(this.value)">
+          <option value="KRTX">KRTX</option>
+          <option value="KLGX">KLGX</option>
+          <option value="KATX">KATX</option>
+          <option value="KMAX">KMAX</option>
+          <option value="KOTX">KOTX</option>
+          <option value="CONUS">CONUS</option>
+        </select>
+      </div>
     </div>
 
   </div>
+
+<script>
+  let satBand = "GEOCOLOR";
+
+  function updateSatellite() {
+    const region = document.getElementById("satRegion").value;
+    const img = document.getElementById("satImage");
+    const link = document.getElementById("satLink");
+
+    img.src =
+      "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" +
+      region + "/" + satBand + "/latest.jpg";
+
+    link.href =
+      "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
+      region + "&band=" + satBand + "&length=12";
+  }
+
+  function setSatMode(band) {
+    satBand = band;
+    updateSatellite();
+  }
+
+  function changeRadar(site) {
+    if (site === "CONUS") {
+      document.getElementById("radarImage").src =
+        "https://radar.weather.gov/ridge/standard/CONUS_0.gif";
+    } else {
+      document.getElementById("radarImage").src =
+        "https://radar.weather.gov/ridge/standard/" + site + "_loop.gif";
+    }
+  }
+
+  updateSatellite();
+</script>
 
 </body>
 </html>
