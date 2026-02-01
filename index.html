@@ -9,16 +9,12 @@
     :root {
       --bg1: #1f2933;
       --bg2: #111827;
-
-      /* softened panel colors */
-      --panel-bg: #e5e7eb;        /* light gray instead of white */
+      --panel-bg: #e5e7eb;
       --panel-border: #c7c9cc;
       --panel-shadow: rgba(0,0,0,0.35);
-
       --panel-header: #dde1e6;
       --panel-controls: #e9ebee;
       --image-bg: #dfe3e8;
-
       --text-main: #111827;
       --text-sub: #6b7280;
     }
@@ -39,7 +35,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* ---------- HEADER / TIME ---------- */
     .header {
       display: flex;
       justify-content: center;
@@ -51,21 +46,13 @@
       color: #e5e7eb;
       display: flex;
       gap: 26px;
-      flex-wrap: wrap;
-      white-space: nowrap;
       letter-spacing: 0.6px;
       font-variant-numeric: tabular-nums;
-    }
-
-    .time-bar span {
-      min-width: 110px;
-      text-align: center;
     }
 
     h1 {
       text-align: center;
       margin-bottom: 4px;
-      letter-spacing: 0.4px;
       color: #f9fafb;
     }
 
@@ -76,7 +63,6 @@
       font-size: 15px;
     }
 
-    /* ---------- PANELS ---------- */
     .top-row {
       display: flex;
       gap: 16px;
@@ -104,8 +90,6 @@
       font-weight: 600;
       background: var(--panel-header);
       border-bottom: 1px solid var(--panel-border);
-      border-radius: 10px 10px 0 0;
-      letter-spacing: 0.4px;
     }
 
     .image-box {
@@ -136,24 +120,13 @@
       font-style: italic;
       color: var(--text-sub);
     }
-
-    select, button {
-      font-size: 13px;
-    }
   </style>
 </head>
 
 <body>
 
-<!-- ⏱️ DIGITAL TIME BAR -->
 <div class="header">
-  <div class="time-bar" id="timeBar">
-    <span>PT --:--:--</span>
-    <span>MT --:--:--</span>
-    <span>CT --:--:--</span>
-    <span>ET --:--:--</span>
-    <span>UTC --:--:--Z</span>
-  </div>
+  <div class="time-bar" id="timeBar"></div>
 </div>
 
 <h1>Jeff Forgeron’s Weather Desk</h1>
@@ -183,7 +156,7 @@
     </div>
   </div>
 
-  <!-- RADAR -->
+  <!-- RADAR (RESTORED WORKING VERSION) -->
   <div class="panel">
     <div class="panel-title">Radar</div>
     <div class="image-box">
@@ -195,10 +168,14 @@
       <select id="regionSelect" onchange="handleRegionChange()"></select>
 
       State:
-      <select id="stateSelect" onchange="populateRadars()"></select>
+      <select id="stateSelect" onchange="populateRadars()">
+        <option value="">— Select State —</option>
+      </select>
 
       City:
-      <select id="radarSelect" onchange="changeRadar(this.value)"></select>
+      <select id="radarSelect" onchange="changeRadar(this.value)">
+        <option value="">— Select City —</option>
+      </select>
 
       <span id="radarId" class="radar-id">Northwest</span>
     </div>
@@ -206,57 +183,125 @@
 
 </div>
 
-<!-- 🌡️ TEMPERATURES -->
+<!-- TEMPERATURES -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
   <div class="image-box">
-    <img src="images/conus_temp.gif"
-         alt="Current U.S. Temperatures"
-         loading="eager">
+    <img src="images/conus_temp.gif" alt="Current U.S. Temperatures">
   </div>
 </div>
 
-<!-- ⏱️ TIME SCRIPT -->
 <script>
+/* -------- TIME -------- */
 function updateTimes() {
-  const now = new Date();
-
-  const fmt = (tz) =>
-    now.toLocaleTimeString("en-US", {
-      timeZone: tz,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    });
-
-  const utc = now.toISOString().substring(11,19) + "Z";
-
-  document.getElementById("timeBar").innerHTML = `
-    <span>PT ${fmt("America/Los_Angeles")}</span>
-    <span>MT ${fmt("America/Denver")}</span>
-    <span>CT ${fmt("America/Chicago")}</span>
-    <span>ET ${fmt("America/New_York")}</span>
-    <span>UTC ${utc}</span>
-  `;
+  const n = new Date();
+  const f = tz => n.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  timeBar.innerHTML = `
+    <span>PT ${f("America/Los_Angeles")}</span>
+    <span>MT ${f("America/Denver")}</span>
+    <span>CT ${f("America/Chicago")}</span>
+    <span>ET ${f("America/New_York")}</span>
+    <span>UTC ${n.toISOString().slice(11,19)}Z</span>`;
 }
-setInterval(updateTimes, 1000);
-updateTimes();
-</script>
+setInterval(updateTimes,1000); updateTimes();
 
-<!-- ⚠️ SATELLITE LOGIC (UNCHANGED) -->
-<script>
-let satBand = "GEOCOLOR";
+/* -------- SATELLITE -------- */
+let satBand="GEOCOLOR";
 function updateSatellite(){
   const r=satRegion.value;
-  if(r==="gwas"&&satBand==="GEOCOLOR")
-    satImage.src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
-  else
-    satImage.src=`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
-
+  satImage.src = r==="gwas"
+    ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+    : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
   satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
 }
 function setSatMode(b){satBand=b;updateSatellite();}
+
+/* -------- RADAR (KNOWN GOOD LOGIC) -------- */
+const radarRegions={
+  "CONUS":[],
+  "Northwest":["WA","OR","ID","MT"],
+  "Southwest":["CA","NV","AZ","UT","NM"],
+  "Northern Plains":["ND","SD","NE","WY"],
+  "Southern Plains":["TX","OK","KS"],
+  "Midwest":["MN","IA","MO","WI","IL","IN","MI","OH"],
+  "Southeast":["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
+  "Northeast":["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
+};
+
+const regionLoops={
+  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Midwest":"https://radar.weather.gov/ridge/standard/MIDWEST_loop.gif",
+  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif",
+  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif"
+};
+
+const radarSites={
+  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"]],
+  "ID":[["KCBX","Boise"]],
+  "MT":[["KTFX","Great Falls"]],
+  "CA":[["KMUX","San Jose"],["KVTX","Los Angeles"]],
+  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"]],
+  "OK":[["KTLX","Oklahoma City"]],
+  "KS":[["KICT","Wichita"]],
+  "MN":[["KMPX","Minneapolis"]],
+  "IL":[["KLOT","Chicago"]],
+  "FL":[["KAMX","Miami"]],
+  "NY":[["KOKX","NYC"]]
+};
+
+function populateRegions(){
+  for(const r in radarRegions){
+    let o=document.createElement("option");
+    o.value=r;o.textContent=r;
+    regionSelect.appendChild(o);
+  }
+}
+
+function handleRegionChange(){
+  stateSelect.innerHTML='<option value="">— Select State —</option>';
+  radarSelect.innerHTML='<option value="">— Select City —</option>';
+
+  if(regionSelect.value==="CONUS"){
+    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    radarId.textContent="CONUS";
+    return;
+  }
+
+  radarImage.src=regionLoops[regionSelect.value];
+  radarId.textContent=regionSelect.value;
+
+  radarRegions[regionSelect.value].forEach(s=>{
+    let o=document.createElement("option");
+    o.value=s;o.textContent=s;
+    stateSelect.appendChild(o);
+  });
+}
+
+function populateRadars(){
+  radarSelect.innerHTML='<option value="">— Select City —</option>';
+  if(!stateSelect.value)return;
+  radarSites[stateSelect.value]?.forEach(site=>{
+    let o=document.createElement("option");
+    o.value=site[0];
+    o.textContent=`${site[1]}, ${stateSelect.value}`;
+    radarSelect.appendChild(o);
+  });
+}
+
+function changeRadar(id){
+  if(!id)return;
+  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+  radarId.textContent=id;
+}
+
+populateRegions();
+regionSelect.value="Northwest";
+handleRegionChange();
+updateSatellite();
 </script>
 
 </body>
