@@ -156,7 +156,11 @@ function updateSatellite() {
   satLink.href =
     `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
 }
-function setSatMode(b) { satBand = b; updateSatellite(); }
+
+function setSatMode(band) {
+  satBand = band;
+  updateSatellite();
+}
 
 /* ---------- RADAR REGIONS ---------- */
 const radarRegions = {
@@ -169,7 +173,7 @@ const radarRegions = {
   "Northeast": ["PA", "NJ", "NY", "CT", "RI", "MA", "VT", "NH", "ME", "MD", "DE", "VA", "WV"]
 };
 
-/* ---------- RADAR SITES (CONUS) ---------- */
+/* ---------- RADAR SITES ---------- */
 const radarSites = {
   "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
   "OR":[["KRTX","Portland"],["KMAX","Medford"]],
@@ -221,20 +225,20 @@ const radarSites = {
 
 /* ---------- RADAR FUNCTIONS ---------- */
 function populateRegions() {
-  Object.keys(radarRegions).forEach(r => {
+  Object.keys(radarRegions).forEach(region => {
     let o = document.createElement("option");
-    o.value = r;
-    o.textContent = r;
+    o.value = region;
+    o.textContent = region;
     regionSelect.appendChild(o);
   });
 }
 
 function populateStates() {
   stateSelect.innerHTML = "";
-  radarRegions[regionSelect.value].forEach(s => {
+  radarRegions[regionSelect.value].forEach(state => {
     let o = document.createElement("option");
-    o.value = s;
-    o.textContent = s;
+    o.value = state;
+    o.textContent = state;
     stateSelect.appendChild(o);
   });
   populateRadars();
@@ -242,10 +246,10 @@ function populateStates() {
 
 function populateRadars() {
   radarSelect.innerHTML = "";
-  radarSites[stateSelect.value].forEach(r => {
+  radarSites[stateSelect.value].forEach(site => {
     let o = document.createElement("option");
-    o.value = r[0];
-    o.textContent = `${r[1]}, ${stateSelect.value}`;
+    o.value = site[0];
+    o.textContent = `${site[1]}, ${stateSelect.value}`;
     radarSelect.appendChild(o);
   });
   changeRadar(radarSelect.value);
@@ -256,10 +260,14 @@ function changeRadar(id) {
   radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
 }
 
-/* ---------- INIT ---------- */
+/* ---------- INIT (DEFAULT = NW → OR → KRTX) ---------- */
 populateRegions();
+regionSelect.value = "Northwest";
 populateStates();
+stateSelect.value = "OR";
 populateRadars();
+radarSelect.value = "KRTX";
+changeRadar("KRTX");
 updateSatellite();
 </script>
 
