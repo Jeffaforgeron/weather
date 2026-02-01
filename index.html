@@ -106,7 +106,11 @@
         <select id="satRegion" onchange="updateSatellite()">
           <option value="pnw">Pacific Northwest</option>
           <option value="wus">West U.S.</option>
-          <option value="gwas">CONUS</option>
+          <option value="gwas">CONUS (Americas)</option>
+          <option value="sw">Southwest U.S.</option>
+          <option value="rm">Rockies</option>
+          <option value="np">Northern Plains</option>
+          <option value="sp">Southern Plains</option>
         </select>
 
         <button onclick="setSatMode('GEOCOLOR')">True Color</button>
@@ -147,7 +151,7 @@
     const img = document.getElementById("satImage");
     const link = document.getElementById("satLink");
 
-    // STATIC IMAGE LOGIC
+    // Static image handling (GWAS fix)
     if (region === "gwas" && satBand === "GEOCOLOR") {
       img.src =
         "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
@@ -157,7 +161,7 @@
         region + "/" + satBand + "/latest.jpg";
     }
 
-    // CLICK-THROUGH (UNCHANGED)
+    // Animation link
     link.href =
       "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
       region + "&band=" + satBand + "&length=12";
