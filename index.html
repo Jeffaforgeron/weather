@@ -126,7 +126,7 @@
 
     <div class="controls">
       Region:
-      <select id="regionSelect" onchange="populateStates()"></select>
+      <select id="regionSelect" onchange="handleRegionChange()"></select>
 
       State:
       <select id="stateSelect" onchange="populateRadars()"></select>
@@ -164,6 +164,7 @@ function setSatMode(band) {
 
 /* ---------- RADAR REGIONS ---------- */
 const radarRegions = {
+  "CONUS": [],
   "Northwest": ["WA", "OR", "ID", "MT"],
   "Southwest": ["CA", "NV", "AZ", "UT", "NM"],
   "Northern Plains": ["ND", "SD", "NE", "WY"],
@@ -191,85 +192,4 @@ const radarSites = {
   "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"]],
   "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
   "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
-  "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
-  "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
-  "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"]],
-  "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"]],
-  "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
-  "IN":[["KIND","Indianapolis"],["KIWX","N. Indiana"]],
-  "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"]],
-  "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]],
-  "AR":[["KLZK","Little Rock"]],
-  "LA":[["KLCH","Lake Charles"],["KSHV","Shreveport"]],
-  "MS":[["KDGX","Jackson"]],
-  "AL":[["KBMX","Birmingham"],["KHTX","Huntsville"],["KMOB","Mobile"]],
-  "TN":[["KOHX","Nashville"],["KNQA","Memphis"]],
-  "KY":[["KLVX","Louisville"],["KPAH","Paducah"]],
-  "GA":[["KFFC","Atlanta"]],
-  "FL":[["KJAX","Jacksonville"],["KTBW","Tampa"],["KMLB","Melbourne"],["KAMX","Miami"]],
-  "SC":[["KCAE","Columbia"]],
-  "NC":[["KRAX","Raleigh"],["KLTX","Wilmington"]],
-  "PA":[["KPBZ","Pittsburgh"],["KCCX","State College"]],
-  "NJ":[["KDIX","Mt Holly"]],
-  "NY":[["KBUF","Buffalo"],["KOKX","NYC"],["KENX","Albany"]],
-  "CT":[["KBOX","Hartford"]],
-  "MA":[["KBOX","Boston"]],
-  "VT":[["KBTV","Burlington"]],
-  "NH":[["KGYX","Gray"]],
-  "ME":[["KGYX","Gray"],["KCAR","Caribou"]],
-  "MD":[["KLWX","Washington DC"]],
-  "DE":[["KDOX","Dover"]],
-  "VA":[["KAKQ","Wakefield"],["KFCX","Blacksburg"]],
-  "WV":[["KRLX","Charleston"]]
-};
-
-/* ---------- RADAR FUNCTIONS ---------- */
-function populateRegions() {
-  Object.keys(radarRegions).forEach(region => {
-    let o = document.createElement("option");
-    o.value = region;
-    o.textContent = region;
-    regionSelect.appendChild(o);
-  });
-}
-
-function populateStates() {
-  stateSelect.innerHTML = "";
-  radarRegions[regionSelect.value].forEach(state => {
-    let o = document.createElement("option");
-    o.value = state;
-    o.textContent = state;
-    stateSelect.appendChild(o);
-  });
-  populateRadars();
-}
-
-function populateRadars() {
-  radarSelect.innerHTML = "";
-  radarSites[stateSelect.value].forEach(site => {
-    let o = document.createElement("option");
-    o.value = site[0];
-    o.textContent = `${site[1]}, ${stateSelect.value}`;
-    radarSelect.appendChild(o);
-  });
-  changeRadar(radarSelect.value);
-}
-
-function changeRadar(id) {
-  radarId.textContent = id;
-  radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
-}
-
-/* ---------- INIT (DEFAULT = NW → OR → KRTX) ---------- */
-populateRegions();
-regionSelect.value = "Northwest";
-populateStates();
-stateSelect.value = "OR";
-populateRadars();
-radarSelect.value = "KRTX";
-changeRadar("KRTX");
-updateSatellite();
-</script>
-
-</body>
-</html>
+  "MN":[["KMPX","Minneapolis"]()]()
