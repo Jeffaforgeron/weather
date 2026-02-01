@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <title>Jeff Forgeron Weather</title>
 
+  <!-- Auto refresh every 30 seconds -->
+  <meta http-equiv="refresh" content="30">
+
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -21,6 +24,18 @@
     h2 {
       margin-top: 30px;
       color: #003366;
+    }
+
+    .radar {
+      max-width: 900px;
+      margin-bottom: 30px;
+      border: 1px solid #cccccc;
+    }
+
+    .radar img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     ul {
@@ -53,8 +68,15 @@
 <h1>Jeff Forgeron Weather</h1>
 
 <p>
-A simple, reliable hub for the weather tools I use every day.
+Live radar updates every 30 seconds. Satellite opens separately for reliability.
 </p>
+
+<!-- LIVE RADAR -->
+<div class="radar">
+  <img
+    src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
+    alt="NWS CONUS Radar Loop">
+</div>
 
 <h2>Live Weather</h2>
 <ul>
@@ -64,8 +86,8 @@ A simple, reliable hub for the weather tools I use every day.
     </a>
   </li>
   <li>
-    <a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
-      GOES Satellite (RAMMB)
+    <a href="satellite.html">
+      GOES Satellite (Live Loop)
     </a>
   </li>
 </ul>
@@ -82,16 +104,4 @@ A simple, reliable hub for the weather tools I use every day.
       Weather Prediction Center
     </a>
   </li>
-  <li>
-    <a href="https://www.weather.gov/" target="_blank">
-      National Weather Service
-    </a>
-  </li>
-</ul>
-
-<div class="footer">
-  Built for speed, reliability, and daily use.
-</div>
-
-</body>
-</html>
+  <
