@@ -13,11 +13,7 @@
       color: #111;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
+    h1 { text-align: center; margin-bottom: 6px; }
     .subtitle {
       text-align: center;
       color: #555;
@@ -162,7 +158,7 @@ function setSatMode(band) {
   updateSatellite();
 }
 
-/* ---------- RADAR REGIONS ---------- */
+/* ---------- RADAR REGIONS + LOOPS ---------- */
 const radarRegions = {
   "CONUS": [],
   "Northwest": ["WA", "OR", "ID", "MT"],
@@ -174,7 +170,16 @@ const radarRegions = {
   "Northeast": ["PA", "NJ", "NY", "CT", "RI", "MA", "VT", "NH", "ME", "MD", "DE", "VA", "WV"]
 };
 
-/* ---------- RADAR SITES ---------- */
+const regionLoops = {
+  "Northwest": "https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest": "https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Southern Plains": "https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Northern Plains": "https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Northeast": "https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+  "Southeast": "https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+};
+
+/* ---------- RADAR SITES (UNCHANGED) ---------- */
 const radarSites = {
   "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
   "OR":[["KRTX","Portland"],["KMAX","Medford"]],
@@ -245,7 +250,12 @@ function handleRegionChange() {
 
   stateSelect.disabled = false;
   radarSelect.disabled = false;
+
   populateStates();
+
+  // Show regional loop immediately
+  radarImage.src = regionLoops[regionSelect.value];
+  radarId.textContent = regionSelect.value;
 }
 
 function populateStates() {
@@ -256,7 +266,8 @@ function populateStates() {
     o.textContent = state;
     stateSelect.appendChild(o);
   });
-  populateRadars();
+
+  radarSelect.innerHTML = "";
 }
 
 function populateRadars() {
@@ -267,7 +278,6 @@ function populateRadars() {
     o.textContent = `${site[1]}, ${stateSelect.value}`;
     radarSelect.appendChild(o);
   });
-  changeRadar(radarSelect.value);
 }
 
 function changeRadar(id) {
@@ -275,14 +285,10 @@ function changeRadar(id) {
   radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
 }
 
-/* ---------- INIT (DEFAULT = NW → OR → KRTX) ---------- */
+/* ---------- INIT ---------- */
 populateRegions();
 regionSelect.value = "Northwest";
 handleRegionChange();
-stateSelect.value = "OR";
-populateRadars();
-radarSelect.value = "KRTX";
-changeRadar("KRTX");
 updateSatellite();
 </script>
 
