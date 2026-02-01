@@ -7,13 +7,13 @@
 
   <style>
     :root {
-      --bg1: #cfe9ff;
-      --bg2: #fefefe;
-      --panel-bg: #fafafa;
-      --panel-border: #dcdcdc;
-      --panel-shadow: rgba(0,0,0,0.15);
-      --text-main: #111;
-      --text-sub: #555;
+      --bg1: #1f2933;     /* dark slate */
+      --bg2: #111827;     /* near-black gray */
+      --panel-bg: #f9fafb;
+      --panel-border: #d1d5db;
+      --panel-shadow: rgba(0,0,0,0.35);
+      --text-main: #111827;
+      --text-sub: #6b7280;
     }
 
     body {
@@ -22,7 +22,7 @@
       min-height: 100vh;
       background: linear-gradient(135deg, var(--bg1), var(--bg2));
       background-size: 200% 200%;
-      animation: skyFlow 45s ease infinite;
+      animation: skyFlow 60s ease infinite;
       color: var(--text-main);
     }
 
@@ -36,17 +36,17 @@
     .header {
       display: flex;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .time-bar {
       font-size: 13px;
-      color: var(--text-sub);
+      color: #e5e7eb;
       display: flex;
-      gap: 26px;               /* 👈 more spacing */
+      gap: 26px;
       flex-wrap: wrap;
       white-space: nowrap;
-      letter-spacing: 0.6px;   /* 👈 digital feel */
+      letter-spacing: 0.6px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -60,11 +60,12 @@
       text-align: center;
       margin-bottom: 4px;
       letter-spacing: 0.4px;
+      color: #f9fafb;
     }
 
     .subtitle {
       text-align: center;
-      color: var(--text-sub);
+      color: #9ca3af;
       margin-bottom: 26px;
       font-size: 15px;
     }
@@ -81,7 +82,7 @@
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       border-radius: 10px;
-      box-shadow: 0 14px 35px var(--panel-shadow);
+      box-shadow: 0 18px 40px var(--panel-shadow);
       display: flex;
       flex-direction: column;
     }
@@ -95,9 +96,10 @@
       padding: 10px 12px;
       font-size: 14px;
       font-weight: 600;
-      background: rgba(0,0,0,0.04);
+      background: #f3f4f6;
       border-bottom: 1px solid var(--panel-border);
       border-radius: 10px 10px 0 0;
+      letter-spacing: 0.4px;
     }
 
     .image-box {
@@ -115,7 +117,7 @@
 
     .controls {
       padding: 10px 12px;
-      background: rgba(0,0,0,0.025);
+      background: #f9fafb;
       border-top: 1px solid var(--panel-border);
       font-size: 13px;
       display: flex;
@@ -126,7 +128,7 @@
 
     .radar-id {
       font-style: italic;
-      color: var(--text-sub);
+      color: #6b7280;
     }
 
     select, button {
@@ -208,7 +210,7 @@
   </div>
 </div>
 
-<!-- ⏱️ TIME SCRIPT (SECONDS + DIGITAL) -->
+<!-- ⏱️ TIME SCRIPT -->
 <script>
 function updateTimes() {
   const now = new Date();
@@ -236,7 +238,7 @@ setInterval(updateTimes, 1000);
 updateTimes();
 </script>
 
-<!-- ⚠️ EXISTING SAT LOGIC (UNCHANGED) -->
+<!-- ⚠️ SATELLITE LOGIC (UNCHANGED) -->
 <script>
 let satBand = "GEOCOLOR";
 function updateSatellite(){
