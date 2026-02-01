@@ -121,11 +121,11 @@
     <div class="panel">
       <div class="panel-title">Radar</div>
 
-      <a
-        href="https://radar.weather.gov/"
-        target="_blank">
+      <a href="https://radar.weather.gov/" target="_blank">
         <div class="image-box">
-          <img id="radarImage" src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif" alt="Radar">
+          <img id="radarImage"
+               src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
+               alt="Radar">
         </div>
       </a>
 
@@ -152,37 +152,21 @@
     const img = document.getElementById("satImage");
     const link = document.getElementById("satLink");
 
+    let sector = region;
+    let frames = 12;
+
+    if (region === "conus") {
+      sector = "gwas";
+      frames = 24;
+    }
+
     if (satMode === "truecolor") {
-      img.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" + region + "/GEOCOLOR/latest.jpg";
-      link.href = "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" + region + "&band=GEOCOLOR&length=12";
+      img.src =
+        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" +
+        sector + "/GEOCOLOR/latest.jpg";
+      link.href =
+        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
+        sector + "&band=GEOCOLOR&length=" + frames;
     } else {
-      img.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" + region + "/NTMICROPHYSICS/latest.jpg";
-      link.href = "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" + region + "&band=NTMICROPHYSICS&length=12";
-    }
-  }
-
-  function setSatelliteMode(mode) {
-    satMode = mode;
-    updateSatellite();
-  }
-
-  function changeRadar(site) {
-    if (site === "CONUS") {
-      document.getElementById("radarImage").src = "https://radar.weather.gov/ridge/standard/CONUS_0.gif";
-    } else {
-      document.getElementById("radarImage").src = "https://radar.weather.gov/ridge/standard/" + site + "_loop.gif";
-    }
-  }
-
-  function updateTime() {
-    const now = new Date();
-    document.getElementById("updatedTime").textContent =
-      "Last updated " + now.toUTCString().replace("GMT", "UTC");
-  }
-
-  updateSatellite();
-  updateTime();
-</script>
-
-</body>
-</html>
+      img.src =
+        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/
