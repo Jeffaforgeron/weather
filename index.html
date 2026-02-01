@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Jeff Forgeron Weather</title>
 
-  <!-- Auto refresh every 30 seconds -->
+  <!-- Refresh every 30 seconds -->
   <meta http-equiv="refresh" content="30">
 
   <style>
@@ -24,11 +24,16 @@
       margin-bottom: 16px;
     }
 
+    .live-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
     .panel {
-      max-width: 900px;
+      flex: 1;
       border: 1px solid #cccccc;
       padding: 10px;
-      margin-bottom: 30px;
     }
 
     .panel-title {
@@ -72,21 +77,42 @@
 <h1>Jeff Forgeron Weather</h1>
 
 <p>
-Live radar and quick access to satellite and forecast tools.
+Live radar and satellite preview. Page refreshes every 30 seconds.
 </p>
 
-<!-- RADAR -->
-<div class="panel">
-  <div class="panel-title">Radar - CONUS Composite</div>
-  <img
-    src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
-    alt="CONUS Radar Loop">
-  <div class="meta">
-    Source: National Weather Service
+<div class="live-row">
+
+  <!-- RADAR -->
+  <div class="panel">
+    <div class="panel-title">Radar - CONUS Composite</div>
+    <img
+      src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
+      alt="CONUS Radar Loop">
+    <div class="meta">
+      Source: National Weather Service
+    </div>
   </div>
+
+  <!-- SATELLITE PREVIEW (CLICKABLE) -->
+  <div class="panel">
+    <div class="panel-title">Satellite - GOES West True Color</div>
+
+    <a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
+      <img
+        src="https://www.ssec.wisc.edu/data/us_comp/truecolor/latest.jpg"
+        alt="GOES West True Color Satellite">
+    </a>
+
+    <div class="meta">
+      Click image to open animated satellite loop (RAMMB).
+    </div>
+  </div>
+
 </div>
 
-<p>
-<a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
-Open animated GOES satellite loop
-<
+<div class="footer">
+  Stable radar plus satellite preview version.
+</div>
+
+</body>
+</html>
