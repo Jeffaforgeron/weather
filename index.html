@@ -45,7 +45,6 @@
       font-weight: 600;
       background: #eeeeee;
       border-bottom: 1px solid #ddd;
-      letter-spacing: 0.2px;
     }
 
     .image-box {
@@ -122,7 +121,7 @@
     </div>
   </div>
 
-  <!-- RADAR (EXPANDED ONLY) -->
+  <!-- RADAR (FULL CONUS) -->
   <div class="panel">
     <div class="panel-title">Radar</div>
 
@@ -135,13 +134,12 @@
     <div class="controls">
       Location:
       <select id="radarSelect" onchange="changeRadar(this.value)">
+        <!-- WEST -->
         <option value="KRTX">Portland, OR</option>
         <option value="KMAX">Medford, OR</option>
-
         <option value="KATX">Seattle, WA</option>
         <option value="KLGX">Langley Hill, WA</option>
         <option value="KOTX">Spokane, WA</option>
-
         <option value="KDAX">Sacramento, CA</option>
         <option value="KMUX">San Jose, CA</option>
         <option value="KHNX">Hanford, CA</option>
@@ -149,31 +147,84 @@
         <option value="KVTX">Los Angeles, CA</option>
         <option value="KNKX">San Diego, CA</option>
         <option value="KVBX">Vandenberg, CA</option>
-
         <option value="KCBX">Boise, ID</option>
-
         <option value="KRGX">Reno, NV</option>
         <option value="KLRX">Elko, NV</option>
-
         <option value="KIWA">Phoenix, AZ</option>
         <option value="KEMX">Tucson, AZ</option>
         <option value="KFSX">Flagstaff, AZ</option>
-
         <option value="KICX">Cedar City, UT</option>
-
         <option value="KTFX">Great Falls, MT</option>
         <option value="KGGW">Glasgow, MT</option>
         <option value="KMSX">Missoula, MT</option>
-
         <option value="KCYS">Cheyenne, WY</option>
         <option value="KRIW">Riverton, WY</option>
-
         <option value="KFTG">Denver, CO</option>
         <option value="KPUX">Pueblo, CO</option>
         <option value="KGJX">Grand Junction, CO</option>
-
         <option value="KABX">Albuquerque, NM</option>
         <option value="KFDX">Cannon AFB, NM</option>
+
+        <!-- EAST -->
+        <option value="KBIS">Bismarck, ND</option>
+        <option value="KMBX">Minot, ND</option>
+        <option value="KFSD">Sioux Falls, SD</option>
+        <option value="KABR">Aberdeen, SD</option>
+        <option value="KOAX">Omaha, NE</option>
+        <option value="KUEX">Hastings, NE</option>
+        <option value="KLNX">North Platte, NE</option>
+        <option value="KICT">Wichita, KS</option>
+        <option value="KTWX">Topeka, KS</option>
+        <option value="KDDC">Dodge City, KS</option>
+        <option value="KGLD">Goodland, KS</option>
+        <option value="KTLX">Oklahoma City, OK</option>
+        <option value="KINX">Tulsa, OK</option>
+        <option value="KFDR">Frederick, OK</option>
+        <option value="KAMA">Amarillo, TX</option>
+        <option value="KLBB">Lubbock, TX</option>
+        <option value="KDYX">Dyess AFB, TX</option>
+        <option value="KSJT">San Angelo, TX</option>
+        <option value="KFWS">Fort Worth, TX</option>
+        <option value="KHGX">Houston, TX</option>
+        <option value="KBRO">Brownsville, TX</option>
+        <option value="KLCH">Lake Charles, LA</option>
+        <option value="KSHV">Shreveport, LA</option>
+        <option value="KMPX">Minneapolis, MN</option>
+        <option value="KDLH">Duluth, MN</option>
+        <option value="KARX">La Crosse, WI</option>
+        <option value="KGRB">Green Bay, WI</option>
+        <option value="KMKX">Milwaukee, WI</option>
+        <option value="KDVN">Davenport, IA</option>
+        <option value="KDMX">Des Moines, IA</option>
+        <option value="KLSX">St. Louis, MO</option>
+        <option value="KEAX">Kansas City, MO</option>
+        <option value="KLOT">Chicago, IL</option>
+        <option value="KILX">Lincoln, IL</option>
+        <option value="KDTX">Detroit, MI</option>
+        <option value="KCLE">Cleveland, OH</option>
+        <option value="KILN">Wilmington, OH</option>
+        <option value="KPBZ">Pittsburgh, PA</option>
+        <option value="KLZK">Little Rock, AR</option>
+        <option value="KDGX">Jackson, MS</option>
+        <option value="KMOB">Mobile, AL</option>
+        <option value="KBMX">Birmingham, AL</option>
+        <option value="KOHX">Nashville, TN</option>
+        <option value="KLVX">Louisville, KY</option>
+        <option value="KFFC">Atlanta, GA</option>
+        <option value="KTLH">Tallahassee, FL</option>
+        <option value="KJAX">Jacksonville, FL</option>
+        <option value="KTBW">Tampa, FL</option>
+        <option value="KMLB">Melbourne, FL</option>
+        <option value="KAMX">Miami, FL</option>
+        <option value="KRAX">Raleigh, NC</option>
+        <option value="KLTX">Wilmington, NC</option>
+        <option value="KAKQ">Wakefield, VA</option>
+        <option value="KLWX">Washington, DC</option>
+        <option value="KDIX">Mt. Holly, NJ</option>
+        <option value="KOKX">New York City, NY</option>
+        <option value="KBOX">Boston, MA</option>
+        <option value="KGYX">Gray, ME</option>
+        <option value="KRLX">Charleston, WV</option>
 
         <option value="CONUS">Continental U.S.</option>
       </select>
@@ -193,26 +244,15 @@
     const link = document.getElementById("satLink");
 
     if (region === "gwas" && satBand === "GEOCOLOR") {
-      img.src =
-        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
+      img.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
     } else if (region === "psw" && satBand === "GEOCOLOR") {
-      img.src =
-        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/psw/GEOCOLOR/1200x1200.jpg";
+      img.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/psw/GEOCOLOR/1200x1200.jpg";
     } else {
-      img.src =
-        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" +
-        region + "/" + satBand + "/latest.jpg";
+      img.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" + region + "/" + satBand + "/latest.jpg";
     }
 
-    if (region === "psw") {
-      link.href =
-        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=psw&band=" +
-        satBand + "&length=24";
-    } else {
-      link.href =
-        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
-        region + "&band=" + satBand + "&length=12";
-    }
+    link.href = "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
+      region + "&band=" + satBand + "&length=12";
   }
 
   function setSatMode(band) {
