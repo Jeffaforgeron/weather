@@ -77,7 +77,7 @@
       flex-wrap: wrap;
     }
 
-    .radar-location {
+    .radar-id {
       color: #555;
       font-style: italic;
       white-space: nowrap;
@@ -135,19 +135,17 @@
       </div>
 
       <div class="controls">
-        Site:
-        <select id="radarSite" onchange="changeRadar(this.value)">
-          <option value="KRTX">KRTX</option>
-          <option value="KLGX">KLGX</option>
-          <option value="KATX">KATX</option>
-          <option value="KMAX">KMAX</option>
-          <option value="KOTX">KOTX</option>
-          <option value="CONUS">CONUS</option>
+        Location:
+        <select id="radarSelect" onchange="changeRadar(this.value)">
+          <option value="KRTX">Portland, OR</option>
+          <option value="KLGX">Langley Hill, WA</option>
+          <option value="KATX">Seattle, WA</option>
+          <option value="KMAX">Medford, OR</option>
+          <option value="KOTX">Spokane, WA</option>
+          <option value="CONUS">Continental U.S.</option>
         </select>
 
-        <span id="radarLocation" class="radar-location">
-          Portland, OR
-        </span>
+        <span id="radarId" class="radar-id">KRTX</span>
       </div>
     </div>
 
@@ -155,15 +153,6 @@
 
 <script>
   let satBand = "GEOCOLOR";
-
-  const radarLocations = {
-    "KRTX": "Portland, OR",
-    "KLGX": "Langley Hill, WA",
-    "KATX": "Seattle, WA",
-    "KMAX": "Medford, OR",
-    "KOTX": "Spokane, WA",
-    "CONUS": "Continental U.S."
-  };
 
   function updateSatellite() {
     const region = document.getElementById("satRegion").value;
@@ -199,8 +188,7 @@
   }
 
   function changeRadar(site) {
-    document.getElementById("radarLocation").textContent =
-      radarLocations[site] || "";
+    document.getElementById("radarId").textContent = site;
 
     if (site === "CONUS") {
       document.getElementById("radarImage").src =
