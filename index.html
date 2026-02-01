@@ -32,33 +32,34 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* ---------- HEADER ---------- */
+    /* ---------- HEADER / TIME ---------- */
     .header {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      flex-wrap: wrap;
-      gap: 10px;
+      justify-content: center;
+      margin-bottom: 10px;
     }
 
     .time-bar {
       font-size: 13px;
       color: var(--text-sub);
       display: flex;
-      gap: 14px;
+      gap: 26px;               /* 👈 more spacing */
       flex-wrap: wrap;
       white-space: nowrap;
+      letter-spacing: 0.6px;   /* 👈 digital feel */
+      font-variant-numeric: tabular-nums;
     }
 
     .time-bar span {
-      font-variant-numeric: tabular-nums;
+      display: inline-block;
+      min-width: 110px;
+      text-align: center;
     }
 
     h1 {
       text-align: center;
-      flex: 1 1 100%;
-      margin: 4px 0 2px;
+      margin-bottom: 4px;
+      letter-spacing: 0.4px;
     }
 
     .subtitle {
@@ -136,14 +137,14 @@
 
 <body>
 
-<!-- ⏱️ TIME BAR -->
+<!-- ⏱️ DIGITAL TIME BAR -->
 <div class="header">
   <div class="time-bar" id="timeBar">
-    <span>PT --:--</span>
-    <span>MT --:--</span>
-    <span>CT --:--</span>
-    <span>ET --:--</span>
-    <span>UTC --:--Z</span>
+    <span>PT --:--:--</span>
+    <span>MT --:--:--</span>
+    <span>CT --:--:--</span>
+    <span>ET --:--:--</span>
+    <span>UTC --:--:--Z</span>
   </div>
 </div>
 
@@ -207,25 +208,27 @@
   </div>
 </div>
 
-<!-- ⏱️ TIME SCRIPT -->
+<!-- ⏱️ TIME SCRIPT (SECONDS + DIGITAL) -->
 <script>
 function updateTimes() {
   const now = new Date();
 
-  const fmt = (date, tz) =>
-    date.toLocaleTimeString("en-US", {
+  const fmt = (tz) =>
+    now.toLocaleTimeString("en-US", {
       timeZone: tz,
-      hour: "numeric",
-      minute: "2-digit"
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
     });
 
-  const utc = now.toISOString().substring(11,16) + "Z";
+  const utc = now.toISOString().substring(11,19) + "Z";
 
   document.getElementById("timeBar").innerHTML = `
-    <span>PT ${fmt(now,"America/Los_Angeles")}</span>
-    <span>MT ${fmt(now,"America/Denver")}</span>
-    <span>CT ${fmt(now,"America/Chicago")}</span>
-    <span>ET ${fmt(now,"America/New_York")}</span>
+    <span>PT ${fmt("America/Los_Angeles")}</span>
+    <span>MT ${fmt("America/Denver")}</span>
+    <span>CT ${fmt("America/Chicago")}</span>
+    <span>ET ${fmt("America/New_York")}</span>
     <span>UTC ${utc}</span>
   `;
 }
@@ -233,13 +236,17 @@ setInterval(updateTimes, 1000);
 updateTimes();
 </script>
 
-<!-- ⚠️ SAT + RADAR LOGIC REMAINS EXACTLY AS BEFORE -->
+<!-- ⚠️ EXISTING SAT LOGIC (UNCHANGED) -->
 <script>
 let satBand = "GEOCOLOR";
-function updateSatellite(){const r=satRegion.value;
-if(r==="gwas"&&satBand==="GEOCOLOR")satImage.src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
-else satImage.src=`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
-satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
+function updateSatellite(){
+  const r=satRegion.value;
+  if(r==="gwas"&&satBand==="GEOCOLOR")
+    satImage.src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
+  else
+    satImage.src=`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
+
+  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
 }
 function setSatMode(b){satBand=b;updateSatellite();}
 </script>
