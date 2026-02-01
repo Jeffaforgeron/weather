@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Jeff Forgeron Weather</title>
 
-  <!-- Refresh page every 30 seconds -->
+  <!-- Refresh every 30 seconds -->
   <meta http-equiv="refresh" content="30">
 
   <style>
@@ -21,7 +21,7 @@
     }
 
     p {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .live-row {
@@ -33,20 +33,34 @@
     .panel {
       flex: 1;
       border: 1px solid #cccccc;
+      padding: 10px;
     }
 
     .panel-title {
-      background-color: #f0f0f0;
-      padding: 6px 10px;
       font-size: 14px;
       font-weight: bold;
-      border-bottom: 1px solid #cccccc;
+      margin-bottom: 8px;
     }
 
     .panel img {
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #555555;
+      margin-top: 6px;
+    }
+
+    a {
+      color: #0055aa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     h2 {
@@ -62,15 +76,6 @@
       margin-bottom: 8px;
     }
 
-    a {
-      color: #0055aa;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
     .footer {
       margin-top: 40px;
       font-size: 13px;
@@ -84,7 +89,7 @@
 <h1>Jeff Forgeron Weather</h1>
 
 <p>
-Live radar and satellite. Page refreshes every 30 seconds.
+Live radar and weather data. Page refreshes every 30 seconds.
 </p>
 
 <div class="live-row">
@@ -95,14 +100,25 @@ Live radar and satellite. Page refreshes every 30 seconds.
     <img
       src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
       alt="CONUS Radar Loop">
+    <div class="meta">
+      Source: National Weather Service
+    </div>
   </div>
 
-  <!-- SATELLITE -->
+  <!-- SATELLITE (LINKED, NOT EMBEDDED) -->
   <div class="panel">
     <div class="panel-title">Satellite - GOES West True Color</div>
-    <img
-      src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/CONUS/GEOCOLOR/GOES18-CONUS-GEOCOLOR-600x600.jpg"
-      alt="GOES West True Color Satellite">
+    <p>
+      Live satellite imagery is blocked on some networks.
+    </p>
+    <p>
+      <a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
+        Open animated true-color satellite (RAMMB)
+      </a>
+    </p>
+    <div class="meta">
+      Opens in a new tab for reliability.
+    </div>
   </div>
 
 </div>
@@ -110,3 +126,13 @@ Live radar and satellite. Page refreshes every 30 seconds.
 <h2>Forecast Tools</h2>
 <ul>
   <li><a href="https://www.spc.noaa.gov/" target="_blank">Storm Prediction Center</a></li>
+  <li><a href="https://www.wpc.ncep.noaa.gov/" target="_blank">Weather Prediction Center</a></li>
+  <li><a href="https://www.weather.gov/" target="_blank">National Weather Service</a></li>
+</ul>
+
+<div class="footer">
+  Built for speed, reliability, and daily use.
+</div>
+
+</body>
+</html>
