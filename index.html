@@ -35,7 +35,6 @@
     h1 {
       text-align: center;
       margin-bottom: 6px;
-      letter-spacing: 0.3px;
     }
 
     .subtitle {
@@ -73,7 +72,6 @@
       background: rgba(0,0,0,0.04);
       border-bottom: 1px solid var(--panel-border);
       border-radius: 10px 10px 0 0;
-      letter-spacing: 0.4px;
     }
 
     .image-box {
@@ -98,33 +96,15 @@
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
-      border-radius: 0 0 10px 10px;
     }
 
     .radar-id {
       font-style: italic;
       color: var(--text-sub);
-      white-space: nowrap;
     }
 
     select, button {
       font-size: 13px;
-    }
-
-    body.night {
-      --bg1: #0b1220;
-      --bg2: #020617;
-      --panel-bg: #0f172a;
-      --panel-border: #1e293b;
-      --panel-shadow: rgba(56,189,248,0.25);
-      --text-main: #e5e7eb;
-      --text-sub: #94a3b8;
-    }
-
-    body.twilight {
-      --bg1: #fde68a;
-      --bg2: #f472b6;
-      --panel-shadow: rgba(251,191,36,0.35);
     }
   </style>
 </head>
@@ -139,14 +119,12 @@
   <!-- SATELLITE -->
   <div class="panel">
     <div class="panel-title">Satellite</div>
-
     <a id="satLink" target="_blank">
       <div class="image-box">
         <img id="satImage"
              src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
       </div>
     </a>
-
     <div class="controls">
       Region:
       <select id="satRegion" onchange="updateSatellite()">
@@ -155,21 +133,18 @@
         <option value="gwas">CONUS</option>
         <option value="psw">Southwest U.S.</option>
       </select>
-
       <button onclick="setSatMode('GEOCOLOR')">True Color</button>
       <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
     </div>
   </div>
 
-  <!-- RADAR -->
+  <!-- RADAR (REVERTED – WORKING VERSION) -->
   <div class="panel">
     <div class="panel-title">Radar</div>
-
     <div class="image-box">
       <img id="radarImage"
-           src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif">
+           src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
     </div>
-
     <div class="controls">
       Region:
       <select id="regionSelect" onchange="handleRegionChange()"></select>
@@ -177,49 +152,33 @@
       State:
       <select id="stateSelect" onchange="populateRadars()"></select>
 
-      Radar:
+      City:
       <select id="radarSelect" onchange="changeRadar(this.value)"></select>
 
-      <span id="radarId" class="radar-id">KRTX</span>
+      <span id="radarId" class="radar-id">Northwest</span>
     </div>
   </div>
 
 </div>
 
-<!-- 🌡️ CURRENT TEMPERATURES -->
+<!-- 🌡️ CURRENT TEMPERATURES (LOCAL IMAGE) -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
-
   <div class="image-box">
-    <img
-      src="/images/conus_temp.gif"
-      alt="Current U.S. Temperatures"
-      loading="eager">
+    <img src="images/conus_temp.gif"
+         alt="Current U.S. Temperatures"
+         loading="eager">
   </div>
 </div>
 
-<!-- 🌗 TIME-BASED THEME -->
-<script>
-(function () {
-  const h = new Date().getHours();
-  if ((h >= 5 && h < 7) || (h >= 18 && h < 20)) {
-    document.body.classList.add("twilight");
-  } else if (h >= 20 || h < 5) {
-    document.body.classList.add("night");
-  }
-})();
-</script>
-
-<!-- ✅ YOUR ORIGINAL, WORKING RADAR + SAT LOGIC -->
 <script>
 let satBand = "GEOCOLOR";
 
+/* SATELLITE */
 function updateSatellite() {
   const r = satRegion.value;
   if (r === "gwas" && satBand === "GEOCOLOR")
     satImage.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
-  else if (r === "psw" && satBand === "GEOCOLOR")
-    satImage.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/psw/GEOCOLOR/1200x1200.jpg";
   else
     satImage.src = `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
 
@@ -231,6 +190,78 @@ function setSatMode(band) {
   satBand = band;
   updateSatellite();
 }
+
+/* RADAR – LAST KNOWN GOOD LOGIC */
+const radarRegions = {
+  "Northwest": ["WA","OR","ID","MT"],
+  "Southwest": ["CA","NV","AZ","UT","NM"],
+  "Northern Plains": ["ND","SD","NE","WY"],
+  "Southern Plains": ["TX","OK","KS"],
+  "Midwest": ["MN","IA","MO","WI","IL","IN","MI","OH"],
+  "Southeast": ["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
+  "Northeast": ["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
+};
+
+const regionLoops = {
+  "Northwest": "https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest": "https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Northern Plains": "https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Southern Plains": "https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Southeast": "https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif",
+  "Northeast": "https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif"
+};
+
+const radarSites = {
+  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"]],
+  "CA":[["KVTX","Los Angeles"],["KNKX","San Diego"]],
+  "TX":[["KFWS","Dallas"],["KHGX","Houston"]],
+  "NY":[["KOKX","New York City"],["KENX","Albany"]]
+};
+
+function populateRegions() {
+  Object.keys(radarRegions).forEach(r => {
+    let o = document.createElement("option");
+    o.value = r;
+    o.textContent = r;
+    regionSelect.appendChild(o);
+  });
+}
+
+function handleRegionChange() {
+  stateSelect.innerHTML = `<option value="">— Select State —</option>`;
+  radarSelect.innerHTML = `<option value="">— Select City —</option>`;
+  radarImage.src = regionLoops[regionSelect.value];
+  radarId.textContent = regionSelect.value;
+
+  radarRegions[regionSelect.value].forEach(s => {
+    let o = document.createElement("option");
+    o.value = s;
+    o.textContent = s;
+    stateSelect.appendChild(o);
+  });
+}
+
+function populateRadars() {
+  radarSelect.innerHTML = `<option value="">— Select City —</option>`;
+  (radarSites[stateSelect.value] || []).forEach(site => {
+    let o = document.createElement("option");
+    o.value = site[0];
+    o.textContent = site[1];
+    radarSelect.appendChild(o);
+  });
+}
+
+function changeRadar(id) {
+  if (!id) return;
+  radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+  radarId.textContent = id;
+}
+
+populateRegions();
+regionSelect.value = "Northwest";
+handleRegionChange();
+updateSatellite();
 </script>
 
 </body>
