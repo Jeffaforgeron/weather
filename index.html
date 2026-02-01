@@ -71,11 +71,20 @@
       border-top: 1px solid #ddd;
       background: #f7f7f7;
       font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .radar-location {
+      color: #555;
+      font-style: italic;
+      white-space: nowrap;
     }
 
     select, button {
       font-size: 13px;
-      margin-right: 6px;
     }
   </style>
 </head>
@@ -127,7 +136,7 @@
 
       <div class="controls">
         Site:
-        <select onchange="changeRadar(this.value)">
+        <select id="radarSite" onchange="changeRadar(this.value)">
           <option value="KRTX">KRTX</option>
           <option value="KLGX">KLGX</option>
           <option value="KATX">KATX</option>
@@ -135,6 +144,10 @@
           <option value="KOTX">KOTX</option>
           <option value="CONUS">CONUS</option>
         </select>
+
+        <span id="radarLocation" class="radar-location">
+          Portland, OR
+        </span>
       </div>
     </div>
 
@@ -143,12 +156,20 @@
 <script>
   let satBand = "GEOCOLOR";
 
+  const radarLocations = {
+    "KRTX": "Portland, OR",
+    "KLGX": "Langley Hill, WA",
+    "KATX": "Seattle, WA",
+    "KMAX": "Medford, OR",
+    "KOTX": "Spokane, WA",
+    "CONUS": "Continental U.S."
+  };
+
   function updateSatellite() {
     const region = document.getElementById("satRegion").value;
     const img = document.getElementById("satImage");
     const link = document.getElementById("satLink");
 
-    // Static image handling for known-problem sectors
     if (region === "gwas" && satBand === "GEOCOLOR") {
       img.src =
         "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
@@ -161,7 +182,6 @@
         region + "/" + satBand + "/latest.jpg";
     }
 
-    // Animation link (region-specific)
     if (region === "psw") {
       link.href =
         "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=psw&band=" +
@@ -179,6 +199,9 @@
   }
 
   function changeRadar(site) {
+    document.getElementById("radarLocation").textContent =
+      radarLocations[site] || "";
+
     if (site === "CONUS") {
       document.getElementById("radarImage").src =
         "https://radar.weather.gov/ridge/standard/CONUS_0.gif";
