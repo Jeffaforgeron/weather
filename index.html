@@ -20,16 +20,9 @@
 
     .subtitle {
       color: #555;
-      margin-bottom: 10px;
+      margin-bottom: 26px;
       font-size: 15px;
       text-align: center;
-    }
-
-    .updated {
-      text-align: center;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 24px;
     }
 
     .top-row {
@@ -52,6 +45,7 @@
       font-weight: 600;
       background: #eeeeee;
       border-bottom: 1px solid #ddd;
+      letter-spacing: 0.2px;
     }
 
     .image-box {
@@ -71,102 +65,47 @@
       display: block;
       cursor: pointer;
     }
-
-    .controls {
-      padding: 8px 10px;
-      border-top: 1px solid #ddd;
-      background: #f7f7f7;
-      font-size: 13px;
-    }
-
-    select, button {
-      font-size: 13px;
-      margin-right: 6px;
-    }
   </style>
 </head>
 
 <body>
 
   <h1>Jeff Forgeron’s Weather Desk</h1>
-  <div class="subtitle">A clean, no-nonsense forecast desk.</div>
-  <div class="updated" id="updatedTime"></div>
+  <div class="subtitle">
+    A clean, no-nonsense forecast desk.
+  </div>
 
   <div class="top-row">
 
-    <!-- SATELLITE -->
+    <!-- SATELLITE (WORKING, STATIC, PNW) -->
     <div class="panel">
-      <div class="panel-title">Satellite</div>
-
-      <a id="satLink" target="_blank">
+      <div class="panel-title">GOES-West True Color (Pacific Northwest)</div>
+      <a
+        href="https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=pnw&band=GEOCOLOR&length=12"
+        target="_blank">
         <div class="image-box">
-          <img id="satImage" alt="Satellite image">
+          <img
+            src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
+            alt="GOES-West True Color Pacific Northwest">
         </div>
       </a>
-
-      <div class="controls">
-        View:
-        <select id="satRegion" onchange="updateSatellite()">
-          <option value="pnw">Pacific Northwest</option>
-          <option value="wus">West U.S.</option>
-          <option value="conus">CONUS</option>
-        </select>
-
-        <button onclick="setSatelliteMode('truecolor')">True Color</button>
-        <button onclick="setSatelliteMode('night')">Nighttime IR</button>
-      </div>
     </div>
 
-    <!-- RADAR -->
+    <!-- RADAR (UNCHANGED) -->
     <div class="panel">
-      <div class="panel-title">Radar</div>
-
-      <a href="https://radar.weather.gov/" target="_blank">
+      <div class="panel-title">Radar - KRTX</div>
+      <a
+        href="https://radar.weather.gov/"
+        target="_blank">
         <div class="image-box">
-          <img id="radarImage"
-               src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
-               alt="Radar">
+          <img
+            src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
+            alt="KRTX Radar Loop">
         </div>
       </a>
-
-      <div class="controls">
-        Site:
-        <select onchange="changeRadar(this.value)">
-          <option value="KRTX">KRTX</option>
-          <option value="KLGX">KLGX</option>
-          <option value="KATX">KATX</option>
-          <option value="KMAX">KMAX</option>
-          <option value="KFTG">KFTG</option>
-          <option value="CONUS">CONUS</option>
-        </select>
-      </div>
     </div>
 
   </div>
 
-<script>
-  let satMode = "truecolor";
-
-  function updateSatellite() {
-    const region = document.getElementById("satRegion").value;
-    const img = document.getElementById("satImage");
-    const link = document.getElementById("satLink");
-
-    let sector = region;
-    let frames = 12;
-
-    if (region === "conus") {
-      sector = "gwas";
-      frames = 24;
-    }
-
-    if (satMode === "truecolor") {
-      img.src =
-        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" +
-        sector + "/GEOCOLOR/latest.jpg";
-      link.href =
-        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
-        sector + "&band=GEOCOLOR&length=" + frames;
-    } else {
-      img.src =
-        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/
+</body>
+</html>
