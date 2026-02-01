@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Jeff Forgeron’s Weather Page</title>
+  <title>Jeff Forgeron’s Weather Page – TEST UPDATE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
@@ -15,6 +15,7 @@
 
     h1 {
       margin-bottom: 6px;
+      color: #b00000;
     }
 
     .subtitle {
@@ -31,7 +32,7 @@
 
     .panel {
       flex: 1 1 480px;
-      border: 1px solid #ddd;
+      border: 2px solid #b00000;
       background: #fafafa;
     }
 
@@ -43,8 +44,8 @@
       border-bottom: 1px solid #ddd;
     }
 
-    .panel iframe,
-    .panel img {
+    iframe,
+    img {
       width: 100%;
       height: 520px;
       border: none;
@@ -61,16 +62,36 @@
 
 <body>
 
-  <h1>Jeff Forgeron’s Weather Page</h1>
+  <!-- VERY OBVIOUS TITLE CHANGE -->
+  <h1>🚨 Jeff Forgeron’s Weather Page (TEST VERSION) 🚨</h1>
+
   <div class="subtitle">
-    A simple, no-nonsense dashboard for checking what’s actually happening.
+    If you see the red title and borders, the code updated correctly.
   </div>
 
   <div class="row">
 
-    <!-- SATELLITE LOOP (IFRAME – RELIABLE) -->
+    <!-- SATELLITE (IFRAME TEST) -->
     <div class="panel">
-      <div class="panel-title">Satellite – True Color Loop (CONUS)</div>
+      <div class="panel-title">Satellite – True Color Loop (COD iframe)</div>
       <iframe
-        src="https://weather.cod.edu/satrad/?parms=regional-conus-truecolor-24-0-100-1&checked=map&colorbar=undefined"
-        loading="lazy">
+        src="https://weather.cod.edu/satrad/?parms=regional-conus-truecolor-24-0-100-1&checked=map&colorbar=undefined">
+      </iframe>
+    </div>
+
+    <!-- RADAR (GIF TEST) -->
+    <div class="panel">
+      <div class="panel-title">Radar – Composite Loop (NWS GIF)</div>
+      <img
+        src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
+        alt="CONUS Composite Radar Loop">
+    </div>
+
+  </div>
+
+  <footer>
+    Debug version – visuals intentionally exaggerated.
+  </footer>
+
+</body>
+</html>
