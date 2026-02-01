@@ -60,7 +60,6 @@
       box-shadow: 0 14px 35px var(--panel-shadow);
       display: flex;
       flex-direction: column;
-      transition: box-shadow 2s ease, background 2s ease;
     }
 
     .panel-title {
@@ -108,7 +107,7 @@
       font-size: 13px;
     }
 
-    /* ---------- NIGHT MODE ---------- */
+    /* Night mode */
     body.night {
       --bg1: #0b1220;
       --bg2: #020617;
@@ -119,15 +118,7 @@
       --text-sub: #94a3b8;
     }
 
-    body.night .panel-title {
-      background: rgba(255,255,255,0.05);
-    }
-
-    body.night .image-box {
-      background: #020617;
-    }
-
-    /* ---------- SUNRISE / SUNSET ---------- */
+    /* Sunrise / sunset */
     body.twilight {
       --bg1: #fde68a;
       --bg2: #f472b6;
@@ -193,7 +184,7 @@
 
 </div>
 
-<!-- 🌗 TIME-BASED THEME (ISOLATED, SAFE) -->
+<!-- Time-based theme (isolated, safe) -->
 <script>
 (function () {
   const h = new Date().getHours();
@@ -205,11 +196,10 @@
 })();
 </script>
 
-<!-- ⬇️ YOUR ORIGINAL, WORKING LOGIC — UNCHANGED ⬇️ -->
+<!-- ✅ RESTORED WORKING DROPDOWN LOGIC -->
 <script>
 let satBand = "GEOCOLOR";
 
-/* ---------- SATELLITE ---------- */
 function updateSatellite() {
   const r = satRegion.value;
   if (r === "gwas" && satBand === "GEOCOLOR")
@@ -228,8 +218,100 @@ function setSatMode(band) {
   updateSatellite();
 }
 
-/* ---------- RADAR DATA & FUNCTIONS (UNCHANGED) ---------- */
-/* Everything below is exactly what you pasted and works */
+/* ---------- RADAR REGIONS ---------- */
+const radarRegions = {
+  "CONUS": [],
+  "Northwest": ["WA", "OR", "ID", "MT"],
+  "Southwest": ["CA", "NV", "AZ", "UT", "NM"],
+  "Northern Plains": ["ND", "SD", "NE", "WY"],
+  "Southern Plains": ["TX", "OK", "KS"],
+  "Midwest": ["MN", "IA", "MO", "WI", "IL", "IN", "MI", "OH"],
+  "Southeast": ["AR", "LA", "MS", "AL", "TN", "KY", "GA", "FL", "SC", "NC"],
+  "Northeast": ["PA", "NJ", "NY", "CT", "RI", "MA", "VT", "NH", "ME", "MD", "DE", "VA", "WV"]
+};
+
+const regionLoops = {
+  "Northwest": "https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest": "https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Southern Plains": "https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Northern Plains": "https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Northeast": "https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+  "Southeast": "https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+};
+
+const radarSites = {
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "ID":[["KCBX","Boise"]],
+  "MT":[["KTFX","Great Falls"],["KGGW","Glasgow"],["KMSX","Missoula"]],
+  "CA":[["KDAX","Sacramento"],["KMUX","San Jose"],["KHNX","Hanford"],["KSOX","Santa Ana"],["KVTX","Los Angeles"],["KNKX","San Diego"],["KVBX","Vandenberg"]],
+  "NV":[["KRGX","Reno"],["KLRX","Elko"]],
+  "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"]],
+  "UT":[["KICX","Cedar City"]],
+  "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"]],
+  "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
+  "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"]],
+  "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
+  "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]],
+  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"]],
+  "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
+  "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]]
+};
+
+function populateRegions() {
+  Object.keys(radarRegions).forEach(region => {
+    let o = document.createElement("option");
+    o.value = region;
+    o.textContent = region;
+    regionSelect.appendChild(o);
+  });
+}
+
+function handleRegionChange() {
+  if (regionSelect.value === "CONUS") {
+    stateSelect.disabled = true;
+    radarSelect.disabled = true;
+    radarImage.src = "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    radarId.textContent = "CONUS";
+    return;
+  }
+
+  stateSelect.disabled = false;
+  radarSelect.disabled = false;
+  stateSelect.innerHTML = `<option value="">— Select State —</option>`;
+  radarSelect.innerHTML = `<option value="">— Select City —</option>`;
+  radarImage.src = regionLoops[regionSelect.value];
+  radarId.textContent = regionSelect.value;
+
+  radarRegions[regionSelect.value].forEach(state => {
+    let o = document.createElement("option");
+    o.value = state;
+    o.textContent = state;
+    stateSelect.appendChild(o);
+  });
+}
+
+function populateRadars() {
+  if (!stateSelect.value) return;
+  radarSelect.innerHTML = `<option value="">— Select City —</option>`;
+  radarSites[stateSelect.value].forEach(site => {
+    let o = document.createElement("option");
+    o.value = site[0];
+    o.textContent = `${site[1]}, ${stateSelect.value}`;
+    radarSelect.appendChild(o);
+  });
+}
+
+function changeRadar(id) {
+  if (!id) return;
+  radarId.textContent = id;
+  radarImage.src = `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+}
+
+populateRegions();
+regionSelect.value = "Northwest";
+handleRegionChange();
+updateSatellite();
 </script>
 
 </body>
