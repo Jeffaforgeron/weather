@@ -91,65 +91,98 @@
 
 <body>
 
-  <h1>Jeff Forgeron’s Weather Desk</h1>
-  <div class="subtitle">
-    A clean, no-nonsense forecast desk.
-  </div>
+<h1>Jeff Forgeron’s Weather Desk</h1>
+<div class="subtitle">A clean, no-nonsense forecast desk.</div>
 
-  <div class="top-row">
+<div class="top-row">
 
-    <!-- SATELLITE -->
-    <div class="panel">
-      <div class="panel-title">Satellite</div>
+  <!-- SATELLITE (UNCHANGED) -->
+  <div class="panel">
+    <div class="panel-title">Satellite</div>
 
-      <a id="satLink" target="_blank">
-        <div class="image-box">
-          <img id="satImage"
-               src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
-               alt="GOES-West Satellite">
-        </div>
-      </a>
-
-      <div class="controls">
-        Region:
-        <select id="satRegion" onchange="updateSatellite()">
-          <option value="pnw">Pacific Northwest</option>
-          <option value="wus">West U.S.</option>
-          <option value="gwas">CONUS (Americas)</option>
-          <option value="psw">Southwest U.S.</option>
-        </select>
-
-        <button onclick="setSatMode('GEOCOLOR')">True Color</button>
-        <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
-      </div>
-    </div>
-
-    <!-- RADAR -->
-    <div class="panel">
-      <div class="panel-title">Radar</div>
-
+    <a id="satLink" target="_blank">
       <div class="image-box">
-        <img id="radarImage"
-             src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
-             alt="Radar Loop">
+        <img id="satImage"
+             src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
+             alt="GOES-West Satellite">
       </div>
+    </a>
 
-      <div class="controls">
-        Location:
-        <select id="radarSelect" onchange="changeRadar(this.value)">
-          <option value="KRTX">Portland, OR</option>
-          <option value="KLGX">Langley Hill, WA</option>
-          <option value="KATX">Seattle, WA</option>
-          <option value="KMAX">Medford, OR</option>
-          <option value="KOTX">Spokane, WA</option>
-          <option value="CONUS">Continental U.S.</option>
-        </select>
+    <div class="controls">
+      Region:
+      <select id="satRegion" onchange="updateSatellite()">
+        <option value="pnw">Pacific Northwest</option>
+        <option value="wus">West U.S.</option>
+        <option value="gwas">CONUS (Americas)</option>
+        <option value="psw">Southwest U.S.</option>
+      </select>
 
-        <span id="radarId" class="radar-id">KRTX</span>
-      </div>
+      <button onclick="setSatMode('GEOCOLOR')">True Color</button>
+      <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
+    </div>
+  </div>
+
+  <!-- RADAR (EXPANDED ONLY) -->
+  <div class="panel">
+    <div class="panel-title">Radar</div>
+
+    <div class="image-box">
+      <img id="radarImage"
+           src="https://radar.weather.gov/ridge/standard/KRTX_loop.gif"
+           alt="Radar Loop">
     </div>
 
+    <div class="controls">
+      Location:
+      <select id="radarSelect" onchange="changeRadar(this.value)">
+        <option value="KRTX">Portland, OR</option>
+        <option value="KMAX">Medford, OR</option>
+
+        <option value="KATX">Seattle, WA</option>
+        <option value="KLGX">Langley Hill, WA</option>
+        <option value="KOTX">Spokane, WA</option>
+
+        <option value="KDAX">Sacramento, CA</option>
+        <option value="KMUX">San Jose, CA</option>
+        <option value="KHNX">Hanford, CA</option>
+        <option value="KSOX">Santa Ana, CA</option>
+        <option value="KVTX">Los Angeles, CA</option>
+        <option value="KNKX">San Diego, CA</option>
+        <option value="KVBX">Vandenberg, CA</option>
+
+        <option value="KCBX">Boise, ID</option>
+
+        <option value="KRGX">Reno, NV</option>
+        <option value="KLRX">Elko, NV</option>
+
+        <option value="KIWA">Phoenix, AZ</option>
+        <option value="KEMX">Tucson, AZ</option>
+        <option value="KFSX">Flagstaff, AZ</option>
+
+        <option value="KICX">Cedar City, UT</option>
+
+        <option value="KTFX">Great Falls, MT</option>
+        <option value="KGGW">Glasgow, MT</option>
+        <option value="KMSX">Missoula, MT</option>
+
+        <option value="KCYS">Cheyenne, WY</option>
+        <option value="KRIW">Riverton, WY</option>
+
+        <option value="KFTG">Denver, CO</option>
+        <option value="KPUX">Pueblo, CO</option>
+        <option value="KGJX">Grand Junction, CO</option>
+
+        <option value="KABX">Albuquerque, NM</option>
+        <option value="KFDX">Cannon AFB, NM</option>
+
+        <option value="CONUS">Continental U.S.</option>
+      </select>
+
+      <span id="radarId" class="radar-id">KRTX</span>
+    </div>
   </div>
+
+</div>
 
 <script>
   let satBand = "GEOCOLOR";
