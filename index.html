@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Jeff Forgeron Weather</title>
 
-  <!-- Auto refresh every 30 seconds -->
+  <!-- Refresh page every 30 seconds -->
   <meta http-equiv="refresh" content="30">
 
   <style>
@@ -49,13 +49,6 @@
       display: block;
     }
 
-    .panel iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-      display: block;
-    }
-
     h2 {
       margin-top: 30px;
       color: #003366;
@@ -94,7 +87,6 @@
 Live radar and satellite. Page refreshes every 30 seconds.
 </p>
 
-<!-- LIVE DATA ROW -->
 <div class="live-row">
 
   <!-- RADAR -->
@@ -107,36 +99,14 @@ Live radar and satellite. Page refreshes every 30 seconds.
 
   <!-- SATELLITE -->
   <div class="panel">
-    <div class="panel-title">Satellite - GOES True Color (RAMMB)</div>
-    <iframe
-      src="https://rammb.cira.colostate.edu/ramsdis/online/loop.asp?data_folder=goes-18/true_color&number_of_images_to_display=24">
-    </iframe>
+    <div class="panel-title">Satellite - GOES West True Color</div>
+    <img
+      src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/CONUS/GEOCOLOR/GOES18-CONUS-GEOCOLOR-600x600.jpg"
+      alt="GOES West True Color Satellite">
   </div>
 
 </div>
 
 <h2>Forecast Tools</h2>
 <ul>
-  <li>
-    <a href="https://www.spc.noaa.gov/" target="_blank">
-      Storm Prediction Center
-    </a>
-  </li>
-  <li>
-    <a href="https://www.wpc.ncep.noaa.gov/" target="_blank">
-      Weather Prediction Center
-    </a>
-  </li>
-  <li>
-    <a href="https://www.weather.gov/" target="_blank">
-      National Weather Service
-    </a>
-  </li>
-</ul>
-
-<div class="footer">
-  Built for speed, reliability, and daily use.
-</div>
-
-</body>
-</html>
+  <li><a href="https://www.spc.noaa.gov/" target="_blank">Storm Prediction Center</a></li>
