@@ -1,118 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Jeff Forgeron Weather</title>
-
-  <!-- Refresh every 30 seconds -->
-  <meta http-equiv="refresh" content="30">
+  <meta charset="UTF-8">
+  <title>Jeff Forgeron Weather Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 30px;
-      background-color: #ffffff;
-      color: #111111;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 20px;
+      background: #ffffff;
+      color: #111;
     }
 
     h1 {
-      color: #003366;
-      margin-bottom: 10px;
+      margin-bottom: 4px;
     }
 
-    p {
-      margin-bottom: 16px;
+    .subtitle {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 15px;
     }
 
-    .live-row {
+    .top-row {
       display: flex;
-      gap: 20px;
-      margin-bottom: 30px;
+      gap: 14px;
+      flex-wrap: wrap;
     }
 
     .panel {
-      flex: 1;
-      border: 1px solid #cccccc;
-      padding: 10px;
+      flex: 1 1 480px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      min-height: 520px;
     }
 
     .panel-title {
+      padding: 6px 10px;
       font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ddd;
     }
 
-    img {
+    .panel img {
       width: 100%;
       height: auto;
       display: block;
-      border: 1px solid #dddddd;
+      cursor: pointer;
     }
 
-    .meta {
-      font-size: 12px;
-      color: #555555;
-      margin-top: 6px;
-    }
-
-    a {
-      color: #0055aa;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .footer {
-      margin-top: 40px;
+    footer {
+      margin-top: 30px;
       font-size: 13px;
-      color: #666666;
+      color: #666;
     }
   </style>
 </head>
 
 <body>
 
-<h1>Jeff Forgeron Weather</h1>
-
-<p>
-Live radar and satellite preview. Page refreshes every 30 seconds.
-</p>
-
-<div class="live-row">
-
-  <!-- RADAR -->
-  <div class="panel">
-    <div class="panel-title">Radar - CONUS Composite</div>
-    <img
-      src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
-      alt="CONUS Radar Loop">
-    <div class="meta">
-      Source: National Weather Service
-    </div>
+  <h1>Jeff Forgeron Weather Page</h1>
+  <div class="subtitle">
+    A simple, no-nonsense dashboard for checking the atmosphere.
   </div>
 
-  <!-- SATELLITE PREVIEW (CLICKABLE) -->
-  <div class="panel">
-    <div class="panel-title">Satellite - GOES West True Color</div>
+  <div class="top-row">
 
-    <a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
+    <!-- SATELLITE (CLICKABLE STILL IMAGE) -->
+    <div class="panel">
+      <div class="panel-title">GOES-18 True Color (CONUS)</div>
+      <a href="https://rammb.cira.colostate.edu/ramsdis/online/" target="_blank">
+        <img
+          src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/CONUS/GEOCOLOR/latest.jpg"
+          alt="GOES-18 True Color CONUS">
+      </a>
+    </div>
+
+    <!-- RADAR -->
+    <div class="panel">
+      <div class="panel-title">NEXRAD Composite Radar (CONUS)</div>
       <img
-        src="https://www.ssec.wisc.edu/data/us_comp/truecolor/latest.jpg"
-        alt="GOES West True Color Satellite">
-    </a>
-
-    <div class="meta">
-      Click image to open animated satellite loop (RAMMB).
+        src="https://radar.weather.gov/ridge/standard/CONUS_0.gif"
+        alt="NEXRAD Composite Radar">
     </div>
+
   </div>
 
-</div>
-
-<div class="footer">
-  Stable radar plus satellite preview version.
-</div>
+  <footer>
+    Built for personal use. Updated only when needed.
+  </footer>
 
 </body>
 </html>
