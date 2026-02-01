@@ -126,7 +126,7 @@
 
     <div class="controls">
       Region:
-      <select id="regionSelect" onchange="populateStates()"></select>
+      <select id="regionSelect" onchange="handleRegionChange()"></select>
 
       State:
       <select id="stateSelect" onchange="populateRadars()"></select>
@@ -164,6 +164,7 @@ function setSatMode(band) {
 
 /* ---------- RADAR REGIONS ---------- */
 const radarRegions = {
+  "CONUS": [],
   "Northwest": ["WA", "OR", "ID", "MT"],
   "Southwest": ["CA", "NV", "AZ", "UT", "NM"],
   "Northern Plains": ["ND", "SD", "NE", "WY"],
@@ -233,6 +234,20 @@ function populateRegions() {
   });
 }
 
+function handleRegionChange() {
+  if (regionSelect.value === "CONUS") {
+    stateSelect.disabled = true;
+    radarSelect.disabled = true;
+    radarImage.src = "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    radarId.textContent = "CONUS";
+    return;
+  }
+
+  stateSelect.disabled = false;
+  radarSelect.disabled = false;
+  populateStates();
+}
+
 function populateStates() {
   stateSelect.innerHTML = "";
   radarRegions[regionSelect.value].forEach(state => {
@@ -263,7 +278,7 @@ function changeRadar(id) {
 /* ---------- INIT (DEFAULT = NW → OR → KRTX) ---------- */
 populateRegions();
 regionSelect.value = "Northwest";
-populateStates();
+handleRegionChange();
 stateSelect.value = "OR";
 populateRadars();
 radarSelect.value = "KRTX";
