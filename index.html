@@ -107,6 +107,7 @@
           <option value="pnw">Pacific Northwest</option>
           <option value="wus">West U.S.</option>
           <option value="gwas">CONUS (Americas)</option>
+          <option value="psw">Southwest U.S.</option>
         </select>
 
         <button onclick="setSatMode('GEOCOLOR')">True Color</button>
@@ -147,20 +148,29 @@
     const img = document.getElementById("satImage");
     const link = document.getElementById("satLink");
 
-    // Static image handling (GWAS fix)
+    // Static image handling for known-problem sectors
     if (region === "gwas" && satBand === "GEOCOLOR") {
       img.src =
         "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
+    } else if (region === "psw" && satBand === "GEOCOLOR") {
+      img.src =
+        "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/psw/GEOCOLOR/1200x1200.jpg";
     } else {
       img.src =
         "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/" +
         region + "/" + satBand + "/latest.jpg";
     }
 
-    // Animation link
-    link.href =
-      "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
-      region + "&band=" + satBand + "&length=12";
+    // Animation link (region-specific)
+    if (region === "psw") {
+      link.href =
+        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=psw&band=" +
+        satBand + "&length=24";
+    } else {
+      link.href =
+        "https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=" +
+        region + "&band=" + satBand + "&length=12";
+    }
   }
 
   function setSatMode(band) {
