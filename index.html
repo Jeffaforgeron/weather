@@ -43,9 +43,11 @@
       border-bottom: 1px solid #ddd;
     }
 
+    .panel iframe,
     .panel img {
       width: 100%;
-      height: auto;
+      height: 520px;
+      border: none;
       display: block;
     }
 
@@ -66,8 +68,9 @@
 
   <div class="row">
 
-    <!-- SATELLITE LOOP (REAL GIF) -->
+    <!-- SATELLITE LOOP (IFRAME – RELIABLE) -->
     <div class="panel">
-      <div class="panel-title">Satellite – CONUS Visible Loop</div>
-      <img
-        src="https://mesonet.agron.iastate.edu/data/gis/im
+      <div class="panel-title">Satellite – True Color Loop (CONUS)</div>
+      <iframe
+        src="https://weather.cod.edu/satrad/?parms=regional-conus-truecolor-24-0-100-1&checked=map&colorbar=undefined"
+        loading="lazy">
