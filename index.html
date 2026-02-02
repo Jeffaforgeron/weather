@@ -36,7 +36,7 @@ body {
 .city-item:last-child { margin-bottom: 0; }
 .city-temp { font-weight: 600; }
 
-/* ---------- TIME BAR (UPGRADED) ---------- */
+/* ---------- TIME BAR (UPGRADED LOOK ONLY) ---------- */
 .time-bar {
   display: flex;
   justify-content: center;
@@ -52,13 +52,14 @@ body {
   border-radius: 8px;
   font-size: 13px;
   letter-spacing: 0.8px;
-  box-shadow: inset 0 0 8px rgba(255,255,255,0.05),
-              0 0 12px rgba(56,189,248,0.15);
+  box-shadow:
+    inset 0 0 6px rgba(255,255,255,0.05),
+    0 0 10px rgba(0,0,0,0.4);
   font-variant-numeric: tabular-nums;
 }
 
 .time-pill span {
-  opacity: 0.7;
+  opacity: 0.65;
   margin-right: 6px;
   font-size: 11px;
 }
@@ -116,7 +117,7 @@ select { font-size:13px; }
 
 <body>
 
-<!-- CITY TEMPS -->
+<!-- LEFT CITY TEMPS -->
 <div class="city-list city-left" id="cityListLeft">
   <div class="city-item"><span>Seattle</span><span class="city-temp">--</span></div>
   <div class="city-item"><span>Portland</span><span class="city-temp">--</span></div>
@@ -126,6 +127,7 @@ select { font-size:13px; }
   <div class="city-item"><span>San Diego</span><span class="city-temp">--</span></div>
 </div>
 
+<!-- RIGHT CITY TEMPS -->
 <div class="city-list city-right" id="cityListRight">
   <div class="city-item"><span>Denver</span><span class="city-temp">--</span></div>
   <div class="city-item"><span>Dallas</span><span class="city-temp">--</span></div>
@@ -148,7 +150,8 @@ select { font-size:13px; }
   <div class="panel-title">Satellite</div>
   <a id="satLink" target="_blank">
     <div class="image-box">
-      <img id="satImage" src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+      <img id="satImage"
+        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
     </div>
   </a>
   <div class="controls">
@@ -166,7 +169,8 @@ select { font-size:13px; }
 <div class="panel">
   <div class="panel-title">Radar</div>
   <div class="image-box">
-    <img id="radarImage" src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
+    <img id="radarImage"
+      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
   </div>
   <div class="controls">
     Region:
@@ -181,11 +185,28 @@ select { font-size:13px; }
 
 </div>
 
+<!-- CURRENT TEMPERATURE MAP -->
+<div class="panel full">
+  <div class="panel-title">Current Temperatures</div>
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer&x=-96.67887&y=38.21582&z=8"
+     target="_blank">
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif">
+    </div>
+  </a>
+</div>
+
 <script>
-/* ---------- TIME (COOL VERSION) ---------- */
+/* ---------- TIME (STYLE CHANGE ONLY) ---------- */
 function updateTimes(){
   const n=new Date();
-  const f=tz=>n.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  const f=tz=>n.toLocaleTimeString("en-US",{
+    timeZone:tz,
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit",
+    hour12:false
+  });
   timeBar.innerHTML=`
     <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
     <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
@@ -194,7 +215,8 @@ function updateTimes(){
     <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
   `;
 }
-setInterval(updateTimes,1000); updateTimes();
+setInterval(updateTimes,1000);
+updateTimes();
 </script>
 
 </body>
