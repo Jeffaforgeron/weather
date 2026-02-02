@@ -13,55 +13,25 @@
       color: #111;
     }
 
-    /* ---------- OBS COLUMN ---------- */
-    .obs-column {
+    /* ---------- CITY TEMPS ---------- */
+    .city-temps {
       position: fixed;
       top: 14px;
       left: 14px;
       background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(6px);
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 11px;
       color: #e5e7eb;
-      line-height: 1.35;
-      z-index: 1000;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      line-height: 1.5;
+      z-index: 999;
+      min-width: 160px;
     }
 
-    .obs-row {
+    .city-row {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-      margin-bottom: 4px;
-    }
-
-    .obs-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .obs-city {
-      font-weight: 600;
-      min-width: 70px;
-    }
-
-    .obs-temp {
-      font-weight: 600;
-    }
-
-    .obs-dew {
-      font-size: 10px;
-      color: #9ca3af;
-    }
-
-    .obs-wind {
-      font-size: 10px;
-      color: #cbd5f5;
-    }
-
-    .obs-icon {
-      width: 14px;
-      text-align: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     /* ---------- TIME BAR ---------- */
@@ -144,12 +114,6 @@
       border-radius: 0 0 10px 10px;
     }
 
-    .radar-id {
-      font-style: italic;
-      color: #555;
-      white-space: nowrap;
-    }
-
     select, button {
       font-size: 13px;
     }
@@ -158,8 +122,10 @@
 
 <body>
 
-<!-- 🌤️ WEST COAST OBS -->
-<div class="obs-column" id="obsColumn"></div>
+<!-- 🌡️ CITY TEMPERATURES -->
+<div class="city-temps" id="cityTemps">
+  Loading…
+</div>
 
 <!-- ⏱️ TIME BAR -->
 <div class="time-bar" id="timeBar"></div>
@@ -167,8 +133,45 @@
 <h1>Jeff Forgeron’s Weather Desk</h1>
 <div class="subtitle">A clean, no-nonsense forecast desk.</div>
 
-<!-- (Satellite, Radar, Temp Map remain unchanged below — omitted here for brevity in explanation) -->
-<!-- KEEP YOUR EXISTING PANELS EXACTLY AS THEY ARE -->
+<div class="top-row">
+
+  <!-- SATELLITE -->
+  <div class="panel">
+    <div class="panel-title">Satellite</div>
+    <div class="image-box">
+      <img
+        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
+        alt="Satellite">
+    </div>
+  </div>
+
+  <!-- RADAR -->
+  <div class="panel">
+    <div class="panel-title">Radar</div>
+    <div class="image-box">
+      <img
+        src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif"
+        alt="Radar">
+    </div>
+  </div>
+
+</div>
+
+<!-- 🌡️ CURRENT TEMPERATURES MAP -->
+<div class="panel full">
+  <div class="panel-title">Current Temperatures</div>
+  <a
+    href="https://viewer.weather.noaa.gov/general#layers=3+40090+42379&x=-97.52477&y=39.23409&z=8.3&panel=layer"
+    target="_blank"
+  >
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img
+        src="https://www.wpc.ncep.noaa.gov/noaa/noaa_temps.gif"
+        alt="Current U.S. Temperatures"
+        style="max-width:100%;height:auto;">
+    </div>
+  </a>
+</div>
 
 <script>
 /* ---------- TIME ---------- */
@@ -192,64 +195,35 @@ function updateTimes() {
 setInterval(updateTimes, 1000);
 updateTimes();
 
-/* ---------- OBS DATA ---------- */
-const obsSites = [
-  { city: "Seattle",  icao: "KSEA" },
-  { city: "Portland", icao: "KPDX" },
-  { city: "San Fran", icao: "KSFO" },
-  { city: "L.A.",     icao: "KLAX" },
-  { city: "Palm Spr", icao: "KPSP" },
-  { city: "San Diego",icao: "KSAN" }
+/* ---------- CITY TEMPS ---------- */
+const cities = [
+  ["Seattle", "KSEA"],
+  ["Portland", "KPDX"],
+  ["San Francisco", "KSFO"],
+  ["Los Angeles", "KLAX"],
+  ["Palm Springs", "KPSP"],
+  ["San Diego", "KSAN"]
 ];
 
-function skyIcon(code) {
-  if (!code) return "—";
-  if (code.includes("TS")) return "⛈️";
-  if (code.includes("SN")) return "❄️";
-  if (code.includes("RA")) return "🌧️";
-  if (code.includes("FG")) return "🌫️";
-  if (code.includes("OVC")) return "☁️";
-  if (code.includes("BKN")) return "⛅";
-  if (code.includes("SCT")) return "🌤️";
-  if (code.includes("CLR") || code.includes("SKC")) return "☀️";
-  return "🌥️";
-}
-
-async function updateObs() {
+async function updateCityTemps() {
   let html = "";
-  for (const s of obsSites) {
+  for (const [name, id] of cities) {
     try {
-      const r = await fetch(`https://aviationweather.gov/api/data/metar?ids=${s.icao}&format=json`);
+      const r = await fetch(
+        `https://aviationweather.gov/api/data/metar?ids=${id}&format=json`
+      );
       const d = (await r.json())[0];
-
-      const temp = Math.round(d.temp_c * 9/5 + 32);
-      const dew  = Math.round(d.dewpoint_c * 9/5 + 32);
-      const wind = d.wind_speed_kt
-        ? Math.round(d.wind_speed_kt * 1.15) + " mph"
-        : "Calm";
-
-      html += `
-        <div class="obs-row">
-          <span class="obs-icon">${skyIcon(d.wx_string || d.clouds || "")}</span>
-          <span class="obs-city">${s.city}</span>
-          <span class="obs-temp">${temp}°</span>
-          <span class="obs-dew">dp ${dew}°</span>
-          <span class="obs-wind">${wind}</span>
-        </div>`;
+      const tempF = Math.round(d.temp_c * 9/5 + 32);
+      html += `<div class="city-row"><span>${name}</span><span>${tempF}°</span></div>`;
     } catch {
-      html += `
-        <div class="obs-row">
-          <span class="obs-icon">—</span>
-          <span class="obs-city">${s.city}</span>
-          <span>—</span>
-        </div>`;
+      html += `<div class="city-row"><span>${name}</span><span>—</span></div>`;
     }
   }
-  document.getElementById("obsColumn").innerHTML = html;
+  document.getElementById("cityTemps").innerHTML = html;
 }
 
-updateObs();
-setInterval(updateObs, 300000);
+updateCityTemps();
+setInterval(updateCityTemps, 300000);
 </script>
 
 </body>
