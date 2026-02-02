@@ -19,7 +19,7 @@ body {
   position: absolute;
   top: 14px;
   left: 14px;
-  width: 360px; /* SHORTENED */
+  width: 360px;
   background: rgba(0,0,0,0.65);
   color: #e5e7eb;
   font-size: 12px;
@@ -77,52 +77,73 @@ body {
 }
 
 /* ================= LAYOUT ================= */
-h1 { text-align:center; margin-top:60px; }
-.subtitle { text-align:center; color:#9ca3af; margin-bottom:26px; }
-
-.top-row { display:flex; gap:16px; flex-wrap:wrap; }
-
-.panel {
-  flex:1 1 480px;
-  background:#e5e7eb;
-  border-radius:10px;
-  display:flex;
-  flex-direction:column;
-  color:#111;
+h1 {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 6px;
 }
 
-.panel.full { flex:1 1 100%; margin-top:20px; }
+.subtitle {
+  text-align: center;
+  color: #9ca3af;
+  margin-bottom: 26px;
+}
+
+.top-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.panel {
+  flex: 1 1 480px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  color: #111;
+}
+
+.panel.full {
+  flex: 1 1 100%;
+  margin-top: 20px;
+}
 
 .panel-title {
-  padding:10px 12px;
-  font-weight:600;
-  background:#dde1e6;
+  padding: 10px 12px;
+  font-weight: 600;
+  background: #dde1e6;
 }
 
 .image-box {
-  height:440px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#dfe3e8;
+  height: 440px;               /* ✅ RESTORED SIZE */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dfe3e8;
+}
+
+.image-box img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .controls {
-  padding:10px;
-  background:#e9ebee;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  font-size:13px;
+  padding: 10px;
+  background: #e9ebee;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
 }
 
-select { font-size:13px; }
+select { font-size: 13px; }
 </style>
 </head>
 
 <body>
 
-<!-- ===== CITY TICKER (SHORT + WORKING) ===== -->
+<!-- ===== CITY TEMP TICKER ===== -->
 <div class="city-list">
   <div class="city-track">
     <div class="city-item">Seattle <span class="city-temp">--</span></div>
@@ -131,7 +152,7 @@ select { font-size:13px; }
     <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item">San Diego <span class="city-temp">--</span></div>
 
-    <!-- duplicate -->
+    <!-- duplicate for smooth loop -->
     <div class="city-item">Seattle <span class="city-temp">--</span></div>
     <div class="city-item">Portland <span class="city-temp">--</span></div>
     <div class="city-item">San Francisco <span class="city-temp">--</span></div>
@@ -148,7 +169,7 @@ select { font-size:13px; }
 
 <div class="top-row">
 
-<!-- ===== SATELLITE (WORKING VERSION) ===== -->
+<!-- ===== SATELLITE (WORKING) ===== -->
 <div class="panel">
   <div class="panel-title">Satellite</div>
   <a id="satLink" target="_blank">
@@ -168,7 +189,7 @@ select { font-size:13px; }
   </div>
 </div>
 
-<!-- ===== RADAR (WORKING VERSION) ===== -->
+<!-- ===== RADAR (WORKING) ===== -->
 <div class="panel">
   <div class="panel-title">Radar</div>
   <div class="image-box">
@@ -212,27 +233,31 @@ select { font-size:13px; }
 /* ===== CLOCKS ===== */
 function updateTimes(){
   const n=new Date();
-  const f=tz=>n.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  const f=tz=>n.toLocaleTimeString("en-US",{
+    timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+  });
   timeBar.innerHTML=`
     <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
     <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
     <div class="time-pill"><span>CT</span>${f("America/Chicago")}</div>
     <div class="time-pill"><span>ET</span>${f("America/New_York")}</div>
-    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>`;
+    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
+  `;
 }
 setInterval(updateTimes,1000); updateTimes();
 
 /* ===== SATELLITE ===== */
 function updateSatellite(){
-  const r=satRegion.value;
-  satImage.src = r==="gwas"
+  const r = satRegion.value;
+  satImage.src = r === "gwas"
     ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
     : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
-  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
+  satLink.href =
+    `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
 }
 
-/* ===== RADAR ===== */
-const regionLoops={
+/* ===== RADAR (KNOWN-GOOD LOGIC) ===== */
+const regionLoops = {
   "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
   "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
   "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
@@ -241,61 +266,74 @@ const regionLoops={
   "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
 };
 
-const radarSites={
-  "OR":[["KRTX","Portland"]],
+const radarSites = {
   "WA":[["KATX","Seattle"]],
-  "CA":[["KMUX","San Jose"]],
+  "OR":[["KRTX","Portland"]],
+  "CA":[["KMUX","San Jose"]]
 };
 
 function handleRegionChange(){
-  if(regionSelect.value==="CONUS"){
-    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    stateSelect.innerHTML=""; radarSelect.innerHTML="";
+  if(regionSelect.value === "CONUS"){
+    radarImage.src = "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    stateSelect.innerHTML = "";
+    radarSelect.innerHTML = "";
     return;
   }
-  radarImage.src=regionLoops[regionSelect.value];
-  stateSelect.innerHTML=`<option value="">Select State</option>`;
-  radarSelect.innerHTML="";
-  for(const s in radarSites){
-    stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
-  }
+
+  radarImage.src = regionLoops[regionSelect.value];
+  stateSelect.innerHTML = `<option value="">Select State</option>`;
+  radarSelect.innerHTML = "";
+
+  Object.keys(radarSites).forEach(state=>{
+    stateSelect.innerHTML += `<option value="${state}">${state}</option>`;
+  });
 }
 
 function populateRadars(){
-  radarSelect.innerHTML="";
+  radarSelect.innerHTML = "";
   if(!stateSelect.value) return;
-  radarSites[stateSelect.value].forEach(r incentiv=> {
-    radarSelect.innerHTML+=`<option value="${r[0]}">${r[1]}</option>`;
+
+  radarSites[stateSelect.value].forEach(site=>{
+    radarSelect.innerHTML +=
+      `<option value="${site[0]}">${site[1]}</option>`;
   });
 }
 
 function changeRadar(id){
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+  radarImage.src =
+    `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
 }
 
-/* ===== CITY TEMPS (WORKING NOAA API) ===== */
-const cityStations={
-  "Seattle":"KSEA","Portland":"KPDX","San Francisco":"KSFO",
-  "Los Angeles":"KLAX","San Diego":"KSAN"
+/* ===== CITY TEMPS (FIXED & MATCHES DOM) ===== */
+const cityStations = {
+  "Seattle":"KSEA",
+  "Portland":"KPDX",
+  "San Francisco":"KSFO",
+  "Los Angeles":"KLAX",
+  "San Diego":"KSAN"
 };
 
 async function updateCityTemps(){
-  const temps=document.querySelectorAll(".city-temp");
-  let i=0;
-  for(const c in cityStations){
+  const items = document.querySelectorAll(".city-item");
+  let i = 0;
+
+  for(const city in cityStations){
     try{
-      const r=await fetch(`https://api.weather.gov/stations/${cityStations[c]}/observations/latest`);
-      const j=await r.json();
-      const t=j.properties.temperature.value;
-      temps[i].textContent=t==null?"--":Math.round(t*9/5+32)+"°";
-    }catch{
-      temps[i].textContent="--";
+      const r = await fetch(
+        `https://api.weather.gov/stations/${cityStations[city]}/observations/latest`
+      );
+      const j = await r.json();
+      const t = j.properties.temperature.value;
+      items[i].querySelector(".city-temp").textContent =
+        t == null ? "--" : Math.round(t*9/5+32) + "°";
+    } catch {
+      items[i].querySelector(".city-temp").textContent = "--";
     }
     i++;
   }
 }
 updateCityTemps();
-setInterval(updateCityTemps,300000);
+setInterval(updateCityTemps, 300000);
 </script>
 
 </body>
