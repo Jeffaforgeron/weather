@@ -42,14 +42,16 @@ body {
   padding: 0 14px;
 }
 
-.city-temp { font-weight: 600; }
+.city-temp {
+  font-weight: 600;
+}
 
 @keyframes cityScroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
-/* ================= CLOCKS (SLIGHTLY SMALLER) ================= */
+/* ================= CLOCKS (SMALL, FIXED) ================= */
 .time-bar {
   position: absolute;
   top: 10px;
@@ -63,17 +65,17 @@ body {
 .time-pill {
   background: rgba(0,0,0,0.6);
   color: #e5e7eb;
-  padding: 4px 6px;          /* smaller */
-  border-radius: 7px;        /* smaller */
-  font-size: 10px;           /* smaller */
+  padding: 4px 6px;
+  border-radius: 7px;
+  font-size: 10px;
   letter-spacing: 0.6px;
-  min-width: 48px;           /* smaller */
+  min-width: 48px;
   text-align: center;
 }
 
 .time-pill span {
   display: block;
-  font-size: 8px;            /* smaller */
+  font-size: 8px;
   opacity: 0.65;
   margin-bottom: 1px;
 }
@@ -147,18 +149,19 @@ select { font-size: 13px; }
 
 <!-- ===== CITY TEMP TICKER ===== -->
 <div class="city-list">
-  <div class="city-track">
-    <div class="city-item">Seattle <span class="city-temp">--</span></div>
-    <div class="city-item">Portland <span class="city-temp">--</span></div>
-    <div class="city-item">San Francisco <span class="city-temp">--</span></div>
-    <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
-    <div class="city-item">San Diego <span class="city-temp">--</span></div>
+  <div class="city-track" id="cityTrack">
+    <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
 
-    <div class="city-item">Seattle <span class="city-temp">--</span></div>
-    <div class="city-item">Portland <span class="city-temp">--</span></div>
-    <div class="city-item">San Francisco <span class="city-temp">--</span></div>
-    <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
-    <div class="city-item">San Diego <span class="city-temp">--</span></div>
+    <!-- duplicate for smooth loop -->
+    <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
   </div>
 </div>
 
@@ -247,6 +250,40 @@ function updateTimes(){
 }
 setInterval(updateTimes,1000);
 updateTimes();
+
+/* ===== SATELLITE ===== */
+function updateSatellite(){
+  const r = satRegion.value;
+  satImage.src = r === "gwas"
+    ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+    : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+
+  satLink.href =
+    `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
+}
+
+/* ===== CITY TEMPS (RESTORED & WORKING) ===== */
+async function updateCityTemps() {
+  const items = document.querySelectorAll(".city-item");
+
+  for (const item of items) {
+    const station = item.dataset.station;
+    try {
+      const res = await fetch(
+        `https://api.weather.gov/stations/${station}/observations/latest`
+      );
+      const data = await res.json();
+      const tempC = data.properties.temperature.value;
+      const tempF = tempC == null ? "--" : Math.round(tempC * 9/5 + 32) + "°F";
+      item.querySelector(".city-temp").textContent = tempF;
+    } catch {
+      item.querySelector(".city-temp").textContent = "--";
+    }
+  }
+}
+
+updateCityTemps();
+setInterval(updateCityTemps, 300000);
 </script>
 
 </body>
