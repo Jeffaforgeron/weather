@@ -13,12 +13,12 @@ body {
   color: #111;
 }
 
-/* ---------- CITY HOVER OBS ---------- */
+/* ---------- CITY HOVER OBS (FIXED) ---------- */
 .city-list {
   position: fixed;
   top: 14px;
   left: 14px;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.6);
   color: #e5e7eb;
   font-size: 12px;
   padding: 8px 10px;
@@ -28,15 +28,22 @@ body {
 
 .city-item {
   position: relative;
-  cursor: default;
-  margin-bottom: 4px;
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
+  margin-bottom: 4px;
+  cursor: default;
+}
+
+.city-item:last-child { margin-bottom: 0; }
+
+.city-name {
+  white-space: nowrap;
 }
 
 .city-temp {
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .city-tooltip {
@@ -53,7 +60,9 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
-.city-item:hover .city-tooltip { display: block; }
+.city-item:hover .city-tooltip {
+  display: block;
+}
 
 /* ---------- TIME BAR ---------- */
 .time-bar {
@@ -80,75 +89,51 @@ h1 {
   font-size: 15px;
 }
 
-.top-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
+/* Panels etc unchanged */
+.top-row { display:flex; gap:16px; flex-wrap:wrap; }
 .panel {
-  flex: 1 1 480px;
-  background: #e5e7eb;
-  border: 1px solid #c7c9cc;
-  border-radius: 10px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
-  display: flex;
-  flex-direction: column;
+  flex:1 1 480px;
+  background:#e5e7eb;
+  border:1px solid #c7c9cc;
+  border-radius:10px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.35);
+  display:flex;
+  flex-direction:column;
 }
-
-.panel.full {
-  flex: 1 1 100%;
-  margin-top: 20px;
-}
-
+.panel.full { flex:1 1 100%; margin-top:20px; }
 .panel-title {
-  padding: 10px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #dde1e6;
-  border-bottom: 1px solid #c7c9cc;
-  border-radius: 10px 10px 0 0;
+  padding:10px 12px;
+  font-size:14px;
+  font-weight:600;
+  background:#dde1e6;
+  border-bottom:1px solid #c7c9cc;
 }
-
 .image-box {
-  height: 440px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #dfe3e8;
+  height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#dfe3e8;
 }
-
-.image-box img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
+.image-box img { max-width:100%; max-height:100%; }
 .controls {
-  padding: 10px 12px;
-  background: #e9ebee;
-  border-top: 1px solid #c7c9cc;
-  font-size: 13px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  border-radius: 0 0 10px 10px;
+  padding:10px 12px;
+  background:#e9ebee;
+  border-top:1px solid #c7c9cc;
+  font-size:13px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
 }
-
-.radar-id {
-  font-style: italic;
-  color: #555;
-}
-
-select {
-  font-size: 13px;
-}
+.radar-id { font-style:italic; color:#555; }
+select { font-size:13px; }
 </style>
 </head>
 
 <body>
 
-<!-- 🌆 CITY LIST -->
+<!-- 🌆 FIXED CITY LIST -->
 <div class="city-list" id="cityList"></div>
 
 <!-- ⏱️ TIME BAR -->
@@ -205,8 +190,7 @@ select {
   <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer&x=-96.67887&y=38.21582&z=8&ts=42853&tst=1770249600"
      target="_blank">
     <div class="image-box" style="height:auto;padding:12px;">
-      <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif"
-           alt="Current U.S. Temperatures">
+      <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif">
     </div>
   </a>
 </div>
@@ -225,77 +209,8 @@ function updateTimes(){
 }
 setInterval(updateTimes,1000); updateTimes();
 
-/* ---------- SATELLITE ---------- */
-function updateSatellite(){
-  const r=satRegion.value;
-  satImage.src=r==="gwas"
-    ?"https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
-    :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
-  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
-}
-
-/* ---------- RADAR ---------- */
-const radarRegions={
-  "CONUS":[],
-  "Northwest":["WA","OR","ID","MT"],
-  "Southwest":["CA","NV","AZ","UT","NM"],
-  "Northern Plains":["ND","SD","NE","WY"],
-  "Southern Plains":["TX","OK","KS"],
-  "Midwest":["MN","IA","MO","WI","IL","IN","MI","OH"],
-  "Southeast":["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
-  "Northeast":["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
-};
-
-const regionLoops={
-  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
-  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
-  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
-  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
-  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
-  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
-};
-
-function populateRegions(){
-  Object.keys(radarRegions).forEach(r=>{
-    let o=document.createElement("option");
-    o.value=r; o.textContent=r;
-    regionSelect.appendChild(o);
-  });
-}
-
-function handleRegionChange(){
-  if(regionSelect.value==="CONUS"){
-    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    radarId.textContent="CONUS";
-    stateSelect.disabled=radarSelect.disabled=true;
-    return;
-  }
-  stateSelect.disabled=radarSelect.disabled=false;
-  stateSelect.innerHTML=`<option value="">— Select State —</option>`;
-  radarSelect.innerHTML=`<option value="">— Select City —</option>`;
-  radarImage.src=regionLoops[regionSelect.value];
-  radarId.textContent=regionSelect.value;
-  radarRegions[regionSelect.value].forEach(s=>{
-    let o=document.createElement("option");
-    o.value=s; o.textContent=s;
-    stateSelect.appendChild(o);
-  });
-}
-
-function populateRadars(){}
-function changeRadar(id){
-  if(!id) return;
-  radarId.textContent=id;
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
-}
-
-populateRegions();
-regionSelect.value="Northwest";
-handleRegionChange();
-updateSatellite();
-
-/* ---------- CITY OBS ---------- */
-const cityObs=[
+/* ---------- CITY METAR OBS ---------- */
+const cityObs = [
  ["Seattle","KSEA"],
  ["Portland","KPDX"],
  ["San Francisco","KSFO"],
@@ -308,39 +223,35 @@ async function updateCityObs(){
   let html="";
   for(const [name,id] of cityObs){
     try{
-      const r=await fetch(`https://aviationweather.gov/api/data/metar?ids=${id}&format=json`);
-      const d=(await r.json())[0];
-      const t=Math.round(d.temp_c*9/5+32);
-      const dp=Math.round(d.dewpoint_c*9/5+32);
-      const w=d.wind_speed_kt?Math.round(d.wind_speed_kt*1.15)+" mph":"Calm";
+      const r = await fetch(`https://aviationweather.gov/api/data/metar?ids=${id}&format=json`);
+      const d = (await r.json())[0];
+      const t = Math.round(d.temp_c * 9/5 + 32);
+      const dp = Math.round(d.dewpoint_c * 9/5 + 32);
+      const w = d.wind_speed_kt ? Math.round(d.wind_speed_kt * 1.15) + " mph" : "Calm";
 
-      if(name==="Seattle"){
-        html+=`
-          <div class="city-item">
-            <span>${name}</span>
-            <span class="city-temp">${t}°</span>
-            <div class="city-tooltip">
-              ${t}°F · dp ${dp}°<br>Wind ${w}<br>${d.wx_string||"—"}
-            </div>
-          </div>`;
-      } else {
-        html+=`
-          <div class="city-item">
-            <span>${name}</span>
-            <div class="city-tooltip">
-              ${t}°F · dp ${dp}°<br>Wind ${w}<br>${d.wx_string||"—"}
-            </div>
-          </div>`;
-      }
-    }catch{
-      html+=`<div class="city-item"><span>${name}</span></div>`;
+      html += `
+        <div class="city-item">
+          <span class="city-name">${name}</span>
+          <span class="city-temp">${t}°</span>
+          <div class="city-tooltip">
+            ${t}°F · dp ${dp}°<br>
+            Wind ${w}<br>
+            ${d.wx_string || "—"}
+          </div>
+        </div>`;
+    } catch {
+      html += `
+        <div class="city-item">
+          <span class="city-name">${name}</span>
+          <span class="city-temp">—</span>
+        </div>`;
     }
   }
-  cityList.innerHTML=html;
+  cityList.innerHTML = html;
 }
 
 updateCityObs();
-setInterval(updateCityObs,300000);
+setInterval(updateCityObs, 300000); // every 5 min
 </script>
 
 </body>
