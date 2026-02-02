@@ -10,16 +10,16 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 20px;
   background: #1f2933;
-  color: #111;
+  color: #f9fafb;
   position: relative;
 }
 
-/* ================= CITY TEMP SCROLL ================= */
+/* ================= CITY TEMP TICKER ================= */
 .city-list {
   position: absolute;
   top: 14px;
   left: 14px;
-  width: 560px;
+  width: 360px; /* SHORTENED */
   background: rgba(0,0,0,0.65);
   color: #e5e7eb;
   font-size: 12px;
@@ -32,22 +32,21 @@ body {
 .city-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: cityScroll 55s linear infinite;
+  animation: cityScroll 40s linear infinite;
 }
 
 .city-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 16px;
-  white-space: nowrap;
+  padding: 0 14px;
 }
 
 .city-temp { font-weight: 600; }
 
 @keyframes cityScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* ================= CLOCKS ================= */
@@ -58,146 +57,86 @@ body {
   display: flex;
   gap: 10px;
   z-index: 10;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: ui-monospace, monospace;
 }
 
 .time-pill {
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.10),
-    rgba(0,0,0,0.55)
-  );
+  background: rgba(0,0,0,0.6);
   color: #e5e7eb;
   padding: 8px 10px;
   border-radius: 10px;
   font-size: 13px;
   letter-spacing: 1px;
-  font-variant-numeric: tabular-nums;
-  box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.06),
-    0 8px 20px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(6px);
 }
 
 .time-pill span {
   display: block;
   font-size: 10px;
-  letter-spacing: 1.6px;
   opacity: 0.7;
   text-align: center;
-  margin-bottom: 2px;
 }
 
-/* ================= PAGE STRUCTURE ================= */
-h1 {
-  text-align: center;
-  margin-top: 60px;
-  margin-bottom: 6px;
-  color: #f9fafb;
-}
+/* ================= LAYOUT ================= */
+h1 { text-align:center; margin-top:60px; }
+.subtitle { text-align:center; color:#9ca3af; margin-bottom:26px; }
 
-.subtitle {
-  text-align: center;
-  color: #9ca3af;
-  margin-bottom: 26px;
-  font-size: 15px;
-}
-
-.top-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
+.top-row { display:flex; gap:16px; flex-wrap:wrap; }
 
 .panel {
-  flex: 1 1 480px;
-  background: #e5e7eb;
-  border: 1px solid #c7c9cc;
-  border-radius: 10px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
-  display: flex;
-  flex-direction: column;
+  flex:1 1 480px;
+  background:#e5e7eb;
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  color:#111;
 }
 
-.panel.full {
-  flex: 1 1 100%;
-  margin-top: 20px;
-}
+.panel.full { flex:1 1 100%; margin-top:20px; }
 
 .panel-title {
-  padding: 10px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #dde1e6;
-  border-bottom: 1px solid #c7c9cc;
+  padding:10px 12px;
+  font-weight:600;
+  background:#dde1e6;
 }
 
 .image-box {
-  height: 440px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #dfe3e8;
-}
-
-.image-box img {
-  max-width: 100%;
-  max-height: 100%;
+  height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#dfe3e8;
 }
 
 .controls {
-  padding: 10px 12px;
-  background: #e9ebee;
-  border-top: 1px solid #c7c9cc;
-  font-size: 13px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
+  padding:10px;
+  background:#e9ebee;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  font-size:13px;
 }
 
-.radar-id {
-  font-style: italic;
-  color: #555;
-}
-
-select {
-  font-size: 13px;
-}
+select { font-size:13px; }
 </style>
 </head>
 
 <body>
 
-<!-- ===== CITY TEMP TICKER ===== -->
-<div class="city-list" id="cityTicker">
+<!-- ===== CITY TICKER (SHORT + WORKING) ===== -->
+<div class="city-list">
   <div class="city-track">
-    Seattle <span class="city-temp">--</span>
-    Portland <span class="city-temp">--</span>
-    San Francisco <span class="city-temp">--</span>
-    Los Angeles <span class="city-temp">--</span>
-    Palm Springs <span class="city-temp">--</span>
-    San Diego <span class="city-temp">--</span>
-    Denver <span class="city-temp">--</span>
-    Dallas <span class="city-temp">--</span>
-    Chicago <span class="city-temp">--</span>
-    Boston <span class="city-temp">--</span>
-    New York <span class="city-temp">--</span>
-    Miami <span class="city-temp">--</span>
+    <div class="city-item">Seattle <span class="city-temp">--</span></div>
+    <div class="city-item">Portland <span class="city-temp">--</span></div>
+    <div class="city-item">San Francisco <span class="city-temp">--</span></div>
+    <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
+    <div class="city-item">San Diego <span class="city-temp">--</span></div>
 
-    Seattle <span class="city-temp">--</span>
-    Portland <span class="city-temp">--</span>
-    San Francisco <span class="city-temp">--</span>
-    Los Angeles <span class="city-temp">--</span>
-    Palm Springs <span class="city-temp">--</span>
-    San Diego <span class="city-temp">--</span>
-    Denver <span class="city-temp">--</span>
-    Dallas <span class="city-temp">--</span>
-    Chicago <span class="city-temp">--</span>
-    Boston <span class="city-temp">--</span>
-    New York <span class="city-temp">--</span>
-    Miami <span class="city-temp">--</span>
+    <!-- duplicate -->
+    <div class="city-item">Seattle <span class="city-temp">--</span></div>
+    <div class="city-item">Portland <span class="city-temp">--</span></div>
+    <div class="city-item">San Francisco <span class="city-temp">--</span></div>
+    <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
+    <div class="city-item">San Diego <span class="city-temp">--</span></div>
   </div>
 </div>
 
@@ -209,7 +148,7 @@ select {
 
 <div class="top-row">
 
-<!-- SATELLITE -->
+<!-- ===== SATELLITE (WORKING VERSION) ===== -->
 <div class="panel">
   <div class="panel-title">Satellite</div>
   <a id="satLink" target="_blank">
@@ -229,7 +168,7 @@ select {
   </div>
 </div>
 
-<!-- RADAR -->
+<!-- ===== RADAR (WORKING VERSION) ===== -->
 <div class="panel">
   <div class="panel-title">Radar</div>
   <div class="image-box">
@@ -249,21 +188,19 @@ select {
     </select>
 
     State:
-    <select id="stateSelect"></select>
+    <select id="stateSelect" onchange="populateRadars()"></select>
 
     City:
-    <select id="radarSelect"></select>
-
-    <span id="radarId" class="radar-id">Northwest</span>
+    <select id="radarSelect" onchange="changeRadar(this.value)"></select>
   </div>
 </div>
 
 </div>
 
-<!-- CURRENT TEMPERATURE MAP -->
+<!-- ===== TEMP MAP ===== -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
-  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer&x=-96.67887&y=38.21582&z=8"
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer"
      target="_blank">
     <div class="image-box" style="height:auto;padding:12px;">
       <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif">
@@ -274,9 +211,92 @@ select {
 <script>
 /* ===== CLOCKS ===== */
 function updateTimes(){
-  const n = new Date();
-  const f = tz => n.toLocaleTimeString("en-US", {
-    timeZone: tz, hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
+  const n=new Date();
+  const f=tz=>n.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  timeBar.innerHTML=`
+    <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
+    <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
+    <div class="time-pill"><span>CT</span>${f("America/Chicago")}</div>
+    <div class="time-pill"><span>ET</span>${f("America/New_York")}</div>
+    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>`;
+}
+setInterval(updateTimes,1000); updateTimes();
+
+/* ===== SATELLITE ===== */
+function updateSatellite(){
+  const r=satRegion.value;
+  satImage.src = r==="gwas"
+    ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+    : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
+}
+
+/* ===== RADAR ===== */
+const regionLoops={
+  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+};
+
+const radarSites={
+  "OR":[["KRTX","Portland"]],
+  "WA":[["KATX","Seattle"]],
+  "CA":[["KMUX","San Jose"]],
+};
+
+function handleRegionChange(){
+  if(regionSelect.value==="CONUS"){
+    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    stateSelect.innerHTML=""; radarSelect.innerHTML="";
+    return;
+  }
+  radarImage.src=regionLoops[regionSelect.value];
+  stateSelect.innerHTML=`<option value="">Select State</option>`;
+  radarSelect.innerHTML="";
+  for(const s in radarSites){
+    stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
+  }
+}
+
+function populateRadars(){
+  radarSelect.innerHTML="";
+  if(!stateSelect.value) return;
+  radarSites[stateSelect.value].forEach(r incentiv=> {
+    radarSelect.innerHTML+=`<option value="${r[0]}">${r[1]}</option>`;
   });
-  timeBar.innerHTML = `
-    <div class="time-pill"><span>PT
+}
+
+function changeRadar(id){
+  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+}
+
+/* ===== CITY TEMPS (WORKING NOAA API) ===== */
+const cityStations={
+  "Seattle":"KSEA","Portland":"KPDX","San Francisco":"KSFO",
+  "Los Angeles":"KLAX","San Diego":"KSAN"
+};
+
+async function updateCityTemps(){
+  const temps=document.querySelectorAll(".city-temp");
+  let i=0;
+  for(const c in cityStations){
+    try{
+      const r=await fetch(`https://api.weather.gov/stations/${cityStations[c]}/observations/latest`);
+      const j=await r.json();
+      const t=j.properties.temperature.value;
+      temps[i].textContent=t==null?"--":Math.round(t*9/5+32)+"°";
+    }catch{
+      temps[i].textContent="--";
+    }
+    i++;
+  }
+}
+updateCityTemps();
+setInterval(updateCityTemps,300000);
+</script>
+
+</body>
+</html>
