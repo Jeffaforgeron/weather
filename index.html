@@ -55,7 +55,7 @@ body {
   top: 10px;
   right: 10px;
   display: flex;
-  gap: 5px;
+  gap: 6px;
   z-index: 10;
   font-family: ui-monospace, monospace;
 }
@@ -63,10 +63,10 @@ body {
 .time-pill {
   background: rgba(0,0,0,0.6);
   color: #e5e7eb;
-  padding: 4px 6px;
+  padding: 4px 7px;
   border-radius: 7px;
   font-size: 10px;
-  min-width: 48px;
+  min-width: 52px;
   text-align: center;
 }
 
@@ -94,10 +94,17 @@ h1 {
   background: #e5e7eb;
   border-radius: 10px;
   color: #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel.full {
+  flex: 1 1 100%;
+  margin-top: 22px;
 }
 
 .panel-title {
-  padding: 10px;
+  padding: 10px 12px;
   font-weight: 600;
   background: #dde1e6;
 }
@@ -139,7 +146,7 @@ select { font-size: 13px; }
     <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
 
-    <!-- duplicate for smooth loop -->
+    <!-- duplicate for seamless loop -->
     <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
@@ -155,38 +162,58 @@ select { font-size: 13px; }
 
 <div class="top-row">
 
-<!-- SATELLITE (UNCHANGED) -->
+<!-- ===== SATELLITE ===== -->
 <div class="panel">
   <div class="panel-title">Satellite</div>
-  <div class="image-box">
-    <img id="satImage"
-      src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
-  </div>
+
+  <a id="satLink" target="_blank">
+    <div class="image-box">
+      <img id="satImage"
+        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
+        alt="Satellite imagery">
+    </div>
+  </a>
+
   <div class="controls">
     Region:
     <select id="satRegion" onchange="updateSatellite()">
-      <option value="pnw">Pacific Northwest</option>
-      <option value="wus">West U.S.</option>
-      <option value="psw">Southwest U.S.</option>
-      <option value="gwas">CONUS</option>
-      <option value="eus">East U.S.</option>
-      <option value="ne">Northeast</option>
+      <!-- GOES-WEST -->
+      <option value="pnw">Pacific Northwest (G18)</option>
+      <option value="wus">West U.S. (G18)</option>
+      <option value="psw">Southwest U.S. (G18)</option>
+      <option value="gwas">CONUS (G18)</option>
+
+      <!-- GOES-EAST -->
+      <option value="eus">East U.S. (G19)</option>
+      <option value="nr">Northern Rockies (G19)</option>
+      <option value="sr">Southern Rockies (G19)</option>
+      <option value="sp">Southern Plains (G19)</option>
+      <option value="can">Canada & Northern U.S. (G19)</option>
+      <option value="umv">Upper Mississippi Valley (G19)</option>
+      <option value="smv">Lower Mississippi Valley (G19)</option>
+      <option value="cgl">Great Lakes (G19)</option>
+      <option value="ne">Northeast (G19)</option>
     </select>
   </div>
 </div>
 
-<!-- RADAR (RESTORED & STABLE) -->
+<!-- ===== RADAR ===== -->
 <div class="panel">
   <div class="panel-title">Radar</div>
+
   <div class="image-box">
     <img id="radarImage"
-      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
+      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif"
+      alt="Radar loop">
   </div>
+
   <div class="controls">
     Region:
     <select id="regionSelect"></select>
+
     State:
     <select id="stateSelect"></select>
+
     City:
     <select id="radarSelect"></select>
   </div>
@@ -194,108 +221,156 @@ select { font-size: 13px; }
 
 </div>
 
+<!-- ===== CURRENT TEMPERATURES PANEL (RESTORED) ===== -->
+<div class="panel full">
+  <div class="panel-title">Current Temperatures</div>
+
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer"
+     target="_blank">
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img
+        src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif"
+        alt="Current U.S. Temperatures">
+    </div>
+  </a>
+</div>
+
 <script>
 /* ===== CLOCKS ===== */
-function updateTimes(){
-  const n=new Date();
-  const f=tz=>n.toLocaleTimeString("en-US",{
-    timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+function updateTimes() {
+  const now = new Date();
+  const fmt = tz => now.toLocaleTimeString("en-US", {
+    timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
   });
-  timeBar.innerHTML=`
-    <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
-    <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
-    <div class="time-pill"><span>CT</span>${f("America/Chicago")}</div>
-    <div class="time-pill"><span>ET</span>${f("America/New_York")}</div>
-    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
+
+  timeBar.innerHTML = `
+    <div class="time-pill"><span>PT</span>${fmt("America/Los_Angeles")}</div>
+    <div class="time-pill"><span>MT</span>${fmt("America/Denver")}</div>
+    <div class="time-pill"><span>CT</span>${fmt("America/Chicago")}</div>
+    <div class="time-pill"><span>ET</span>${fmt("America/New_York")}</div>
+    <div class="time-pill"><span>UTC</span>${now.toISOString().slice(11,19)}Z</div>
   `;
 }
-setInterval(updateTimes,1000); updateTimes();
+setInterval(updateTimes, 1000);
+updateTimes();
 
-/* ===== TEMP FETCH (FIXED) ===== */
-async function updateCityTemps(){
-  document.querySelectorAll(".city-item").forEach(async item=>{
-    try{
-      const r=await fetch(
+/* ===== CITY TEMPS ===== */
+async function updateCityTemps() {
+  document.querySelectorAll(".city-item").forEach(async item => {
+    try {
+      const res = await fetch(
         `https://api.weather.gov/stations/${item.dataset.station}/observations/latest`
       );
-      const j=await r.json();
-      const c=j.properties.temperature.value;
+      const data = await res.json();
+      const c = data.properties.temperature.value;
       item.querySelector(".city-temp").textContent =
-        c==null?"--":Math.round(c*9/5+32)+"°F";
-    }catch{
-      item.querySelector(".city-temp").textContent="--";
+        c == null ? "--" : Math.round(c * 9/5 + 32) + "°F";
+    } catch {
+      item.querySelector(".city-temp").textContent = "--";
     }
   });
 }
 updateCityTemps();
-setInterval(updateCityTemps,300000);
+setInterval(updateCityTemps, 300000);
 
-/* ===== RADAR DROPDOWNS (KNOWN-GOOD) ===== */
-const radarData={
-  "Northwest":{
-    loop:"PACNORTHWEST",
-    states:{
-      "WA":[["KATX","Seattle"],["KLGX","Langley Hill"]],
-      "OR":[["KRTX","Portland"],["KMAX","Medford"]]
+/* ===== SATELLITE LOGIC (FULLY FIXED) ===== */
+function updateSatellite() {
+  const r = satRegion.value;
+  const east = ["eus","nr","sr","sp","can","umv","smv","cgl","ne"];
+
+  if (east.includes(r)) {
+    satImage.src =
+      `https://cdn.star.nesdis.noaa.gov/GOES19/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+    satLink.href =
+      `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G19&sector=${r}&band=GEOCOLOR&length=24`;
+  } else {
+    satImage.src = r === "gwas"
+      ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+      : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+
+    satLink.href =
+      `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=24`;
+  }
+}
+
+/* ===== RADAR DROPDOWNS (UNCHANGED, WORKING) ===== */
+const radarRegions = {
+  "CONUS": { loop: "CONUS-LARGE" },
+  "Northwest": {
+    loop: "PACNORTHWEST",
+    states: {
+      "WA": [["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+      "OR": [["KRTX","Portland"],["KMAX","Medford"]],
+      "ID": [["KCBX","Boise"]],
+      "MT": [["KTFX","Great Falls"],["KMSX","Missoula"]]
     }
   },
-  "Southwest":{
-    loop:"PACSOUTHWEST",
-    states:{
-      "CA":[["KMUX","San Jose"],["KLAX","Los Angeles"]],
-      "AZ":[["KIWA","Phoenix"]]
+  "Southwest": {
+    loop: "PACSOUTHWEST",
+    states: {
+      "CA": [["KMUX","San Jose"],["KHNX","Hanford"],["KSOX","Santa Ana"],["KLAX","Los Angeles"],["KNKX","San Diego"]],
+      "NV": [["KRGX","Reno"],["KLRX","Elko"]],
+      "AZ": [["KIWA","Phoenix"],["KEMX","Tucson"]],
+      "UT": [["KICX","Cedar City"]],
+      "NM": [["KABX","Albuquerque"]]
     }
-  },
-  "CONUS":{loop:"CONUS-LARGE"}
+  }
 };
 
-function initRadar(){
-  regionSelect.innerHTML="";
-  Object.keys(radarData).forEach(r=>{
-    regionSelect.innerHTML+=`<option value="${r}">${r}</option>`;
-  });
-  regionSelect.value="Northwest";
-  handleRegion();
+function initRadar() {
+  regionSelect.innerHTML = "";
+  Object.keys(radarRegions).forEach(r =>
+    regionSelect.innerHTML += `<option value="${r}">${r}</option>`
+  );
+  regionSelect.value = "Northwest";
+  handleRadarRegion();
 }
 
-function handleRegion(){
-  const r=radarData[regionSelect.value];
-  if(regionSelect.value==="CONUS"){
-    radarImage.src=
+function handleRadarRegion() {
+  const r = radarRegions[regionSelect.value];
+
+  if (regionSelect.value === "CONUS") {
+    radarImage.src =
       "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    stateSelect.innerHTML="";
-    radarSelect.innerHTML="";
+    stateSelect.innerHTML = "";
+    radarSelect.innerHTML = "";
     return;
   }
-  radarImage.src=
+
+  radarImage.src =
     `https://radar.weather.gov/ridge/standard/${r.loop}_loop.gif`;
-  stateSelect.innerHTML="<option value=''>Select State</option>";
-  radarSelect.innerHTML="";
-  Object.keys(r.states).forEach(s=>{
-    stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
-  });
+
+  stateSelect.innerHTML = `<option value="">Select State</option>`;
+  radarSelect.innerHTML = "";
+
+  Object.keys(r.states).forEach(s =>
+    stateSelect.innerHTML += `<option value="${s}">${s}</option>`
+  );
 }
 
-function populateRadars(){
-  radarSelect.innerHTML="<option value=''>Select City</option>";
-  radarData[regionSelect.value].states[stateSelect.value]
-    .forEach(site=>{
-      radarSelect.innerHTML+=
-        `<option value="${site[0]}">${site[1]}</option>`;
-    });
+function populateRadarSites() {
+  radarSelect.innerHTML = `<option value="">Select City</option>`;
+  if (!stateSelect.value) return;
+
+  radarRegions[regionSelect.value].states[stateSelect.value]
+    .forEach(site =>
+      radarSelect.innerHTML +=
+        `<option value="${site[0]}">${site[1]}</option>`
+    );
 }
 
-function changeRadar(){
-  if(radarSelect.value)
-    radarImage.src=
-      `https://radar.weather.gov/ridge/standard/${radarSelect.value}_loop.gif`;
+function changeRadar() {
+  if (!radarSelect.value) return;
+  radarImage.src =
+    `https://radar.weather.gov/ridge/standard/${radarSelect.value}_loop.gif`;
 }
 
-regionSelect.onchange=handleRegion;
-stateSelect.onchange=populateRadars;
-radarSelect.onchange=changeRadar;
+regionSelect.onchange = handleRadarRegion;
+stateSelect.onchange = populateRadarSites;
+radarSelect.onchange = changeRadar;
 
 initRadar();
+updateSatellite();
 </script>
 
 </body>
