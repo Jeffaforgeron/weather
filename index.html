@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Jeff Forgeron’s Weather Dashboard</title>
+  <title>Jeff Forgeron’s Weather Desk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
@@ -95,12 +95,12 @@
 
 <body>
 
-<h1>Jeff Forgeron’s Weather Dashboard</h1>
+<h1>Jeff Forgeron’s Weather Desk</h1>
 <div class="subtitle">A clean, no-nonsense forecast desk.</div>
 
 <div class="top-row">
 
-  <!-- SATELLITE (WORKING VERSION) -->
+  <!-- SATELLITE -->
   <div class="panel">
     <div class="panel-title">Satellite</div>
 
@@ -125,7 +125,7 @@
     </div>
   </div>
 
-  <!-- RADAR (WORKING DROPDOWNS RESTORED) -->
+  <!-- RADAR -->
   <div class="panel">
     <div class="panel-title">Radar</div>
 
@@ -150,7 +150,7 @@
 
 </div>
 
-<!-- 🌡️ CURRENT TEMPERATURES (SAFE STATIC PANEL) -->
+<!-- 🌡️ CURRENT TEMPERATURES -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
 
@@ -161,7 +161,7 @@
   >
     <div class="image-box" style="height:auto;padding:12px;">
       <img
-        src="/images/conus_temp.gif"
+        src="images/conus_temp.gif"
         alt="Current U.S. Temperatures"
         style="max-width:100%;height:auto;border-radius:6px;"
         loading="eager"
@@ -201,7 +201,7 @@ function setSatMode(band) {
   updateSatellite();
 }
 
-/* ---------- RADAR DATA (WORKING) ---------- */
+/* ---------- RADAR DATA ---------- */
 const radarRegions = {
   "CONUS": [],
   "Northwest": ["WA","OR","ID","MT"],
