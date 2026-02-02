@@ -13,11 +13,10 @@ body {
   color: #111;
 }
 
-/* ---------- CITY TEMPERATURES (SCROLL AWAY) ---------- */
+/* ---------- CITY TEMPERATURES ---------- */
 .city-list {
   position: absolute;
   top: 14px;
-  left: 14px;
   background: rgba(0,0,0,0.6);
   color: #e5e7eb;
   font-size: 12px;
@@ -25,6 +24,9 @@ body {
   border-radius: 8px;
   z-index: 10;
 }
+
+.city-left { left: 14px; }
+.city-right { right: 14px; }
 
 .city-item {
   display: flex;
@@ -127,14 +129,24 @@ select { font-size: 13px; }
 
 <body>
 
-<!-- 🌆 CITY TEMPERATURES -->
-<div class="city-list" id="cityList">
+<!-- 🌆 LEFT CITY TEMPS -->
+<div class="city-list city-left" id="cityListLeft">
   <div class="city-item"><span class="city-name">Seattle</span><span class="city-temp">--</span></div>
   <div class="city-item"><span class="city-name">Portland</span><span class="city-temp">--</span></div>
   <div class="city-item"><span class="city-name">San Francisco</span><span class="city-temp">--</span></div>
   <div class="city-item"><span class="city-name">Los Angeles</span><span class="city-temp">--</span></div>
   <div class="city-item"><span class="city-name">Palm Springs</span><span class="city-temp">--</span></div>
   <div class="city-item"><span class="city-name">San Diego</span><span class="city-temp">--</span></div>
+</div>
+
+<!-- 🌆 RIGHT CITY TEMPS -->
+<div class="city-list city-right" id="cityListRight">
+  <div class="city-item"><span class="city-name">Denver</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Dallas</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Chicago</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Boston</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">New York</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Miami</span><span class="city-temp">--</span></div>
 </div>
 
 <!-- ⏱️ TIME BAR -->
@@ -219,112 +231,41 @@ function updateSatellite(){
   satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
 }
 
-/* ---------- RADAR (STABLE LOGIC) ---------- */
-const radarRegions = {
-  "CONUS": [],
-  "Northwest": ["WA","OR","ID","MT"],
-  "Southwest": ["CA","NV","AZ","UT","NM"],
-  "Northern Plains": ["ND","SD","NE","WY"],
-  "Southern Plains": ["TX","OK","KS"],
-  "Midwest": ["MN","IA","MO","WI","IL","IN","MI","OH"],
-  "Southeast": ["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
-  "Northeast": ["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
+/* ---------- CITY TEMPS (NOAA, CORS-SAFE) ---------- */
+const cityStationsLeft = {
+  "Seattle":"KSEA","Portland":"KPDX","San Francisco":"KSFO",
+  "Los Angeles":"KLAX","Palm Springs":"KPSP","San Diego":"KSAN"
 };
 
-const regionLoops = {
-  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
-  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
-  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
-  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
-  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
-  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+const cityStationsRight = {
+  "Denver":"KDEN","Dallas":"KDFW","Chicago":"KORD",
+  "Boston":"KBOS","New York":"KNYC","Miami":"KMIA"
 };
 
-function populateRegions(){
-  for(const r in radarRegions){
-    let o=document.createElement("option");
-    o.value=r; o.textContent=r;
-    regionSelect.appendChild(o);
-  }
-}
-
-function handleRegionChange(){
-  if(regionSelect.value==="CONUS"){
-    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    radarId.textContent="CONUS";
-    stateSelect.disabled = radarSelect.disabled = true;
-    return;
-  }
-  stateSelect.disabled = radarSelect.disabled = false;
-  stateSelect.innerHTML='<option value="">— Select State —</option>';
-  radarSelect.innerHTML='<option value="">— Select City —</option>';
-  radarImage.src = regionLoops[regionSelect.value];
-  radarId.textContent = regionSelect.value;
-
-  radarRegions[regionSelect.value].forEach(s=>{
-    let o=document.createElement("option");
-    o.value=s; o.textContent=s;
-    stateSelect.appendChild(o);
-  });
-}
-
-function populateRadars(){
-  radarSelect.innerHTML='<option value="">— Select City —</option>';
-  const sites = {
-    "WA":["KATX","KLGX","KOTX"],
-    "OR":["KRTX","KMAX"],
-    "CA":["KDAX","KMUX","KHNX","KSOX","KVTX","KNKX"],
-    "AZ":["KIWA","KEMX","KFSX"]
-  };
-  if(!sites[stateSelect.value]) return;
-  sites[stateSelect.value].forEach(id=>{
-    let o=document.createElement("option");
-    o.value=id; o.textContent=id;
-    radarSelect.appendChild(o);
-  });
-}
-
-function changeRadar(id){
-  if(!id) return;
-  radarId.textContent=id;
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
-}
-
-populateRegions();
-regionSelect.value="Northwest";
-handleRegionChange();
-updateSatellite();
-
-/* ---------- CITY TEMPS (NOAA API – WORKS ON GITHUB PAGES) ---------- */
-const cityStations = {
-  "Seattle":"KSEA",
-  "Portland":"KPDX",
-  "San Francisco":"KSFO",
-  "Los Angeles":"KLAX",
-  "Palm Springs":"KPSP",
-  "San Diego":"KSAN"
-};
-
-async function updateCityTemps(){
-  const rows = document.querySelectorAll(".city-item");
-  let i = 0;
-  for(const city in cityStations){
+async function updateCityTemps(containerId, map){
+  const rows=document.querySelectorAll(`#${containerId} .city-item`);
+  let i=0;
+  for(const city in map){
     try{
-      const res = await fetch(`https://api.weather.gov/stations/${cityStations[city]}/observations/latest`,
+      const res=await fetch(`https://api.weather.gov/stations/${map[city]}/observations/latest`,
         {headers:{Accept:"application/geo+json"}});
-      const json = await res.json();
-      const c = json.properties.temperature.value;
+      const j=await res.json();
+      const c=j.properties.temperature.value;
       rows[i].querySelector(".city-temp").textContent =
-        c===null ? "--" : Math.round(c*9/5+32)+"°";
-    } catch {
+        c===null?"--":Math.round(c*9/5+32)+"°";
+    }catch{
       rows[i].querySelector(".city-temp").textContent="--";
     }
     i++;
   }
 }
 
-updateCityTemps();
-setInterval(updateCityTemps,300000);
+updateCityTemps("cityListLeft", cityStationsLeft);
+updateCityTemps("cityListRight", cityStationsRight);
+setInterval(()=>{
+  updateCityTemps("cityListLeft", cityStationsLeft);
+  updateCityTemps("cityListRight", cityStationsRight);
+},300000);
 </script>
 
 </body>
