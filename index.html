@@ -13,9 +13,9 @@ body {
   color: #111;
 }
 
-/* ---------- CITY TEMPS (SCROLLS AWAY) ---------- */
+/* ---------- CITY TEMPERATURES (SCROLL AWAY) ---------- */
 .city-list {
-  position: absolute; /* <-- IMPORTANT CHANGE */
+  position: absolute;
   top: 14px;
   left: 14px;
   background: rgba(0,0,0,0.6);
@@ -23,7 +23,7 @@ body {
   font-size: 12px;
   padding: 8px 10px;
   border-radius: 8px;
-  z-index: 50;
+  z-index: 10;
 }
 
 .city-item {
@@ -176,7 +176,7 @@ select { font-size: 13px; }
     Region:
     <select id="regionSelect" onchange="handleRegionChange()"></select>
     State:
-    <select id="stateSelect"></select>
+    <select id="stateSelect" onchange="populateRadars()"></select>
     City:
     <select id="radarSelect" onchange="changeRadar(this.value)"></select>
     <span id="radarId" class="radar-id">Northwest</span>
@@ -185,7 +185,7 @@ select { font-size: 13px; }
 
 </div>
 
-<!-- 🌡️ CURRENT TEMPERATURES -->
+<!-- 🌡️ CURRENT TEMPERATURES MAP -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
   <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer&x=-96.67887&y=38.21582&z=8&ts=42853&tst=1770249600"
@@ -210,35 +210,121 @@ function updateTimes(){
 }
 setInterval(updateTimes,1000); updateTimes();
 
-/* ---------- CITY TEMPS (ROBUST) ---------- */
-const cityMap = {
-  "Seattle": "KSEA",
-  "Portland": "KPDX",
-  "San Francisco": "KSFO",
-  "Los Angeles": "KLAX",
-  "Palm Springs": "KPSP",
-  "San Diego": "KSAN"
+/* ---------- SATELLITE ---------- */
+function updateSatellite(){
+  const r=satRegion.value;
+  satImage.src=r==="gwas"
+    ?"https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+    :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
+}
+
+/* ---------- RADAR (STABLE LOGIC) ---------- */
+const radarRegions = {
+  "CONUS": [],
+  "Northwest": ["WA","OR","ID","MT"],
+  "Southwest": ["CA","NV","AZ","UT","NM"],
+  "Northern Plains": ["ND","SD","NE","WY"],
+  "Southern Plains": ["TX","OK","KS"],
+  "Midwest": ["MN","IA","MO","WI","IL","IN","MI","OH"],
+  "Southeast": ["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
+  "Northeast": ["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
+};
+
+const regionLoops = {
+  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+};
+
+function populateRegions(){
+  for(const r in radarRegions){
+    let o=document.createElement("option");
+    o.value=r; o.textContent=r;
+    regionSelect.appendChild(o);
+  }
+}
+
+function handleRegionChange(){
+  if(regionSelect.value==="CONUS"){
+    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    radarId.textContent="CONUS";
+    stateSelect.disabled = radarSelect.disabled = true;
+    return;
+  }
+  stateSelect.disabled = radarSelect.disabled = false;
+  stateSelect.innerHTML='<option value="">— Select State —</option>';
+  radarSelect.innerHTML='<option value="">— Select City —</option>';
+  radarImage.src = regionLoops[regionSelect.value];
+  radarId.textContent = regionSelect.value;
+
+  radarRegions[regionSelect.value].forEach(s=>{
+    let o=document.createElement("option");
+    o.value=s; o.textContent=s;
+    stateSelect.appendChild(o);
+  });
+}
+
+function populateRadars(){
+  radarSelect.innerHTML='<option value="">— Select City —</option>';
+  const sites = {
+    "WA":["KATX","KLGX","KOTX"],
+    "OR":["KRTX","KMAX"],
+    "CA":["KDAX","KMUX","KHNX","KSOX","KVTX","KNKX"],
+    "AZ":["KIWA","KEMX","KFSX"]
+  };
+  if(!sites[stateSelect.value]) return;
+  sites[stateSelect.value].forEach(id=>{
+    let o=document.createElement("option");
+    o.value=id; o.textContent=id;
+    radarSelect.appendChild(o);
+  });
+}
+
+function changeRadar(id){
+  if(!id) return;
+  radarId.textContent=id;
+  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+}
+
+populateRegions();
+regionSelect.value="Northwest";
+handleRegionChange();
+updateSatellite();
+
+/* ---------- CITY TEMPS (NOAA API – WORKS ON GITHUB PAGES) ---------- */
+const cityStations = {
+  "Seattle":"KSEA",
+  "Portland":"KPDX",
+  "San Francisco":"KSFO",
+  "Los Angeles":"KLAX",
+  "Palm Springs":"KPSP",
+  "San Diego":"KSAN"
 };
 
 async function updateCityTemps(){
   const rows = document.querySelectorAll(".city-item");
   let i = 0;
-
-  for (const city in cityMap) {
-    try {
-      const res = await fetch(`https://aviationweather.gov/api/data/metar?ids=${cityMap[city]}&format=json`);
-      const data = (await res.json())[0];
-      const tempF = Math.round(data.temp_c * 9/5 + 32);
-      rows[i].querySelector(".city-temp").textContent = `${tempF}°`;
+  for(const city in cityStations){
+    try{
+      const res = await fetch(`https://api.weather.gov/stations/${cityStations[city]}/observations/latest`,
+        {headers:{Accept:"application/geo+json"}});
+      const json = await res.json();
+      const c = json.properties.temperature.value;
+      rows[i].querySelector(".city-temp").textContent =
+        c===null ? "--" : Math.round(c*9/5+32)+"°";
     } catch {
-      rows[i].querySelector(".city-temp").textContent = "--";
+      rows[i].querySelector(".city-temp").textContent="--";
     }
     i++;
   }
 }
 
 updateCityTemps();
-setInterval(updateCityTemps, 300000);
+setInterval(updateCityTemps,300000);
 </script>
 
 </body>
