@@ -1,25 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jeff Forgeron’s Weather Desk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 20px;
+  background: #1f2933;
+  color: #111;
+}
+
+/* ---------- CITY TEMPERATURES ---------- */
 .city-list {
   position: absolute;
   top: 14px;
-  left: 14px;
-  width: 280px;
-  overflow: hidden;
   background: rgba(0,0,0,0.6);
   color: #e5e7eb;
   font-size: 12px;
   padding: 6px 0;
   border-radius: 8px;
   z-index: 10;
+  overflow: hidden;
 }
 
-/* scrolling inner track */
+.city-left {
+  left: 14px;
+  width: 300px;
+}
+
+.city-right {
+  right: 14px;
+  padding: 8px 10px;
+}
+
 .city-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: cityScroll 35s linear infinite;
+  animation: cityScroll 40s linear infinite;
 }
 
-/* individual city item */
 .city-item {
   display: inline-flex;
   align-items: center;
@@ -32,8 +54,270 @@
   font-weight: 600;
 }
 
-/* smooth subtle motion */
+/* scrolling animation */
 @keyframes cityScroll {
-  0%   { transform: translateX(0); }
+  0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* ---------- TIME BAR ---------- */
+.time-bar {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.time-pill {
+  background: rgba(0,0,0,0.55);
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-pill span {
+  opacity: 0.65;
+  margin-right: 6px;
+  font-size: 11px;
+}
+
+/* ---------- PANELS ---------- */
+h1 { text-align:center; margin-bottom:6px; color:#f9fafb; }
+.subtitle { text-align:center; color:#9ca3af; margin-bottom:26px; font-size:15px; }
+
+.top-row { display:flex; gap:16px; flex-wrap:wrap; }
+
+.panel {
+  flex:1 1 480px;
+  background:#e5e7eb;
+  border:1px solid #c7c9cc;
+  border-radius:10px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.35);
+  display:flex;
+  flex-direction:column;
+}
+
+.panel.full { flex:1 1 100%; margin-top:20px; }
+
+.panel-title {
+  padding:10px 12px;
+  font-size:14px;
+  font-weight:600;
+  background:#dde1e6;
+  border-bottom:1px solid #c7c9cc;
+}
+
+.image-box {
+  height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#dfe3e8;
+}
+.image-box img { max-width:100%; max-height:100%; }
+
+.controls {
+  padding:10px 12px;
+  background:#e9ebee;
+  border-top:1px solid #c7c9cc;
+  font-size:13px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.radar-id { font-style:italic; color:#555; }
+select { font-size:13px; }
+</style>
+</head>
+
+<body>
+
+<!-- LEFT SCROLLING CITY TEMPS -->
+<div class="city-list city-left" id="cityListLeft">
+  <div class="city-track">
+    <div class="city-item"><span>Seattle</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Portland</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>San Francisco</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Los Angeles</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Palm Springs</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>San Diego</span><span class="city-temp">--</span></div>
+
+    <!-- duplicate for seamless loop -->
+    <div class="city-item"><span>Seattle</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Portland</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>San Francisco</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Los Angeles</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>Palm Springs</span><span class="city-temp">--</span></div>
+    <div class="city-item"><span>San Diego</span><span class="city-temp">--</span></div>
+  </div>
+</div>
+
+<!-- RIGHT STATIC CITY TEMPS -->
+<div class="city-list city-right" id="cityListRight">
+  <div class="city-item"><span>Denver</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span>Dallas</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span>Chicago</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span>Boston</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span>New York</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span>Miami</span><span class="city-temp">--</span></div>
+</div>
+
+<!-- TIME BAR -->
+<div class="time-bar" id="timeBar"></div>
+
+<h1>Jeff Forgeron’s Weather Desk</h1>
+<div class="subtitle">A clean, no-nonsense forecast desk.</div>
+
+<div class="top-row">
+
+<!-- SATELLITE -->
+<div class="panel">
+  <div class="panel-title">Satellite</div>
+  <a id="satLink" target="_blank">
+    <div class="image-box">
+      <img id="satImage"
+        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+    </div>
+  </a>
+  <div class="controls">
+    Region:
+    <select id="satRegion" onchange="updateSatellite()">
+      <option value="pnw">Pacific Northwest</option>
+      <option value="wus">West U.S.</option>
+      <option value="gwas">CONUS</option>
+      <option value="psw">Southwest U.S.</option>
+    </select>
+  </div>
+</div>
+
+<!-- RADAR -->
+<div class="panel">
+  <div class="panel-title">Radar</div>
+  <div class="image-box">
+    <img id="radarImage"
+      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
+  </div>
+  <div class="controls">
+    Region:
+    <select id="regionSelect"></select>
+    State:
+    <select id="stateSelect"></select>
+    City:
+    <select id="radarSelect"></select>
+    <span id="radarId" class="radar-id">Northwest</span>
+  </div>
+</div>
+
+</div>
+
+<!-- CURRENT TEMPERATURE MAP -->
+<div class="panel full">
+  <div class="panel-title">Current Temperatures</div>
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer&x=-96.67887&y=38.21582&z=8"
+     target="_blank">
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif">
+    </div>
+  </a>
+</div>
+
+<script>
+/* ---------- TIME ---------- */
+function updateTimes(){
+  const n=new Date();
+  const f=tz=>n.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  timeBar.innerHTML=`
+    <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
+    <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
+    <div class="time-pill"><span>CT</span>${f("America/Chicago")}</div>
+    <div class="time-pill"><span>ET</span>${f("America/New_York")}</div>
+    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>`;
+}
+setInterval(updateTimes,1000); updateTimes();
+
+/* ---------- SATELLITE ---------- */
+function updateSatellite(){
+  const r=satRegion.value;
+  satImage.src=r==="gwas"
+    ?"https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
+    :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
+}
+
+/* ---------- RADAR (UNCHANGED, WORKING) ---------- */
+const radarRegions={"CONUS":[],"Northwest":["WA","OR","ID","MT"],"Southwest":["CA","NV","AZ","UT","NM"]};
+const regionLoops={"Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif","Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif"};
+const radarSites={"WA":[["KATX","Seattle"],["KLGX","Langley Hill"]],"OR":[["KRTX","Portland"],["KMAX","Medford"]],"CA":[["KDAX","Sacramento"],["KMUX","San Jose"],["KNKX","San Diego"]],"AZ":[["KIWA","Phoenix"],["KEMX","Tucson"]]};
+
+function initRadar(){
+  Object.keys(radarRegions).forEach(r=>{
+    let o=document.createElement("option"); o.value=r; o.textContent=r;
+    regionSelect.appendChild(o);
+  });
+
+  regionSelect.onchange=()=>{
+    stateSelect.innerHTML='<option value="">— State —</option>';
+    radarSelect.innerHTML='<option value="">— City —</option>';
+    if(regionSelect.value==="CONUS"){
+      radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+      radarId.textContent="CONUS"; return;
+    }
+    radarImage.src=regionLoops[regionSelect.value];
+    radarId.textContent=regionSelect.value;
+    radarRegions[regionSelect.value].forEach(s=>{
+      let o=document.createElement("option"); o.value=s; o.textContent=s;
+      stateSelect.appendChild(o);
+    });
+  };
+
+  stateSelect.onchange=()=>{
+    radarSelect.innerHTML='<option value="">— City —</option>';
+    (radarSites[stateSelect.value]||[]).forEach(([id,name])=>{
+      let o=document.createElement("option"); o.value=id; o.textContent=name;
+      radarSelect.appendChild(o);
+    });
+  };
+
+  radarSelect.onchange=()=>{
+    if(!radarSelect.value) return;
+    radarImage.src=`https://radar.weather.gov/ridge/standard/${radarSelect.value}_loop.gif`;
+    radarId.textContent=radarSelect.value;
+  };
+
+  regionSelect.value="Northwest";
+  regionSelect.onchange();
+}
+initRadar();
+
+/* ---------- CITY TEMPS (UNCHANGED, WORKING) ---------- */
+const cityStationsLeft={Seattle:"KSEA",Portland:"KPDX","San Francisco":"KSFO","Los Angeles":"KLAX","Palm Springs":"KPSP","San Diego":"KSAN"};
+const cityStationsRight={Denver:"KDEN",Dallas:"KDFW",Chicago:"KORD",Boston:"KBOS","New York":"KNYC",Miami:"KMIA"};
+
+async function updateCityTemps(id,map){
+  const rows=document.querySelectorAll(`#${id} .city-item`);
+  let i=0;
+  for(const c in map){
+    try{
+      const r=await fetch(`https://api.weather.gov/stations/${map[c]}/observations/latest`);
+      const j=await r.json();
+      const t=j.properties.temperature.value;
+      rows[i].querySelector(".city-temp").textContent=t==null?"--":Math.round(t*9/5+32)+"°";
+    }catch{
+      rows[i].querySelector(".city-temp").textContent="--";
+    }
+    i++;
+  }
+}
+updateCityTemps("cityListLeft",cityStationsLeft);
+updateCityTemps("cityListRight",cityStationsRight);
+setInterval(()=>{updateCityTemps("cityListLeft",cityStationsLeft);updateCityTemps("cityListRight",cityStationsRight);},300000);
+</script>
+
+</body>
+</html>
