@@ -30,9 +30,14 @@ body {
   position: relative;
   cursor: default;
   margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.city-item:last-child { margin-bottom: 0; }
+.city-temp {
+  font-weight: 600;
+}
 
 .city-tooltip {
   display: none;
@@ -48,9 +53,7 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
-.city-item:hover .city-tooltip {
-  display: block;
-}
+.city-item:hover .city-tooltip { display: block; }
 
 /* ---------- TIME BAR ---------- */
 .time-bar {
@@ -93,7 +96,10 @@ h1 {
   flex-direction: column;
 }
 
-.panel.full { flex: 1 1 100%; margin-top: 20px; }
+.panel.full {
+  flex: 1 1 100%;
+  margin-top: 20px;
+}
 
 .panel-title {
   padding: 10px 12px;
@@ -129,9 +135,14 @@ h1 {
   border-radius: 0 0 10px 10px;
 }
 
-.radar-id { font-style: italic; color: #555; }
+.radar-id {
+  font-style: italic;
+  color: #555;
+}
 
-select, button { font-size: 13px; }
+select {
+  font-size: 13px;
+}
 </style>
 </head>
 
@@ -165,7 +176,6 @@ select, button { font-size: 13px; }
       <option value="gwas">CONUS</option>
       <option value="psw">Southwest U.S.</option>
     </select>
-    <button onclick="setSatMode('GEOCOLOR')">True Color</button>
   </div>
 </div>
 
@@ -192,7 +202,8 @@ select, button { font-size: 13px; }
 <!-- 🌡️ CURRENT TEMPERATURES -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
-  <a href="https://viewer.weather.noaa.gov/general#layers=3" target="_blank">
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=legend&x=-96.42467&y=38.09306&z=8&ts=42853&tst=1770249600"
+     target="_blank">
     <div class="image-box" style="height:auto;padding:12px;">
       <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif"
            alt="Current U.S. Temperatures">
@@ -212,10 +223,9 @@ function updateTimes(){
     <span>ET ${f("America/New_York")}</span>
     <span>UTC ${n.toISOString().slice(11,19)}Z</span>`;
 }
-setInterval(updateTimes,1000);updateTimes();
+setInterval(updateTimes,1000); updateTimes();
 
 /* ---------- SATELLITE ---------- */
-let satBand="GEOCOLOR";
 function updateSatellite(){
   const r=satRegion.value;
   satImage.src=r==="gwas"
@@ -223,7 +233,6 @@ function updateSatellite(){
     :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
   satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
 }
-function setSatMode(){ updateSatellite(); }
 
 /* ---------- RADAR ---------- */
 const radarRegions={
@@ -249,7 +258,8 @@ const regionLoops={
 function populateRegions(){
   Object.keys(radarRegions).forEach(r=>{
     let o=document.createElement("option");
-    o.value=r;o.textContent=r;regionSelect.appendChild(o);
+    o.value=r; o.textContent=r;
+    regionSelect.appendChild(o);
   });
 }
 
@@ -267,13 +277,14 @@ function handleRegionChange(){
   radarId.textContent=regionSelect.value;
   radarRegions[regionSelect.value].forEach(s=>{
     let o=document.createElement("option");
-    o.value=s;o.textContent=s;stateSelect.appendChild(o);
+    o.value=s; o.textContent=s;
+    stateSelect.appendChild(o);
   });
 }
 
 function populateRadars(){}
 function changeRadar(id){
-  if(!id)return;
+  if(!id) return;
   radarId.textContent=id;
   radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
 }
@@ -302,19 +313,32 @@ async function updateCityObs(){
       const t=Math.round(d.temp_c*9/5+32);
       const dp=Math.round(d.dewpoint_c*9/5+32);
       const w=d.wind_speed_kt?Math.round(d.wind_speed_kt*1.15)+" mph":"Calm";
-      html+=`
-        <div class="city-item">
-          ${name}
-          <div class="city-tooltip">
-            ${t}°F · dp ${dp}°<br>Wind ${w}<br>${d.wx_string||"—"}
-          </div>
-        </div>`;
+
+      if(name==="Seattle"){
+        html+=`
+          <div class="city-item">
+            <span>${name}</span>
+            <span class="city-temp">${t}°</span>
+            <div class="city-tooltip">
+              ${t}°F · dp ${dp}°<br>Wind ${w}<br>${d.wx_string||"—"}
+            </div>
+          </div>`;
+      } else {
+        html+=`
+          <div class="city-item">
+            <span>${name}</span>
+            <div class="city-tooltip">
+              ${t}°F · dp ${dp}°<br>Wind ${w}<br>${d.wx_string||"—"}
+            </div>
+          </div>`;
+      }
     }catch{
-      html+=`<div class="city-item">${name}</div>`;
+      html+=`<div class="city-item"><span>${name}</span></div>`;
     }
   }
   cityList.innerHTML=html;
 }
+
 updateCityObs();
 setInterval(updateCityObs,300000);
 </script>
