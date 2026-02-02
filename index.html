@@ -13,9 +13,9 @@ body {
   color: #111;
 }
 
-/* ---------- CITY HOVER OBS (FIXED) ---------- */
+/* ---------- CITY TEMPS (SCROLLS AWAY) ---------- */
 .city-list {
-  position: fixed;
+  position: absolute; /* <-- IMPORTANT CHANGE */
   top: 14px;
   left: 14px;
   background: rgba(0,0,0,0.6);
@@ -23,46 +23,20 @@ body {
   font-size: 12px;
   padding: 8px 10px;
   border-radius: 8px;
-  z-index: 999;
+  z-index: 50;
 }
 
 .city-item {
-  position: relative;
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 4px;
-  cursor: default;
 }
 
 .city-item:last-child { margin-bottom: 0; }
 
-.city-name {
-  white-space: nowrap;
-}
-
-.city-temp {
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.city-tooltip {
-  display: none;
-  position: absolute;
-  left: 110%;
-  top: 0;
-  background: rgba(17,24,39,0.95);
-  color: #e5e7eb;
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-}
-
-.city-item:hover .city-tooltip {
-  display: block;
-}
+.city-name { white-space: nowrap; }
+.city-temp { font-weight: 600; }
 
 /* ---------- TIME BAR ---------- */
 .time-bar {
@@ -89,52 +63,79 @@ h1 {
   font-size: 15px;
 }
 
-/* Panels etc unchanged */
-.top-row { display:flex; gap:16px; flex-wrap:wrap; }
+.top-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .panel {
-  flex:1 1 480px;
-  background:#e5e7eb;
-  border:1px solid #c7c9cc;
-  border-radius:10px;
-  box-shadow:0 18px 40px rgba(0,0,0,0.35);
-  display:flex;
-  flex-direction:column;
+  flex: 1 1 480px;
+  background: #e5e7eb;
+  border: 1px solid #c7c9cc;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
 }
-.panel.full { flex:1 1 100%; margin-top:20px; }
+
+.panel.full {
+  flex: 1 1 100%;
+  margin-top: 20px;
+}
+
 .panel-title {
-  padding:10px 12px;
-  font-size:14px;
-  font-weight:600;
-  background:#dde1e6;
-  border-bottom:1px solid #c7c9cc;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #dde1e6;
+  border-bottom: 1px solid #c7c9cc;
 }
+
 .image-box {
-  height:440px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#dfe3e8;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dfe3e8;
 }
-.image-box img { max-width:100%; max-height:100%; }
+
+.image-box img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .controls {
-  padding:10px 12px;
-  background:#e9ebee;
-  border-top:1px solid #c7c9cc;
-  font-size:13px;
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
+  padding: 10px 12px;
+  background: #e9ebee;
+  border-top: 1px solid #c7c9cc;
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.radar-id { font-style:italic; color:#555; }
-select { font-size:13px; }
+
+.radar-id {
+  font-style: italic;
+  color: #555;
+}
+
+select { font-size: 13px; }
 </style>
 </head>
 
 <body>
 
-<!-- 🌆 FIXED CITY LIST -->
-<div class="city-list" id="cityList"></div>
+<!-- 🌆 CITY TEMPERATURES -->
+<div class="city-list" id="cityList">
+  <div class="city-item"><span class="city-name">Seattle</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Portland</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">San Francisco</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Los Angeles</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">Palm Springs</span><span class="city-temp">--</span></div>
+  <div class="city-item"><span class="city-name">San Diego</span><span class="city-temp">--</span></div>
+</div>
 
 <!-- ⏱️ TIME BAR -->
 <div class="time-bar" id="timeBar"></div>
@@ -175,7 +176,7 @@ select { font-size:13px; }
     Region:
     <select id="regionSelect" onchange="handleRegionChange()"></select>
     State:
-    <select id="stateSelect" onchange="populateRadars()"></select>
+    <select id="stateSelect"></select>
     City:
     <select id="radarSelect" onchange="changeRadar(this.value)"></select>
     <span id="radarId" class="radar-id">Northwest</span>
@@ -209,49 +210,35 @@ function updateTimes(){
 }
 setInterval(updateTimes,1000); updateTimes();
 
-/* ---------- CITY METAR OBS ---------- */
-const cityObs = [
- ["Seattle","KSEA"],
- ["Portland","KPDX"],
- ["San Francisco","KSFO"],
- ["Los Angeles","KLAX"],
- ["Palm Springs","KPSP"],
- ["San Diego","KSAN"]
-];
+/* ---------- CITY TEMPS (ROBUST) ---------- */
+const cityMap = {
+  "Seattle": "KSEA",
+  "Portland": "KPDX",
+  "San Francisco": "KSFO",
+  "Los Angeles": "KLAX",
+  "Palm Springs": "KPSP",
+  "San Diego": "KSAN"
+};
 
-async function updateCityObs(){
-  let html="";
-  for(const [name,id] of cityObs){
-    try{
-      const r = await fetch(`https://aviationweather.gov/api/data/metar?ids=${id}&format=json`);
-      const d = (await r.json())[0];
-      const t = Math.round(d.temp_c * 9/5 + 32);
-      const dp = Math.round(d.dewpoint_c * 9/5 + 32);
-      const w = d.wind_speed_kt ? Math.round(d.wind_speed_kt * 1.15) + " mph" : "Calm";
+async function updateCityTemps(){
+  const rows = document.querySelectorAll(".city-item");
+  let i = 0;
 
-      html += `
-        <div class="city-item">
-          <span class="city-name">${name}</span>
-          <span class="city-temp">${t}°</span>
-          <div class="city-tooltip">
-            ${t}°F · dp ${dp}°<br>
-            Wind ${w}<br>
-            ${d.wx_string || "—"}
-          </div>
-        </div>`;
+  for (const city in cityMap) {
+    try {
+      const res = await fetch(`https://aviationweather.gov/api/data/metar?ids=${cityMap[city]}&format=json`);
+      const data = (await res.json())[0];
+      const tempF = Math.round(data.temp_c * 9/5 + 32);
+      rows[i].querySelector(".city-temp").textContent = `${tempF}°`;
     } catch {
-      html += `
-        <div class="city-item">
-          <span class="city-name">${name}</span>
-          <span class="city-temp">—</span>
-        </div>`;
+      rows[i].querySelector(".city-temp").textContent = "--";
     }
+    i++;
   }
-  cityList.innerHTML = html;
 }
 
-updateCityObs();
-setInterval(updateCityObs, 300000); // every 5 min
+updateCityTemps();
+setInterval(updateCityTemps, 300000);
 </script>
 
 </body>
