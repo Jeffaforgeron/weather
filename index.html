@@ -42,16 +42,14 @@ body {
   padding: 0 14px;
 }
 
-.city-temp {
-  font-weight: 600;
-}
+.city-temp { font-weight: 600; }
 
 @keyframes cityScroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
-/* ================= CLOCKS (SMALL, FIXED) ================= */
+/* ================= CLOCKS ================= */
 .time-bar {
   position: absolute;
   top: 10px;
@@ -149,14 +147,14 @@ select { font-size: 13px; }
 
 <!-- ===== CITY TEMP TICKER ===== -->
 <div class="city-list">
-  <div class="city-track" id="cityTrack">
+  <div class="city-track">
     <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
 
-    <!-- duplicate for smooth loop -->
+    <!-- duplicate -->
     <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
@@ -202,21 +200,13 @@ select { font-size: 13px; }
   </div>
   <div class="controls">
     Region:
-    <select id="regionSelect" onchange="handleRegionChange()">
-      <option value="Northwest">Northwest</option>
-      <option value="Southwest">Southwest</option>
-      <option value="Northern Plains">Northern Plains</option>
-      <option value="Southern Plains">Southern Plains</option>
-      <option value="Northeast">Northeast</option>
-      <option value="Southeast">Southeast</option>
-      <option value="CONUS">CONUS</option>
-    </select>
+    <select id="regionSelect"></select>
 
     State:
-    <select id="stateSelect" onchange="populateRadars()"></select>
+    <select id="stateSelect"></select>
 
     City:
-    <select id="radarSelect" onchange="changeRadar(this.value)"></select>
+    <select id="radarSelect"></select>
   </div>
 </div>
 
@@ -248,8 +238,7 @@ function updateTimes(){
     <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
   `;
 }
-setInterval(updateTimes,1000);
-updateTimes();
+setInterval(updateTimes,1000); updateTimes();
 
 /* ===== SATELLITE ===== */
 function updateSatellite(){
@@ -262,28 +251,98 @@ function updateSatellite(){
     `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
 }
 
-/* ===== CITY TEMPS (RESTORED & WORKING) ===== */
-async function updateCityTemps() {
-  const items = document.querySelectorAll(".city-item");
+/* ===== RADAR DROPDOWNS (RESTORED & STABLE) ===== */
+const radarRegions = {
+  "Northwest": {
+    loop: "PACNORTHWEST",
+    states: {
+      "WA": [["KATX","Seattle"],["KLGX","Langley Hill"]],
+      "OR": [["KRTX","Portland"],["KMAX","Medford"]]
+    }
+  },
+  "Southwest": {
+    loop: "PACSOUTHWEST",
+    states: {
+      "CA": [["KMUX","San Jose"],["KHNX","Hanford"],["KLAX","Los Angeles"]],
+      "AZ": [["KIWA","Phoenix"]]
+    }
+  },
+  "CONUS": { loop: "CONUS-LARGE" }
+};
 
-  for (const item of items) {
+function initRadarRegions(){
+  regionSelect.innerHTML = "";
+  Object.keys(radarRegions).forEach(r=>{
+    regionSelect.innerHTML += `<option value="${r}">${r}</option>`;
+  });
+  handleRegionChange();
+}
+
+function handleRegionChange(){
+  const region = radarRegions[regionSelect.value];
+
+  if(regionSelect.value === "CONUS"){
+    radarImage.src =
+      "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    stateSelect.innerHTML = "";
+    radarSelect.innerHTML = "";
+    return;
+  }
+
+  radarImage.src =
+    `https://radar.weather.gov/ridge/standard/${region.loop}_loop.gif`;
+
+  stateSelect.innerHTML = `<option value="">Select State</option>`;
+  radarSelect.innerHTML = "";
+
+  Object.keys(region.states).forEach(st=>{
+    stateSelect.innerHTML += `<option value="${st}">${st}</option>`;
+  });
+}
+
+function populateRadars(){
+  radarSelect.innerHTML = `<option value="">Select City</option>`;
+  const region = radarRegions[regionSelect.value];
+  if(!stateSelect.value || !region.states[stateSelect.value]) return;
+
+  region.states[stateSelect.value].forEach(site=>{
+    radarSelect.innerHTML +=
+      `<option value="${site[0]}">${site[1]}</option>`;
+  });
+}
+
+function changeRadar(){
+  if(!radarSelect.value) return;
+  radarImage.src =
+    `https://radar.weather.gov/ridge/standard/${radarSelect.value}_loop.gif`;
+}
+
+regionSelect.onchange = handleRegionChange;
+stateSelect.onchange = populateRadars;
+radarSelect.onchange = changeRadar;
+
+initRadarRegions();
+
+/* ===== CITY TEMPS ===== */
+async function updateCityTemps(){
+  const items = document.querySelectorAll(".city-item");
+  for(const item of items){
     const station = item.dataset.station;
-    try {
-      const res = await fetch(
+    try{
+      const r = await fetch(
         `https://api.weather.gov/stations/${station}/observations/latest`
       );
-      const data = await res.json();
-      const tempC = data.properties.temperature.value;
-      const tempF = tempC == null ? "--" : Math.round(tempC * 9/5 + 32) + "°F";
-      item.querySelector(".city-temp").textContent = tempF;
+      const j = await r.json();
+      const c = j.properties.temperature.value;
+      item.querySelector(".city-temp").textContent =
+        c == null ? "--" : Math.round(c*9/5+32)+"°F";
     } catch {
       item.querySelector(".city-temp").textContent = "--";
     }
   }
 }
-
 updateCityTemps();
-setInterval(updateCityTemps, 300000);
+setInterval(updateCityTemps,300000);
 </script>
 
 </body>
