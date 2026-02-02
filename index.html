@@ -49,13 +49,13 @@ body {
   to { transform: translateX(-50%); }
 }
 
-/* ================= CLOCKS ================= */
+/* ================= CLOCKS (SLIGHTLY SMALLER) ================= */
 .time-bar {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 10px;
   display: flex;
-  gap: 10px;
+  gap: 5px;
   z-index: 10;
   font-family: ui-monospace, monospace;
 }
@@ -63,17 +63,19 @@ body {
 .time-pill {
   background: rgba(0,0,0,0.6);
   color: #e5e7eb;
-  padding: 8px 10px;
-  border-radius: 10px;
-  font-size: 13px;
-  letter-spacing: 1px;
+  padding: 4px 6px;          /* smaller */
+  border-radius: 7px;        /* smaller */
+  font-size: 10px;           /* smaller */
+  letter-spacing: 0.6px;
+  min-width: 48px;           /* smaller */
+  text-align: center;
 }
 
 .time-pill span {
   display: block;
-  font-size: 10px;
-  opacity: 0.7;
-  text-align: center;
+  font-size: 8px;            /* smaller */
+  opacity: 0.65;
+  margin-bottom: 1px;
 }
 
 /* ================= LAYOUT ================= */
@@ -116,7 +118,7 @@ h1 {
 }
 
 .image-box {
-  height: 440px;               /* ✅ RESTORED SIZE */
+  height: 440px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +154,6 @@ select { font-size: 13px; }
     <div class="city-item">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item">San Diego <span class="city-temp">--</span></div>
 
-    <!-- duplicate for smooth loop -->
     <div class="city-item">Seattle <span class="city-temp">--</span></div>
     <div class="city-item">Portland <span class="city-temp">--</span></div>
     <div class="city-item">San Francisco <span class="city-temp">--</span></div>
@@ -169,7 +170,7 @@ select { font-size: 13px; }
 
 <div class="top-row">
 
-<!-- ===== SATELLITE (WORKING) ===== -->
+<!-- SATELLITE -->
 <div class="panel">
   <div class="panel-title">Satellite</div>
   <a id="satLink" target="_blank">
@@ -189,7 +190,7 @@ select { font-size: 13px; }
   </div>
 </div>
 
-<!-- ===== RADAR (WORKING) ===== -->
+<!-- RADAR -->
 <div class="panel">
   <div class="panel-title">Radar</div>
   <div class="image-box">
@@ -218,7 +219,7 @@ select { font-size: 13px; }
 
 </div>
 
-<!-- ===== TEMP MAP ===== -->
+<!-- TEMP MAP -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
   <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer"
@@ -244,96 +245,8 @@ function updateTimes(){
     <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
   `;
 }
-setInterval(updateTimes,1000); updateTimes();
-
-/* ===== SATELLITE ===== */
-function updateSatellite(){
-  const r = satRegion.value;
-  satImage.src = r === "gwas"
-    ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
-    : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
-  satLink.href =
-    `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
-}
-
-/* ===== RADAR (KNOWN-GOOD LOGIC) ===== */
-const regionLoops = {
-  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
-  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
-  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
-  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
-  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
-  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
-};
-
-const radarSites = {
-  "WA":[["KATX","Seattle"]],
-  "OR":[["KRTX","Portland"]],
-  "CA":[["KMUX","San Jose"]]
-};
-
-function handleRegionChange(){
-  if(regionSelect.value === "CONUS"){
-    radarImage.src = "https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    stateSelect.innerHTML = "";
-    radarSelect.innerHTML = "";
-    return;
-  }
-
-  radarImage.src = regionLoops[regionSelect.value];
-  stateSelect.innerHTML = `<option value="">Select State</option>`;
-  radarSelect.innerHTML = "";
-
-  Object.keys(radarSites).forEach(state=>{
-    stateSelect.innerHTML += `<option value="${state}">${state}</option>`;
-  });
-}
-
-function populateRadars(){
-  radarSelect.innerHTML = "";
-  if(!stateSelect.value) return;
-
-  radarSites[stateSelect.value].forEach(site=>{
-    radarSelect.innerHTML +=
-      `<option value="${site[0]}">${site[1]}</option>`;
-  });
-}
-
-function changeRadar(id){
-  radarImage.src =
-    `https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
-}
-
-/* ===== CITY TEMPS (FIXED & MATCHES DOM) ===== */
-const cityStations = {
-  "Seattle":"KSEA",
-  "Portland":"KPDX",
-  "San Francisco":"KSFO",
-  "Los Angeles":"KLAX",
-  "San Diego":"KSAN"
-};
-
-async function updateCityTemps(){
-  const items = document.querySelectorAll(".city-item");
-  let i = 0;
-
-  for(const city in cityStations){
-    try{
-      const r = await fetch(
-        `https://api.weather.gov/stations/${cityStations[city]}/observations/latest`
-      );
-      const j = await r.json();
-      const t = j.properties.temperature.value;
-      items[i].querySelector(".city-temp").textContent =
-        t == null ? "--" : Math.round(t*9/5+32) + "°";
-    } catch {
-      items[i].querySelector(".city-temp").textContent = "--";
-    }
-    i++;
-  }
-}
-updateCityTemps();
-setInterval(updateCityTemps, 300000);
+setInterval(updateTimes,1000);
+updateTimes();
 </script>
 
 </body>
