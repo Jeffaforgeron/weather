@@ -5,61 +5,17 @@
   <title>Jeff Forgeron’s Weather Desk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Leaflet -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <style>
-    :root {
-      --bg1: #1f2933;
-      --bg2: #111827;
-      --panel-bg: #e5e7eb;
-      --panel-border: #c7c9cc;
-      --panel-shadow: rgba(0,0,0,0.35);
-      --panel-header: #dde1e6;
-      --panel-controls: #e9ebee;
-      --image-bg: #dfe3e8;
-      --text-main: #111827;
-      --text-sub: #6b7280;
-    }
-
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 20px;
-      min-height: 100vh;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      background-size: 200% 200%;
-      animation: skyFlow 60s ease infinite;
-      color: var(--text-main);
-    }
-
-    @keyframes skyFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .header {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-
-    .time-bar {
-      font-size: 13px;
-      color: #e5e7eb;
-      display: flex;
-      gap: 26px;
-      letter-spacing: 0.6px;
-      font-variant-numeric: tabular-nums;
+      background: #1f2933;
+      color: #111;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       color: #f9fafb;
     }
 
@@ -78,184 +34,252 @@
 
     .panel {
       flex: 1 1 480px;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
+      background: #e5e7eb;
+      border: 1px solid #c7c9cc;
       border-radius: 10px;
-      box-shadow: 0 18px 40px var(--panel-shadow);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
       display: flex;
       flex-direction: column;
     }
 
     .panel.full {
       flex: 1 1 100%;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
     .panel-title {
       padding: 10px 12px;
       font-size: 14px;
       font-weight: 600;
-      background: var(--panel-header);
-      border-bottom: 1px solid var(--panel-border);
+      background: #dde1e6;
+      border-bottom: 1px solid #c7c9cc;
+      border-radius: 10px 10px 0 0;
     }
 
     .image-box {
       height: 440px;
-      background: var(--image-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #dfe3e8;
+    }
+
+    .image-box img {
+      max-width: 100%;
+      max-height: 100%;
     }
 
     .controls {
       padding: 10px 12px;
-      background: var(--panel-controls);
-      border-top: 1px solid var(--panel-border);
+      background: #e9ebee;
+      border-top: 1px solid #c7c9cc;
       font-size: 13px;
       display: flex;
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
+      border-radius: 0 0 10px 10px;
     }
 
     .radar-id {
       font-style: italic;
-      color: var(--text-sub);
+      color: #555;
+      white-space: nowrap;
     }
 
-    #tempMap {
-      height: 440px;
-      width: 100%;
-      border-radius: 0 0 10px 10px;
-    }
-
-    .temp-label {
-      font-weight: 600;
+    select, button {
       font-size: 13px;
-      color: white;
-      text-shadow: 0 0 4px rgba(0,0,0,0.9);
     }
   </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="time-bar" id="timeBar"></div>
-</div>
-
 <h1>Jeff Forgeron’s Weather Desk</h1>
-<div class="subtitle">A living, breathing forecast desk.</div>
+<div class="subtitle">A clean, no-nonsense forecast desk.</div>
 
 <div class="top-row">
 
-  <!-- SATELLITE (UNCHANGED) -->
+  <!-- SATELLITE (WORKING VERSION) -->
   <div class="panel">
     <div class="panel-title">Satellite</div>
-    <div class="image-box">
-      <img
-        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg"
-        style="max-width:100%;max-height:100%;">
+
+    <a id="satLink" target="_blank">
+      <div class="image-box">
+        <img id="satImage"
+          src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+      </div>
+    </a>
+
+    <div class="controls">
+      Region:
+      <select id="satRegion" onchange="updateSatellite()">
+        <option value="pnw">Pacific Northwest</option>
+        <option value="wus">West U.S.</option>
+        <option value="gwas">CONUS</option>
+        <option value="psw">Southwest U.S.</option>
+      </select>
+
+      <button onclick="setSatMode('GEOCOLOR')">True Color</button>
+      <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
     </div>
   </div>
 
-  <!-- RADAR (UNCHANGED LOGIC – NOT TOUCHED) -->
+  <!-- RADAR (WORKING DROPDOWNS RESTORED) -->
   <div class="panel">
     <div class="panel-title">Radar</div>
+
     <div class="image-box">
-      <img
-        id="radarImage"
-        src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif"
-        style="max-width:100%;max-height:100%;">
+      <img id="radarImage"
+        src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
     </div>
+
     <div class="controls">
-      Radar dropdowns preserved
+      Region:
+      <select id="regionSelect" onchange="handleRegionChange()"></select>
+
+      State:
+      <select id="stateSelect" onchange="populateRadars()"></select>
+
+      City:
+      <select id="radarSelect" onchange="changeRadar(this.value)"></select>
+
+      <span id="radarId" class="radar-id">Northwest</span>
     </div>
   </div>
 
 </div>
 
-<!-- 🌡️ LIVE TEMPERATURE MAP -->
+<!-- 🌡️ CURRENT TEMPERATURES (SAFE STATIC PANEL) -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
-  <div id="tempMap"></div>
+
+  <a
+    href="https://viewer.weather.noaa.gov/general#layers=3+40090+42379&x=-97.52477&y=39.23409&z=8.3&panel=layer"
+    target="_blank"
+    style="text-decoration:none;"
+  >
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img
+        src="/images/conus_temp.gif"
+        alt="Current U.S. Temperatures"
+        style="max-width:100%;height:auto;border-radius:6px;"
+        loading="eager"
+      >
+    </div>
+  </a>
+
+  <div class="controls">
+    <span style="font-style:italic;color:#555;">
+      Static CONUS temperature analysis
+    </span>
+    <span style="font-style:italic;color:#555;">
+      Click map for interactive NOAA viewer
+    </span>
+  </div>
 </div>
 
 <script>
-/* ---------- TIME ---------- */
-function updateTimes() {
-  const n = new Date();
-  const f = tz => n.toLocaleTimeString("en-US", {
-    timeZone: tz, hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
-  });
-  timeBar.innerHTML = `
-    <span>PT ${f("America/Los_Angeles")}</span>
-    <span>MT ${f("America/Denver")}</span>
-    <span>CT ${f("America/Chicago")}</span>
-    <span>ET ${f("America/New_York")}</span>
-    <span>UTC ${n.toISOString().slice(11,19)}Z</span>`;
-}
-setInterval(updateTimes,1000); updateTimes();
+let satBand = "GEOCOLOR";
 
-/* ---------- TEMPERATURE MAP ---------- */
-const cities = [
-  {name:"Seattle",icao:"KSEA",lat:47.45,lon:-122.31},
-  {name:"San Francisco",icao:"KSFO",lat:37.62,lon:-122.38},
-  {name:"Los Angeles",icao:"KLAX",lat:33.94,lon:-118.40},
-  {name:"Phoenix",icao:"KPHX",lat:33.43,lon:-112.01},
-  {name:"Denver",icao:"KDEN",lat:39.86,lon:-104.67},
-  {name:"Dallas–Fort Worth",icao:"KDFW",lat:32.90,lon:-97.04},
-  {name:"Houston",icao:"KIAH",lat:29.99,lon:-95.34},
-  {name:"Chicago",icao:"KORD",lat:41.98,lon:-87.90},
-  {name:"Minneapolis",icao:"KMSP",lat:44.88,lon:-93.22},
-  {name:"St. Louis",icao:"KSTL",lat:38.75,lon:-90.37},
-  {name:"Atlanta",icao:"KATL",lat:33.64,lon:-84.43},
-  {name:"Detroit",icao:"KDTW",lat:42.21,lon:-83.35},
-  {name:"Charlotte",icao:"KCLT",lat:35.21,lon:-80.94},
-  {name:"Washington DC",icao:"KIAD",lat:38.95,lon:-77.45},
-  {name:"New York",icao:"KJFK",lat:40.64,lon:-73.78},
-  {name:"Boston",icao:"KBOS",lat:42.36,lon:-71.01},
-  {name:"Miami",icao:"KMIA",lat:25.79,lon:-80.29}
-];
+/* ---------- SATELLITE ---------- */
+function updateSatellite() {
+  const r = satRegion.value;
+  if (r === "gwas" && satBand === "GEOCOLOR")
+    satImage.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg";
+  else if (r === "psw" && satBand === "GEOCOLOR")
+    satImage.src = "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/psw/GEOCOLOR/1200x1200.jpg";
+  else
+    satImage.src = `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
 
-const map = L.map("tempMap", {
-  zoomControl: false,
-  attributionControl: false
-}).setView([39,-98],4);
-
-L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-  subdomains: "abcd"
-}).addTo(map);
-
-let markers = {};
-
-function tempColor(t){
-  if (t <= 32) return "#60a5fa";
-  if (t <= 59) return "#93c5fd";
-  if (t <= 79) return "#f9fafb";
-  return "#fb7185";
+  satLink.href =
+    `https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
 }
 
-async function updateTemps(){
-  const r = await fetch("https://aviationweather.gov/api/data/metar?format=json&hours=1");
-  const data = await r.json();
+function setSatMode(band) {
+  satBand = band;
+  updateSatellite();
+}
 
-  cities.forEach(c=>{
-    const obs = data.find(d=>d.icaoId===c.icao);
-    if(!obs || obs.tempC==null) return;
+/* ---------- RADAR DATA (WORKING) ---------- */
+const radarRegions = {
+  "CONUS": [],
+  "Northwest": ["WA","OR","ID","MT"],
+  "Southwest": ["CA","NV","AZ","UT","NM"],
+  "Northern Plains": ["ND","SD","NE","WY"],
+  "Southern Plains": ["TX","OK","KS"],
+  "Midwest": ["MN","IA","MO","WI","IL","IN","MI","OH"],
+  "Southeast": ["AR","LA","MS","AL","TN","KY","GA","FL","SC","NC"],
+  "Northeast": ["PA","NJ","NY","CT","MA","VT","NH","ME","MD","VA","WV"]
+};
 
-    const f = Math.round(obs.tempC * 9/5 + 32);
-    const html = `<span class="temp-label" style="color:${tempColor(f)}">${c.name} ${f}°</span>`;
+const regionLoops = {
+  "Northwest":"https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif",
+  "Southwest":"https://radar.weather.gov/ridge/standard/PACSOUTHWEST_loop.gif",
+  "Southern Plains":"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+  "Northern Plains":"https://radar.weather.gov/ridge/standard/UPPERMISSVLY_loop.gif",
+  "Northeast":"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+  "Southeast":"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif"
+};
 
-    if(markers[c.icao]) {
-      markers[c.icao].setLatLng([c.lat,c.lon]).setIcon(L.divIcon({html}));
-    } else {
-      markers[c.icao] = L.marker([c.lat,c.lon],{
-        icon: L.divIcon({html, className:""})
-      }).addTo(map);
-    }
+const radarSites = {
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+  "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "CA":[["KDAX","Sacramento"],["KMUX","San Jose"],["KHNX","Hanford"]],
+  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"]],
+  "IL":[["KLOT","Chicago"]],
+  "NY":[["KBUF","Buffalo"],["KOKX","New York City"]]
+};
+
+function populateRegions() {
+  Object.keys(radarRegions).forEach(r=>{
+    let o=document.createElement("option");
+    o.value=r;o.textContent=r;regionSelect.appendChild(o);
   });
 }
 
-updateTemps();
-setInterval(updateTemps, 300000);
+function handleRegionChange() {
+  if(regionSelect.value==="CONUS"){
+    stateSelect.disabled=true;
+    radarSelect.disabled=true;
+    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
+    radarId.textContent="CONUS";
+    return;
+  }
+  stateSelect.disabled=false;
+  radarSelect.disabled=false;
+  stateSelect.innerHTML=`<option value="">— Select State —</option>`;
+  radarSelect.innerHTML=`<option value="">— Select City —</option>`;
+  radarImage.src=regionLoops[regionSelect.value];
+  radarId.textContent=regionSelect.value;
+
+  radarRegions[regionSelect.value].forEach(s=>{
+    let o=document.createElement("option");
+    o.value=s;o.textContent=s;stateSelect.appendChild(o);
+  });
+}
+
+function populateRadars(){
+  if(!stateSelect.value) return;
+  radarSelect.innerHTML=`<option value="">— Select City —</option>`;
+  (radarSites[stateSelect.value]||[]).forEach(site=>{
+    let o=document.createElement("option");
+    o.value=site[0];
+    o.textContent=`${site[1]}, ${stateSelect.value}`;
+    radarSelect.appendChild(o);
+  });
+}
+
+function changeRadar(id){
+  if(!id) return;
+  radarId.textContent=id;
+  radarImage.src=`https://radar.weather.gov/ridge/standard/${id}_loop.gif`;
+}
+
+populateRegions();
+regionSelect.value="Northwest";
+handleRegionChange();
+updateSatellite();
 </script>
 
 </body>
