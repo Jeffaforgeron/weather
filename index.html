@@ -166,7 +166,6 @@ select, button { font-size: 13px; }
       <option value="psw">Southwest U.S.</option>
     </select>
     <button onclick="setSatMode('GEOCOLOR')">True Color</button>
-    <button onclick="setSatMode('NTMICROPHYSICS')">Nighttime Microphysics</button>
   </div>
 </div>
 
@@ -219,14 +218,14 @@ setInterval(updateTimes,1000);updateTimes();
 let satBand="GEOCOLOR";
 function updateSatellite(){
   const r=satRegion.value;
-  satImage.src=r==="gwas"&&satBand==="GEOCOLOR"
+  satImage.src=r==="gwas"
     ?"https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
-    :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/${satBand}/latest.jpg`;
-  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=${satBand}&length=12`;
+    :`https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
+  satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=12`;
 }
-function setSatMode(b){satBand=b;updateSatellite();}
+function setSatMode(){ updateSatellite(); }
 
-/* ---------- RADAR (UNCHANGED WORKING LOGIC) ---------- */
+/* ---------- RADAR ---------- */
 const radarRegions={
   "CONUS":[],
   "Northwest":["WA","OR","ID","MT"],
