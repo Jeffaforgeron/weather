@@ -13,6 +13,18 @@
       color: #111;
     }
 
+    /* ---------- TIME BAR ---------- */
+    .time-bar {
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      font-size: 13px;
+      color: #e5e7eb;
+      letter-spacing: 0.6px;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 10px;
+    }
+
     h1 {
       text-align: center;
       margin-bottom: 6px;
@@ -95,6 +107,9 @@
 
 <body>
 
+<!-- ⏱️ TIME BAR -->
+<div class="time-bar" id="timeBar"></div>
+
 <h1>Jeff Forgeron’s Weather Desk</h1>
 <div class="subtitle">A clean, no-nonsense forecast desk.</div>
 
@@ -150,7 +165,7 @@
 
 </div>
 
-<!-- 🌡️ CURRENT TEMPERATURES -->
+<!-- 🌡️ CURRENT TEMPERATURES (STATIC, VISIBLE) -->
 <div class="panel full">
   <div class="panel-title">Current Temperatures</div>
 
@@ -180,9 +195,30 @@
 </div>
 
 <script>
-let satBand = "GEOCOLOR";
+/* ---------- TIME ---------- */
+function updateTimes() {
+  const n = new Date();
+  const f = tz => n.toLocaleTimeString("en-US", {
+    timeZone: tz,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  });
+  document.getElementById("timeBar").innerHTML = `
+    <span>PT ${f("America/Los_Angeles")}</span>
+    <span>MT ${f("America/Denver")}</span>
+    <span>CT ${f("America/Chicago")}</span>
+    <span>ET ${f("America/New_York")}</span>
+    <span>UTC ${n.toISOString().slice(11,19)}Z</span>
+  `;
+}
+setInterval(updateTimes, 1000);
+updateTimes();
 
 /* ---------- SATELLITE ---------- */
+let satBand = "GEOCOLOR";
+
 function updateSatellite() {
   const r = satRegion.value;
   if (r === "gwas" && satBand === "GEOCOLOR")
@@ -201,7 +237,7 @@ function setSatMode(band) {
   updateSatellite();
 }
 
-/* ---------- RADAR DATA ---------- */
+/* ---------- RADAR (UNCHANGED, WORKING) ---------- */
 const radarRegions = {
   "CONUS": [],
   "Northwest": ["WA","OR","ID","MT"],
