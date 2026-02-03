@@ -140,106 +140,6 @@ h1 {
 }
 
 select { font-size: 13px; }
-  /* ===== MOBILE-ONLY LAYOUT FIX (SAFE) ===== */
-@media (max-width: 768px) {
-
-  /* Prevent absolute-position overlap */
-  .city-list {
-    position: static;
-    width: 100%;
-    margin-bottom: 8px;
-  }
-
-  .time-bar {
-    position: static;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  /* Reduce vertical waste */
-  h1 {
-    margin-top: 12px;
-    font-size: 22px;
-  }
-
-  .subtitle {
-    font-size: 13px;
-    margin-bottom: 16px;
-  }
-
-  /* Stack panels */
-  .top-row {
-    flex-direction: column;
-  }
-
-  .panel {
-    flex: 1 1 100%;
-  }
-
-  /* Make images fit phones */
-  .image-box {
-    height: auto;
-    min-height: 240px;
-    max-height: 60vh;
-  }
-
-  /* Touch-friendly controls */
-  .controls {
-    font-size: 14px;
-    gap: 10px;
-  }
-
-  select {
-    font-size: 14px;
-    padding: 4px;
-  }
-  /* ===== MOBILE PANEL ORDER (RELIABLE) ===== */
-@media (max-width: 768px) {
-
-  .top-row {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .column {
-    display: contents;
-  }
-
-  .panel-satellite { order: 1; }
-  .panel-radar     { order: 2; }
-  .panel-conditions{ order: 3; }
-  .panel-forecast  { order: 4; }
-}
-
-
-}
-/* ===== DASHBOARD SKIN TUNING: LIGHTER ===== */
-:root {
-  --bg-main: #0f172a;
-  --bg-card: #111c3a;
-  --bg-card-alt: #16214a;
-  --border-subtle: rgba(255,255,255,0.08);
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --accent: #38bdf8; /* brighter cyan */
-}
-
-body {
-  background: radial-gradient(
-    1200px 600px at 20% -10%,
-    #1e2a5a 0%,
-    var(--bg-main) 60%
-  );
-}
-
-/* ===== DASHBOARD COLUMNS ===== */
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex: 1 1 480px;
-}
-
 </style>
 </head>
 
@@ -270,31 +170,64 @@ body {
 
 <div class="top-row">
 
-  <!-- SATELLITE -->
-  <div class="panel panel-satellite">
-    <!-- (Satellite content stays EXACTLY the same here) -->
+<!-- SATELLITE -->
+<div class="panel">
+  <div class="panel-title">Satellite</div>
+  <a id="satLink" target="_blank">
+    <div class="image-box">
+      <img id="satImage"
+        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+    </div>
+  </a>
+  <div class="controls">
+    Region:
+    <select id="satRegion" onchange="updateSatellite()">
+      <option value="pnw">Pacific Northwest (G18)</option>
+      <option value="wus">West U.S. (G18)</option>
+      <option value="psw">Southwest U.S. (G18)</option>
+      <option value="gwas">CONUS (G18)</option>
+      <option value="eus">East U.S. (G19)</option>
+      <option value="nr">Northern Rockies (G19)</option>
+      <option value="sr">Southern Rockies (G19)</option>
+      <option value="sp">Southern Plains (G19)</option>
+      <option value="can">Canada & Northern U.S. (G19)</option>
+      <option value="umv">Upper Mississippi Valley (G19)</option>
+      <option value="smv">Lower Mississippi Valley (G19)</option>
+      <option value="cgl">Great Lakes (G19)</option>
+      <option value="ne">Northeast (G19)</option>
+    </select>
   </div>
+</div>
 
-  <!-- RADAR -->
-  <div class="panel panel-radar">
-    <!-- (Radar content stays EXACTLY the same here) -->
+<!-- RADAR -->
+<div class="panel">
+  <div class="panel-title">Radar</div>
+  <div class="image-box">
+    <img id="radarImage"
+      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
   </div>
-
-  <!-- CURRENT CONDITIONS -->
-  <div class="panel panel-conditions">
-    <!-- (Current Conditions content stays EXACTLY the same here) -->
+  <div class="controls">
+    Region:
+    <select id="regionSelect"></select>
+    State:
+    <select id="stateSelect"></select>
+    City:
+    <select id="radarSelect"></select>
   </div>
-
-  <!-- FORECAST TOOLS -->
-  <div class="panel panel-forecast">
-    <!-- (Forecast Tools content stays EXACTLY the same here) -->
-  </div>
+</div>
 
 </div>
 
-
-
-
+<!-- TEMP MAP -->
+<div class="panel full">
+  <div class="panel-title">Current Temperatures</div>
+  <a href="https://viewer.weather.noaa.gov/general#layers=3+42853+42379&panel=layer"
+     target="_blank">
+    <div class="image-box" style="height:auto;padding:12px;">
+      <img src="https://www.wpc.ncep.noaa.gov/sfc/90fwbg.gif">
+    </div>
+  </a>
+</div>
 
 <script>
 /* ===== CLOCKS ===== */
