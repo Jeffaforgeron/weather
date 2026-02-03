@@ -293,6 +293,31 @@ h1 {
   position: relative;
   z-index: 5;
 }
+/* ===== FORCE SOCIAL ICONS ABOVE EVERYTHING ===== */
+.social-bar {
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex;
+  gap: 16px;
+  z-index: 9999 !important;
+  isolation: isolate;
+}
+
+/* Make absolutely sure nothing overlaps it */
+.city-list,
+.time-bar,
+.panel,
+.top-row {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reserve space so panels don't cover icons */
+body {
+  padding-bottom: 56px;
+}
 
 </style>
 </head>
