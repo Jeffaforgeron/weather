@@ -226,14 +226,12 @@ select { font-size: 13px; }
 }
 /* ===== SOCIAL ICON BAR ===== */
 /* ===== SOCIAL ICON BAR (BOTTOM CENTER) ===== */
+/* ===== SOCIAL ICONS FOOTER ===== */
 .social-bar {
-  position: fixed;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin: 40px auto 20px;
   display: flex;
+  justify-content: center;
   gap: 16px;
-  z-index: 100;
 }
 
 .social-bar a {
@@ -242,7 +240,7 @@ select { font-size: 13px; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.55);
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
@@ -257,17 +255,6 @@ select { font-size: 13px; }
   fill: currentColor;
 }
 
-/* Mobile tweak */
-@media (max-width: 768px) {
-  .social-bar {
-    bottom: 10px;
-    gap: 14px;
-  }
-
-  .social-bar a {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 
