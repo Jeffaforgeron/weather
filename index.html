@@ -354,6 +354,12 @@ body {
   transform: translateY(-2px);
 }
 
+/* ===== LOCK FOOTER INTO NORMAL FLOW ===== */
+.footer,
+.social-bar {
+  position: static !important;
+}
+ 
 
 </style>
 </head>
@@ -616,15 +622,20 @@ async function updateCityTemps(){
 updateCityTemps();
 setInterval(updateCityTemps,300000);
 </script>
-<!-- ===== FOOTER ===== -->
+...
+</div> <!-- last panel / content -->
+
 <div class="footer">
   <div class="social-bar">
-    <a class="ig" href="https://www.instagram.com/iloveweather/" target="_blank" aria-label="Instagram">◎</a>
-    <a class="fb" href="https://www.facebook.com/WeatherJefe/" target="_blank" aria-label="Facebook">f</a>
-    <a class="th" href="https://www.threads.com/@iloveweather" target="_blank" aria-label="Threads">@</a>
-    <a class="in" href="https://www.linkedin.com/in/jeff-forgeron-447ab846" target="_blank" aria-label="LinkedIn">in</a>
+    <a class="ig" href="https://www.instagram.com/iloveweather/" target="_blank">◎</a>
+    <a class="fb" href="https://www.facebook.com/WeatherJefe/" target="_blank">f</a>
+    <a class="th" href="https://www.threads.com/@iloveweather" target="_blank">@</a>
+    <a class="in" href="https://www.linkedin.com/in/jeff-forgeron-447ab846" target="_blank">in</a>
   </div>
 </div>
+
+</body>
+
 
 
 </body>
