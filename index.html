@@ -193,6 +193,25 @@ select { font-size: 13px; }
     font-size: 14px;
     padding: 4px;
   }
+  /* ===== MOBILE PANEL ORDER OVERRIDE ===== */
+@media (max-width: 768px) {
+
+  .top-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column {
+    display: contents;
+  }
+
+  /* Explicit mobile order */
+  .panel:nth-of-type(1) { order: 1; } /* Satellite */
+  .panel:nth-of-type(2) { order: 3; } /* Current Conditions */
+  .panel:nth-of-type(3) { order: 2; } /* Radar */
+  .panel:nth-of-type(4) { order: 4; } /* Forecast Tools */
+}
+
 }
 /* ===== DASHBOARD SKIN TUNING: LIGHTER ===== */
 :root {
