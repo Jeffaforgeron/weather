@@ -194,21 +194,25 @@ select { font-size: 13px; }
     padding: 4px;
   }
 }
-/* ===== DASHBOARD SKIN: TRADING DESK ===== */
+/* ===== DASHBOARD SKIN TUNING: LIGHTER ===== */
 :root {
-  --bg-main: #0b1220;
-  --bg-card: #0f172a;
-  --bg-card-alt: #111c33;
-  --border-subtle: rgba(255,255,255,0.06);
-  --text-primary: #e5e7eb;
-  --text-secondary: #9ca3af;
-  --accent: #22d3ee; /* cyan-teal accent */
+  --bg-main: #0f172a;
+  --bg-card: #111c3a;
+  --bg-card-alt: #16214a;
+  --border-subtle: rgba(255,255,255,0.08);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --accent: #38bdf8; /* brighter cyan */
 }
 
 body {
-  background: radial-gradient(1200px 600px at 20% -10%, #142044 0%, var(--bg-main) 60%);
-  color: var(--text-primary);
+  background: radial-gradient(
+    1200px 600px at 20% -10%,
+    #1e2a5a 0%,
+    var(--bg-main) 60%
+  );
 }
+
 
 </style>
 </head>
