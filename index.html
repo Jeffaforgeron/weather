@@ -140,6 +140,65 @@ h1 {
 }
 
 select { font-size: 13px; }
+/* ===== MOBILE FIX: SAFE PHASE 1 OVERRIDES ===== */
+@media (max-width: 768px) {
+
+  body {
+    margin: 10px;
+  }
+
+  /* Move ticker + clocks into normal flow */
+  .city-list {
+    position: static;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .time-bar {
+    position: static;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  /* Reduce header size */
+  h1 {
+    margin-top: 10px;
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* Stack Satellite + Radar */
+  .top-row {
+    flex-direction: column;
+  }
+
+  .panel {
+    flex: 1 1 100%;
+  }
+
+  /* Make images fit phone screens */
+  .image-box {
+    height: auto;
+    min-height: 220px;
+    max-height: 60vh;
+  }
+
+  /* Make controls easier to tap */
+  .controls {
+    font-size: 14px;
+    gap: 10px;
+  }
+
+  select {
+    font-size: 14px;
+    padding: 4px;
+  }
+}
+
 </style>
 </head>
 
