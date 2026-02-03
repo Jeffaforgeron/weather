@@ -306,25 +306,42 @@ body {
   background: #0b1220;
 }
 
+/* ===== SOCIAL ICONS (CLEAR + STABLE) ===== */
 .social-bar {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 18px;
 }
 
 .social-bar a {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: ui-monospace, system-ui, sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.5px;
+  font-size: 13px;
+  font-weight: 600;
   text-decoration: none;
   color: #9ca3af;
-  transition: color 0.2s ease, transform 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Individual identity tweaks */
+.social-bar a.ig { font-size: 14px; }
+.social-bar a.fb { font-family: system-ui, sans-serif; font-weight: 700; }
+.social-bar a.th { font-size: 14px; }
+.social-bar a.in { font-family: system-ui, sans-serif; }
+
+/* Hover = trading dashboard accent */
 .social-bar a:hover {
   color: #38bdf8;
+  border-color: #38bdf8;
   transform: translateY(-2px);
 }
+
 
 </style>
 </head>
