@@ -301,20 +301,29 @@ body {
 /* ===== SOLID FOOTER (NO BLEED-THROUGH) ===== */
 /* ===== SOLID FOOTER ===== */
 /* ===== SOLID FOOTER (TIGHT) ===== */
+/* ===== FOOTER (NO BACKGROUND) ===== */
 .footer {
   margin-top: 32px;
-  padding: 12px 0;
-  background: #0b1220;
+  padding: 0;
+  background: transparent;
 }
 
 
 
-/* ===== SOCIAL ICONS (CLEAR + STABLE) ===== */
+
+
+/* ===== SOCIAL ICON BAR (SELF-CONTAINED) ===== */
 .social-bar {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   gap: 18px;
+  padding: 10px 14px;
+  margin: 0 auto 20px;
+  background: #0b1220; /* solid ONLY behind icons */
+  border-radius: 10px;
 }
+
+
 
 .social-bar a {
   width: 22px;
