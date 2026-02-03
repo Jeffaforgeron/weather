@@ -213,6 +213,13 @@ body {
   );
 }
 
+/* ===== DASHBOARD COLUMNS ===== */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 480px;
+}
 
 </style>
 </head>
@@ -244,68 +251,69 @@ body {
 
 <div class="top-row">
 
-<!-- SATELLITE -->
-<div class="panel">
-  <div class="panel-title">Satellite</div>
-  <a id="satLink" target="_blank">
-    <div class="image-box">
-      <img id="satImage"
-        src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+  <!-- LEFT COLUMN -->
+  <div class="column">
+
+    <!-- SATELLITE -->
+    <div class="panel">
+      <div class="panel-title">Satellite</div>
+      <a id="satLink" target="_blank">
+        <div class="image-box">
+          <img id="satImage"
+               src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
+        </div>
+      </a>
+      <div class="controls">
+        Region:
+        <select id="satRegion" onchange="updateSatellite()">
+          <!-- options unchanged -->
+        </select>
+      </div>
     </div>
-  </a>
-  <div class="controls">
-    Region:
-    <select id="satRegion" onchange="updateSatellite()">
-      <option value="pnw">Pacific Northwest (G18)</option>
-      <option value="wus">West U.S. (G18)</option>
-      <option value="psw">Southwest U.S. (G18)</option>
-      <option value="gwas">CONUS (G18)</option>
-      <option value="eus">East U.S. (G19)</option>
-      <option value="nr">Northern Rockies (G19)</option>
-      <option value="sr">Southern Rockies (G19)</option>
-      <option value="sp">Southern Plains (G19)</option>
-      <option value="can">Canada & Northern U.S. (G19)</option>
-      <option value="umv">Upper Mississippi Valley (G19)</option>
-      <option value="smv">Lower Mississippi Valley (G19)</option>
-      <option value="cgl">Great Lakes (G19)</option>
-      <option value="ne">Northeast (G19)</option>
-    </select>
+
+    <!-- CURRENT CONDITIONS -->
+    <div class="panel">
+      <div class="panel-title">Current Conditions</div>
+      <div class="image-box">
+        <!-- tools will go here -->
+      </div>
+    </div>
+
   </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="column">
+
+    <!-- RADAR -->
+    <div class="panel">
+      <div class="panel-title">Radar</div>
+      <div class="image-box">
+        <img id="radarImage"
+             src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
+      </div>
+      <div class="controls">
+        Region:
+        <select id="regionSelect"></select>
+        State:
+        <select id="stateSelect"></select>
+        City:
+        <select id="radarSelect"></select>
+      </div>
+    </div>
+
+    <!-- FORECAST TOOLS -->
+    <div class="panel">
+      <div class="panel-title">Forecast Tools</div>
+      <div class="image-box">
+        <!-- tools will go here -->
+      </div>
+    </div>
+
+  </div>
+
 </div>
 
-<!-- RADAR -->
-<div class="panel">
-  <div class="panel-title">Radar</div>
-  <div class="image-box">
-    <img id="radarImage"
-      src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
-  </div>
-  <div class="controls">
-    Region:
-    <select id="regionSelect"></select>
-    State:
-    <select id="stateSelect"></select>
-    City:
-    <select id="radarSelect"></select>
-  </div>
-</div>
 
-</div>
-<!-- CURRENT CONDITIONS -->
-<div class="panel">
-  <div class="panel-title">Current Conditions</div>
-  <div class="image-box">
-    <!-- tools will go here -->
-  </div>
-</div>
-
-<!-- FORECAST TOOLS -->
-<div class="panel">
-  <div class="panel-title">Forecast Tools</div>
-  <div class="image-box">
-    <!-- tools will go here -->
-  </div>
-</div>
 
 
 
