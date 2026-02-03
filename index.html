@@ -140,6 +140,61 @@ h1 {
 }
 
 select { font-size: 13px; }
+  /* ===== MOBILE-ONLY LAYOUT FIX (SAFE) ===== */
+@media (max-width: 768px) {
+
+  /* Prevent absolute-position overlap */
+  .city-list {
+    position: static;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .time-bar {
+    position: static;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  /* Reduce vertical waste */
+  h1 {
+    margin-top: 12px;
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* Stack panels */
+  .top-row {
+    flex-direction: column;
+  }
+
+  .panel {
+    flex: 1 1 100%;
+  }
+
+  /* Make images fit phones */
+  .image-box {
+    height: auto;
+    min-height: 240px;
+    max-height: 60vh;
+  }
+
+  /* Touch-friendly controls */
+  .controls {
+    font-size: 14px;
+    gap: 10px;
+  }
+
+  select {
+    font-size: 14px;
+    padding: 4px;
+  }
+}
+
 </style>
 </head>
 
