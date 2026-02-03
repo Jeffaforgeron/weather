@@ -225,17 +225,16 @@ select { font-size: 13px; }
   }
 }
 /* ===== SOCIAL ICON BAR ===== */
+/* ===== SOCIAL ICON BAR (BOTTOM CENTER) ===== */
 .social-bar {
-  position: absolute;
-  top: 12px;
+  position: fixed;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 14px;
-  z-index: 50; /* higher than ticker and title */
-  pointer-events: auto;
+  gap: 16px;
+  z-index: 100;
 }
-
 
 .social-bar a {
   width: 18px;
@@ -243,13 +242,13 @@ select { font-size: 13px; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.6);
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .social-bar a:hover {
-  color: #38bdf8; /* matches your dashboard accent */
-  transform: translateY(-1px);
+  color: #38bdf8;
+  transform: translateY(-2px);
 }
 
 .social-bar svg {
@@ -257,6 +256,20 @@ select { font-size: 13px; }
   height: 100%;
   fill: currentColor;
 }
+
+/* Mobile tweak */
+@media (max-width: 768px) {
+  .social-bar {
+    bottom: 10px;
+    gap: 14px;
+  }
+
+  .social-bar a {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 
 /* Mobile adjustment */
 @media (max-width: 768px) {
