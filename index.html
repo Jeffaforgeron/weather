@@ -193,7 +193,7 @@ select { font-size: 13px; }
     font-size: 14px;
     padding: 4px;
   }
-  /* ===== MOBILE PANEL ORDER OVERRIDE ===== */
+  /* ===== MOBILE PANEL ORDER (RELIABLE) ===== */
 @media (max-width: 768px) {
 
   .top-row {
@@ -205,12 +205,12 @@ select { font-size: 13px; }
     display: contents;
   }
 
-  /* Explicit mobile order */
-  .panel:nth-of-type(1) { order: 1; } /* Satellite */
-  .panel:nth-of-type(2) { order: 3; } /* Current Conditions */
-  .panel:nth-of-type(3) { order: 2; } /* Radar */
-  .panel:nth-of-type(4) { order: 4; } /* Forecast Tools */
+  .panel-satellite { order: 1; }
+  .panel-radar     { order: 2; }
+  .panel-conditions{ order: 3; }
+  .panel-forecast  { order: 4; }
 }
+
 
 }
 /* ===== DASHBOARD SKIN TUNING: LIGHTER ===== */
@@ -274,7 +274,7 @@ body {
   <div class="column">
 
     <!-- SATELLITE -->
-    <div class="panel">
+    <div class="panel panel-satellite">
       <div class="panel-title">
   Satellite
   <span class="panel-hint">(click to animate)</span>
@@ -308,7 +308,7 @@ body {
     </div>
 
     <!-- CURRENT CONDITIONS -->
-    <div class="panel">
+    <div class="panel panel-conditions">
       <div class="panel-title">Current Conditions</div>
       <div class="image-box">
         <!-- tools will go here -->
@@ -321,7 +321,7 @@ body {
   <div class="column">
 
     <!-- RADAR -->
-    <div class="panel">
+    <div class="panel panel-radar">
       <div class="panel-title">Radar</div>
       <div class="image-box">
         <img id="radarImage"
@@ -338,7 +338,7 @@ body {
     </div>
 
     <!-- FORECAST TOOLS -->
-    <div class="panel">
+    <div class="panel panel-forecast">
       <div class="panel-title">Forecast Tools</div>
       <div class="image-box">
         <!-- tools will go here -->
