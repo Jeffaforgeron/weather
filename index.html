@@ -212,6 +212,18 @@ select { font-size: 13px; }
     padding: 4px;
   }
 }
+/* ===== DESKTOP 2x2 DASHBOARD GRID ===== */
+@media (min-width: 769px) {
+  .top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+}
 
 </style>
 </head>
