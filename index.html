@@ -282,6 +282,123 @@ select { font-size: 13px; }
   transform: translateY(-2px);
 }
 
+/* ===== FORECAST TV (sleek) ===== */
+.forecast-tv {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  border-radius: 8px;
+  min-height: 220px;
+  color: var(--text-primary, #e5e7eb);
+}
+
+.forecast-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content: space-between;
+  color: var(--text-secondary,#cbd5e1);
+  font-size:13px;
+}
+
+.forecast-header .city {
+  font-weight:700;
+  font-size:14px;
+  color: var(--text-primary,#f1f5f9);
+}
+
+.refresh {
+  cursor:pointer;
+  opacity:0.7;
+  padding:6px;
+  border-radius:6px;
+  transition: all .15s ease;
+}
+.refresh:hover { color: #38bdf8; transform: translateY(-2px); opacity:1; }
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* responsive: stack on small screens */
+@media (max-width: 768px) {
+  .forecast-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* forecast card */
+.fc-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 8px;
+  display:flex;
+  flex-direction: column;
+  gap:6px;
+  align-items:center;
+  justify-content:space-between;
+  min-height:110px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.fc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.45);
+}
+
+.fc-day {
+  font-weight:700;
+  font-size:13px;
+  color: #f1f5f9;
+  text-align:center;
+}
+
+.fc-icon {
+  width:48px;
+  height:48px;
+  background: rgba(255,255,255,0.03);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.fc-icon img { width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
+
+.fc-temp {
+  font-weight:800;
+  font-size:16px;
+  color: #fff;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.fc-temp .hi { color: #ffd166; }  /* warm */
+.fc-temp .lo { color: #9ad1ff; }  /* cool */
+
+.fc-desc {
+  font-size:11px;
+  color: var(--text-secondary,#cbd5e1);
+  text-align:center;
+  line-height:1.1;
+}
+
+/* loader */
+.loader {
+  text-align:center;
+  width:100%;
+  color:var(--text-secondary,#9ca3af);
+  padding:18px 0;
+}
+
+/* timestamp footer */
+.forecast-footer { display:flex; justify-content:flex-end; }
+.forecast-footer .ts { font-size:11px; color:var(--text-secondary,#9ca3af); }
 
   
 </style>
@@ -383,10 +500,25 @@ select { font-size: 13px; }
 
 
 
-  <!-- FORECAST TOOLS -->
-<div class="panel">
+<!-- FORECAST TOOLS (7-day sleek TV style) -->
+<div class="panel" id="forecastPanel">
   <div class="panel-title">Forecast Tools</div>
-  <div class="image-box"></div>
+  <div class="forecast-tv">
+    <div class="forecast-header">
+      <div class="city">Portland, OR</div>
+      <div class="meta">7-Day (NBM-style via NWS)</div>
+      <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
+    </div>
+
+    <div id="forecastGrid" class="forecast-grid" aria-live="polite">
+      <!-- Forecast cards injected here -->
+      <div class="loader">Loading…</div>
+    </div>
+
+    <div class="forecast-footer">
+      <div id="forecastTimestamp" class="ts">Last updated: —</div>
+    </div>
+  </div>
 </div>
 
 
@@ -614,6 +746,112 @@ setInterval(() => {
       Date.now();
   }
 }, 300000);
+
+/* ===== 7-DAY FORECAST (Portland, OR) ===== */
+(async function(){
+  const grid = document.getElementById("forecastGrid");
+  const tsEl = document.getElementById("forecastTimestamp");
+  const refreshBtn = document.getElementById("forecastRefreshBtn");
+
+  // Portland lat/lon
+  const lat = 45.5152, lon = -122.6784;
+  const apiPoints = `https://api.weather.gov/points/${lat},${lon}`;
+
+  async function fetchForecast(){
+    try{
+      grid.innerHTML = '<div class="loader">Loading forecast…</div>';
+      // Step 1: get forecast link for gridpoint
+      const p = await fetch(apiPoints);
+      if(!p.ok) throw new Error("points fetch failed");
+      const pj = await p.json();
+      const forecastUrl = pj.properties.forecast; // daily periods
+
+      // Step 2: fetch the forecast periods
+      const r = await fetch(forecastUrl);
+      if(!r.ok) throw new Error("forecast fetch failed");
+      const j = await r.json();
+      const periods = j.properties.periods || [];
+
+      // Using the first 14 periods (day & night) - but we want 7 daily tiles.
+      // We'll extract next 7 daytime periods where isDaytime true OR take sequential pairs.
+      const days = [];
+      for (let i=0;i<periods.length && days.length<7;i++){
+        const p = periods[i];
+        if(p.isDaytime){ // prefer daytime entry
+          days.push(p);
+        }
+      }
+      // fallback: if less than 7 daytime entries (rare), fill with first 7 periods
+      if(days.length < 7){
+        for(let i=0;i<periods.length && days.length<7;i++){
+          if(!days.includes(periods[i])) days.push(periods[i]);
+        }
+      }
+
+      // render
+      grid.innerHTML = "";
+      days.forEach(period => {
+        const card = document.createElement("div");
+        card.className = "fc-card";
+
+        // day label
+        const day = document.createElement("div");
+        day.className = "fc-day";
+        day.textContent = period.name;
+
+        // icon
+        const iconWrap = document.createElement("div");
+        iconWrap.className = "fc-icon";
+        const icon = document.createElement("img");
+        // use icon URL from period (SVG or PNG)
+        icon.src = period.icon;
+        icon.alt = period.shortForecast || "";
+        iconWrap.appendChild(icon);
+
+        // temps: weather.gov gives single temperature for the period (daytime high or night low).
+        const temp = document.createElement("div");
+        temp.className = "fc-temp";
+        const hi = document.createElement("div"); hi.className="hi"; hi.textContent = period.temperature + "°"+period.temperatureUnit;
+        temp.appendChild(hi);
+
+        // description / pop / wind summary
+        const desc = document.createElement("div");
+        desc.className = "fc-desc";
+        const popText = (period.probabilityOfPrecipitation && period.probabilityOfPrecipitation.value) ? `Precip: ${period.probabilityOfPrecipitation.value}%` : "";
+        const windText = period.windSpeed ? `Wind: ${period.windSpeed}` : "";
+        desc.textContent = `${period.shortForecast}${popText? " • " + popText: ""}${windText? " • " + windText: ""}`;
+
+        // append
+        card.appendChild(day);
+        card.appendChild(iconWrap);
+        card.appendChild(temp);
+        card.appendChild(desc);
+
+        grid.appendChild(card);
+      });
+
+      // timestamp
+      const now = new Date();
+      tsEl.textContent = "Last updated: " + now.toLocaleString();
+    }catch(err){
+      console.error(err);
+      grid.innerHTML = `<div class="loader">Unable to load forecast.</div>`;
+      tsEl.textContent = "";
+    }
+  }
+
+  // initial load
+  await fetchForecast();
+
+  // manual refresh
+  refreshBtn && refreshBtn.addEventListener("click", () => {
+    fetchForecast();
+  });
+
+  // auto refresh hourly (3600000 ms)
+  setInterval(fetchForecast, 3600000);
+})();
+  
   
 </script>
 
