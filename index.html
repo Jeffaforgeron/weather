@@ -1217,6 +1217,7 @@ const ccCanvas = document.getElementById("ccChart");
 
 let chart;
 const CITY_STATIONS = {
+const CITY_STATIONS = {
   "45.5152,-122.6784": "KPDX", // Portland Intl
   "34.0522,-118.2437": "KLAX", // Los Angeles Intl
   "47.6062,-122.3321": "KSEA", // SeaTac
@@ -1224,8 +1225,12 @@ const CITY_STATIONS = {
   "41.8781,-87.6298": "KMDW", // Chicago Midway
   "29.7604,-95.3698": "KHOU", // Houston Hobby
   "25.7617,-80.1918": "KMIA", // Miami Intl
-  "39.7392,-104.9903": "KDEN"  // Denver Intl
+  "39.7392,-104.9903": "KDEN", // Denver Intl
+
+  "38.2975,-122.2869": "KAPC", // Napa County Airport
+  "33.8303,-116.5453": "KPSP"  // Palm Springs Intl
 };
+
 
 async function loadCity(lat,lon){
 
