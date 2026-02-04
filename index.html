@@ -857,7 +857,7 @@ canvas{
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
 <script>
@@ -1090,6 +1090,7 @@ const ccSelect=document.getElementById("currentCitySelect");
 const mapWrap=document.getElementById("ccMapWrap");
 const cityWrap=document.getElementById("ccCityWrap");
 
+const ccCanvas = document.getElementById("ccChart");
 
 let chart;
 
@@ -1167,7 +1168,8 @@ ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString()
 /* Chart */
 if(chart) chart.destroy();
 
-const ctx=document.getElementById("ccChart").getContext("2d");
+const ctx = ccCanvas.getContext("2d");
+
 
 chart=new Chart(ctx,{
  type:"line",
