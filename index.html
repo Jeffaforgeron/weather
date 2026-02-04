@@ -544,14 +544,14 @@ select { font-size: 13px; }
   </div>
 
 <!-- CURRENT CONDITIONS -->
-<!-- CURRENT CONDITIONS -->
 <div class="panel">
+
   <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
-    <span>Current Conditions</span>
+    <span>Current Conditions <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span></span>
 
     <select id="currentCitySelect"
       style="font-size:12px;background:#020617;color:#9ca3af;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:2px 6px;">
-      <option value="">Select City</option>
+      <option value="US" selected>United States</option>
       <option value="45.5152,-122.6784">Portland, OR</option>
       <option value="34.0522,-118.2437">Los Angeles, CA</option>
       <option value="47.6062,-122.3321">Seattle, WA</option>
@@ -563,16 +563,26 @@ select { font-size: 13px; }
     </select>
   </div>
 
-  <div class="image-box" style="flex-direction:column;gap:10px;padding:16px;text-align:center;">
+  <!-- MAP MODE -->
+  <div id="ccMapWrap" class="image-box" style="padding:0;">
+    <img id="tempMapImage"
+      src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png"
+      style="width:100%;height:auto;">
+  </div>
+
+  <!-- CITY MODE -->
+  <div id="ccCityWrap" style="display:none;padding:16px;text-align:center;">
     <div id="ccCity" style="color:#9ca3af;"></div>
-    <div id="ccTemp" style="font-size:56px;font-weight:800;">—</div>
+    <div id="ccTemp" style="font-size:56px;font-weight:800;"></div>
     <div id="ccFeels"></div>
     <div id="ccWx"></div>
     <div id="ccWind"></div>
     <div id="ccHum"></div>
     <div id="ccUpdated" style="font-size:11px;color:#9ca3af;"></div>
   </div>
+
 </div>
+
 
 
 
