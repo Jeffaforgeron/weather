@@ -26,6 +26,11 @@ body {
     flex-wrap: nowrap;
   }
 }
+/* ===== DESKTOP PANEL ORDER ===== */
+.top-row .panel:nth-child(1){ order:4; } /* Satellite -> bottom right */
+.top-row .panel:nth-child(2){ order:2; } /* Radar -> top right */
+.top-row .panel:nth-child(3){ order:1; } /* Current -> top left */
+.top-row .panel:nth-child(4){ order:3; } /* Forecast -> bottom left */
 
 }
 
@@ -625,6 +630,11 @@ canvas{
 canvas{
   filter:drop-shadow(0 0 10px rgba(56,189,248,.7));
 }
+/* ===== MOBILE PANEL ORDER ===== */
+.top-row .panel:nth-child(1){ order:4; } /* Satellite */
+.top-row .panel:nth-child(2){ order:3; } /* Radar */
+.top-row .panel:nth-child(3){ order:1; } /* Current */
+.top-row .panel:nth-child(4){ order:2; } /* Forecast */
   
 </style>
 </head>
