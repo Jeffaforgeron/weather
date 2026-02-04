@@ -529,6 +529,33 @@ async function updateCityTemps(){
 }
 updateCityTemps();
 setInterval(updateCityTemps,300000);
+
+  /* ===== AUTO REFRESH IMAGES (EVERY 5 MINUTES) ===== */
+setInterval(() => {
+
+  /* Current Conditions Temperature Map */
+  const tempMap = document.getElementById("tempMapImage");
+  if (tempMap) {
+    tempMap.src =
+      "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png?ts=" +
+      Date.now();
+  }
+
+  /* Satellite */
+  const sat = document.getElementById("satImage");
+  if (sat) {
+    sat.src = sat.src.split("?")[0] + "?ts=" + Date.now();
+  }
+
+  /* Radar */
+  const radar = document.getElementById("radarImage");
+  if (radar) {
+    radar.src = radar.src.split("?")[0] + "?ts=" + Date.now();
+  }
+
+}, 300000); // 300000 ms = 5 minutes
+
+  
 </script>
 
 </div> <!-- last panel / content -->
