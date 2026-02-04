@@ -449,6 +449,12 @@ select { font-size: 13px; }
   background: #020617;
 }
 
+/* Forecast header darker, more subtle */
+.forecast-header .city,
+.forecast-header .meta {
+  color: #9ca3af;   /* dark gray */
+  font-weight: 600;
+}
   
 </style>
 </head>
@@ -555,7 +561,8 @@ select { font-size: 13px; }
   <div class="forecast-tv">
     <div class="forecast-header">
       <div class="city">Portland, OR</div>
-      <div class="meta">7-Day (NBM-style via NWS)</div>
+     <div class="meta">7-Day Outlook via NWS</div>
+
       <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
     </div>
 
