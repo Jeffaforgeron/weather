@@ -1137,6 +1137,7 @@ cityWrap.style.display="block";
 
 const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
 const pj=await p.json();
+const forecastZone = pj.properties.forecastZone;
 
 const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
 document.getElementById("ccCity").textContent=city;
@@ -1192,14 +1193,44 @@ const windMPH = windMS !== null
   ? Math.round(windMS * 2.23694)
   : "—";
 
+let windMPH = latest.windSpeed?.value != null
+  ? Math.round(latest.windSpeed.value * 2.23694)
+  : "—";
+
 ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
+
 
 
 ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
 
 ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
-ccSun.innerHTML="Sun <span>—</span>";
+try {
+  const zoneResp = await fetch(forecastZone + "/forecast");
+  const zoneJSON = await zoneResp.json();
+
+  const periods = zoneJSON.properties.periods;
+
+  const today = periods[0];
+
+  ccSun.innerHTML = `Sun <span>↑ ${today.sunrise} ↓ ${today.sunset}</span>`;
+} catch {
+  ccSun.innerHTML = "Sun <span>—</span>";
+}
+try {
+  const gridURL = pj.properties.forecastGridData;
+  const gridResp = await fetch(gridURL);
+  const gridJSON = await gridResp.json();
+
+  const uv = gridJSON.properties.uvIndex?.values?.[0]?.value;
+
+  ccUV.innerHTML = uv != null
+    ? `UV <span>${Math.round(uv)}</span>`
+    : "UV <span>—</span>";
+} catch {
+  ccUV.innerHTML = "UV <span>—</span>";
+}
+
 ccUV.innerHTML="UV <span>—</span>";
 
 ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
