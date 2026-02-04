@@ -464,6 +464,59 @@ select { font-size: 13px; }
   padding: 4px 6px;
   font-size: 12px;
 }
+/* ===== CURRENT CONDITIONS PRO CARD ===== */
+
+.cc-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+
+.cc-city{
+  font-weight:700;
+  color:#e5e7eb;
+}
+
+.cc-updated{
+  font-size:11px;
+  color:#9ca3af;
+}
+
+.cc-main{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:14px;
+}
+
+.cc-temp{
+  font-size:56px;
+  font-weight:900;
+  color:#fff;
+  animation:pulse 2.5s infinite;
+}
+
+.cc-feels{
+  color:#9ca3af;
+  margin-bottom:6px;
+}
+
+.cc-left canvas{
+  width:100%;
+}
+
+.cc-right{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+@keyframes pulse{
+  0%{opacity:1}
+  50%{opacity:.65}
+  100%{opacity:1}
+}
   
 </style>
 </head>
@@ -571,15 +624,37 @@ select { font-size: 13px; }
   </div>
 
   <!-- CITY MODE -->
-  <div id="ccCityWrap" style="display:none;padding:16px;text-align:center;">
-    <div id="ccCity" style="color:#9ca3af;"></div>
-    <div id="ccTemp" style="font-size:56px;font-weight:800;"></div>
-    <div id="ccFeels"></div>
-    <div id="ccWx"></div>
-    <div id="ccWind"></div>
-    <div id="ccHum"></div>
-    <div id="ccUpdated" style="font-size:11px;color:#9ca3af;"></div>
+ <div id="ccCityWrap" style="display:none;padding:14px;">
+
+  <div class="cc-header">
+    <div id="ccCity" class="cc-city"></div>
+    <div id="ccUpdated" class="cc-updated"></div>
   </div>
+
+  <div class="cc-main">
+
+    <!-- LEFT: TEMP + CHART -->
+    <div class="cc-left">
+      <div id="ccTemp" class="cc-temp">—</div>
+      <div id="ccFeels" class="cc-feels"></div>
+
+      <canvas id="ccChart" height="120"></canvas>
+    </div>
+
+    <!-- RIGHT: STATS -->
+    <div class="cc-right">
+      <div id="ccWx"></div>
+      <div id="ccWind"></div>
+      <div id="ccHum"></div>
+      <div id="ccDew"></div>
+      <div id="ccSun"></div>
+      <div id="ccUV"></div>
+    </div>
+
+  </div>
+
+</div>
+
 
 </div>
 
@@ -635,6 +710,7 @@ select { font-size: 13px; }
 
 
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <script>
@@ -861,66 +937,90 @@ setInterval(() => {
 
 
 
-/* ===== CURRENT CONDITIONS IN-PANEL ===== */
+/* ===== <script> ===== */
 
-const ccSelect = document.getElementById("currentCitySelect");
+const ccSelect=document.getElementById("currentCitySelect");
+const mapWrap=document.getElementById("ccMapWrap");
+const cityWrap=document.getElementById("ccCityWrap");
+const ctx=document.getElementById("ccChart").getContext("2d");
 
-async function loadCurrentConditions(lat, lon){
+let chart;
 
-  try{
-    const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
-    const pj = await p.json();
+async function loadCity(lat,lon){
 
-    const city =
-      pj.properties.relativeLocation.properties.city + ", " +
-      pj.properties.relativeLocation.properties.state;
+mapWrap.style.display="none";
+cityWrap.style.display="block";
 
-    document.getElementById("ccCity").textContent = city;
+const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+const pj=await p.json();
 
-    const s = await fetch(pj.properties.observationStations);
-    const sj = await s.json();
-    const station = sj.features[0].id;
+const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
+document.getElementById("ccCity").textContent=city;
 
-    const o = await fetch(station + "/observations/latest");
-    const oj = await o.json();
-    const d = oj.properties;
+const s=await fetch(pj.properties.observationStations);
+const sj=await s.json();
+const station=sj.features[0].id;
 
-    document.getElementById("ccTemp").textContent =
-      Math.round(d.temperature.value*9/5+32) + "°";
+/* last 12 hours */
+const end=new Date().toISOString();
+const start=new Date(Date.now()-12*3600000).toISOString();
 
-    document.getElementById("ccFeels").textContent =
-      "Feels Like: " + Math.round(d.apparentTemperature.value*9/5+32) + "°";
+const obs=await fetch(`${station}/observations?start=${start}&end=${end}`);
+const oj=await obs.json();
 
-    document.getElementById("ccWx").textContent = d.textDescription;
+const temps=[];
+const labels=[];
 
-    document.getElementById("ccWind").textContent =
-      "Wind: " + (d.windSpeed.value ? Math.round(d.windSpeed.value*2.237)+" mph":"--");
-
-    document.getElementById("ccHum").textContent =
-      "Humidity: " + Math.round(d.relativeHumidity.value) + "%";
-
-    document.getElementById("ccUpdated").textContent =
-      "Updated " + new Date(d.timestamp).toLocaleTimeString();
-
-  }catch(e){
-    console.error(e);
+oj.features.reverse().forEach(o=>{
+  if(o.properties.temperature.value){
+    temps.push(o.properties.temperature.value*9/5+32);
+    labels.push(new Date(o.properties.timestamp).toLocaleTimeString([], {hour:'2-digit'}));
   }
-}
-
-/* Dropdown change */
-ccSelect.addEventListener("change",()=>{
-  if(!ccSelect.value) return;
-  const parts = ccSelect.value.split(",");
-  loadCurrentConditions(parts[0], parts[1]);
 });
 
-/* Auto refresh every 5 minutes */
-setInterval(()=>{
-  if(ccSelect.value){
-    const parts = ccSelect.value.split(",");
-    loadCurrentConditions(parts[0], parts[1]);
-  }
-},300000);
+const latest=oj.features[oj.features.length-1].properties;
+
+ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
+ccFeels.textContent="Feels Like "+Math.round(latest.apparentTemperature.value*9/5+32)+"°";
+ccWx.textContent=latest.textDescription;
+ccWind.textContent="Wind "+Math.round(latest.windSpeed.value*2.237)+" mph";
+ccHum.textContent="Humidity "+Math.round(latest.relativeHumidity.value)+"%";
+ccDew.textContent="Dew Point "+Math.round(latest.dewpoint.value*9/5+32)+"°";
+ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
+
+/* Chart */
+if(chart) chart.destroy();
+
+chart=new Chart(ctx,{
+ type:"line",
+ data:{
+   labels,
+   datasets:[{
+     data:temps,
+     borderColor:"#38bdf8",
+     backgroundColor:"rgba(56,189,248,.15)",
+     tension:.35,
+     fill:true,
+     pointRadius:0
+   }]
+ },
+ options:{
+   plugins:{legend:{display:false}},
+   scales:{x:{display:false},y:{display:false}}
+ }
+});
+
+}
+
+ccSelect.addEventListener("change",()=>{
+ if(ccSelect.value==="US"){
+   cityWrap.style.display="none";
+   mapWrap.style.display="block";
+   return;
+ }
+ const [lat,lon]=ccSelect.value.split(",");
+ loadCity(lat,lon);
+});
 
   
 
