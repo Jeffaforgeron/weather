@@ -982,11 +982,21 @@ oj.features.reverse().forEach(o=>{
 const latest=oj.features[oj.features.length-1].properties;
 
 ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
-ccFeels.textContent="Feels Like "+Math.round(latest.apparentTemperature.value*9/5+32)+"°";
+ccFeels.textContent = latest.apparentTemperature?.value
+  ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
+  : "";
+
 ccWx.textContent=latest.textDescription;
-ccWind.textContent="Wind "+Math.round(latest.windSpeed.value*2.237)+" mph";
+ccWind.textContent = latest.windSpeed?.value
+  ? "Wind " + Math.round(latest.windSpeed.value*2.237) + " mph"
+  : "";
+
 ccHum.textContent="Humidity "+Math.round(latest.relativeHumidity.value)+"%";
-ccDew.textContent="Dew Point "+Math.round(latest.dewpoint.value*9/5+32)+"°";
+
+ccDew.textContent = latest.dewpoint?.value
+  ? "Dew Point " + Math.round(latest.dewpoint.value*9/5+32) + "°"
+  : "";
+
 ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
 
 /* Chart */
