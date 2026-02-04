@@ -861,6 +861,9 @@ canvas{
 
 
 <script>
+
+const timeBar = document.getElementById("timeBar");
+  
 /* ===== CLOCKS ===== */
 function updateTimes(){
   const n=new Date();
@@ -1001,7 +1004,8 @@ initRadar();
 
 /* ===== CITY TEMPS ===== */
 async function updateCityTemps(){
-  const items=document.querySelectorAll(".city-item");
+  const items = document.querySelectorAll(".city-item");
+
   for(const item of items){
     const s=item.dataset.station;
     try{
@@ -1128,7 +1132,6 @@ const start=new Date(Date.now()-12*3600000).toISOString();
 const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
 const oj = await obsResp.json();
 
-const oj=await obs.json();
 
 const temps=[];
 const labels=[];
