@@ -652,6 +652,17 @@ canvas{
 .cc-right {
   height: 100%;
 }
+/* Make Current Conditions chart fill available height */
+
+#ccChart{
+  flex:1;
+  width:100% !important;
+  min-height:220px;
+}
+
+.cc-left{
+  flex:1;
+}
   
 </style>
 </head>
@@ -773,7 +784,8 @@ canvas{
       <div id="ccTemp" class="cc-temp">—</div>
       <div id="ccFeels" class="cc-feels"></div>
 
-      <canvas id="ccChart" height="120"></canvas>
+      <canvas id="ccChart"></canvas>
+
     </div>
 
     <!-- RIGHT: STATS -->
