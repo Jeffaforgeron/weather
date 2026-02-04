@@ -943,7 +943,7 @@ setInterval(() => {
 const ccSelect=document.getElementById("currentCitySelect");
 const mapWrap=document.getElementById("ccMapWrap");
 const cityWrap=document.getElementById("ccCityWrap");
-const ctx=document.getElementById("ccChart").getContext("2d");
+
 
 let chart;
 
@@ -992,7 +992,10 @@ ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString()
 /* Chart */
 if(chart) chart.destroy();
 
+const ctx=document.getElementById("ccChart").getContext("2d");
+
 chart=new Chart(ctx,{
+
  type:"line",
  data:{
    labels,
