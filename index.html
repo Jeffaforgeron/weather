@@ -601,26 +601,8 @@ canvas{
 
 .cc-left{
   padding-right:6px;
-
-  .cc-left{
-  padding-right:6px;
-
-  /* sunrise / sunset row */
-  #ccRiseSet{
-    margin-top:8px;
-    background:#020617;
-    padding:6px;
-    border-radius:6px;
-    font-size:12px;
-    display:flex;
-    justify-content:space-between;
-  }
-
-  #ccRiseSet span{
-    color:#facc15;
-    font-weight:600;
-  }
 }
+
 
 
 .cc-right div{
@@ -1189,13 +1171,10 @@ const windDir = latest.windDirection?.value
 
 const windMS = latest.windSpeed?.value;
 
-const windMPH = windMS !== null
+const windMPH = windMS != null
   ? Math.round(windMS * 2.23694)
   : "—";
 
-let windMPH = latest.windSpeed?.value != null
-  ? Math.round(latest.windSpeed.value * 2.23694)
-  : "—";
 
 ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
 
@@ -1205,18 +1184,8 @@ ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</
 
 ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
-try {
-  const zoneResp = await fetch(forecastZone + "/forecast");
-  const zoneJSON = await zoneResp.json();
+ccSun.innerHTML = "Sun <span>—</span>";
 
-  const periods = zoneJSON.properties.periods;
-
-  const today = periods[0];
-
-  ccSun.innerHTML = `Sun <span>↑ ${today.sunrise} ↓ ${today.sunset}</span>`;
-} catch {
-  ccSun.innerHTML = "Sun <span>—</span>";
-}
 try {
   const gridURL = pj.properties.forecastGridData;
   const gridResp = await fetch(gridURL);
@@ -1228,7 +1197,7 @@ try {
     ? `UV <span>${Math.round(uv)}</span>`
     : "UV <span>—</span>";
 } catch {
-  ccUV.innerHTML = "UV <span>—</span>";
+
 }
 
 ccUV.innerHTML="UV <span>—</span>";
