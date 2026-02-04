@@ -518,6 +518,66 @@ select { font-size: 13px; }
   50%{opacity:.65}
   100%{opacity:1}
 }
+/* ===== CURRENT CONDITIONS PRO UI ===== */
+
+#ccCityWrap{
+  background: radial-gradient(circle at top,#0f172a,#020617);
+  border-radius:10px;
+  color:#e5e7eb;
+}
+
+.cc-main{
+  grid-template-columns:1.5fr 1fr;
+}
+
+.cc-temp{
+  font-size:64px;
+  background:linear-gradient(90deg,#38bdf8,#facc15);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.cc-left{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+#ccChart{
+  margin-top:8px;
+}
+
+.cc-right{
+  background:#020617;
+  border-radius:8px;
+  padding:10px;
+}
+
+.cc-right div{
+  background:#0b1220;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.cc-header{
+  margin-bottom:10px;
+}
+
+.cc-city{
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+
+.cc-updated{
+  opacity:.6;
+}
+
+/* Glow chart */
+canvas{
+  filter:drop-shadow(0 0 6px rgba(56,189,248,.6));
+}
   
 </style>
 </head>
@@ -1005,24 +1065,32 @@ if(chart) chart.destroy();
 const ctx=document.getElementById("ccChart").getContext("2d");
 
 chart=new Chart(ctx,{
-
  type:"line",
  data:{
    labels,
    datasets:[{
      data:temps,
      borderColor:"#38bdf8",
-     backgroundColor:"rgba(56,189,248,.15)",
-     tension:.35,
+     backgroundColor:"rgba(56,189,248,.25)",
+     tension:.4,
      fill:true,
-     pointRadius:0
+     pointRadius:0,
+     borderWidth:3
    }]
  },
  options:{
    plugins:{legend:{display:false}},
-   scales:{x:{display:false},y:{display:false}}
+   scales:{
+     x:{display:false},
+     y:{display:false}
+   },
+   animation:{
+     duration:1200,
+     easing:"easeOutQuart"
+   }
  }
 });
+
 
 }
 
