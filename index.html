@@ -1104,9 +1104,33 @@ const pj=await p.json();
 const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
 document.getElementById("ccCity").textContent=city;
 
-const s=await fetch(pj.properties.observationStations);
-const sj=await s.json();
-const station=sj.features[0].id;
+const stationListResponse = await fetch(pj.properties.observationStations);
+const stationListJSON = await stationListResponse.json();
+const stationFeatures = stationListJSON.features;
+
+// OPTIONAL: a priority list of known good airport stations
+const preferredStations = [
+  "https://api.weather.gov/stations/KPDX", // Portland International Airport
+  "https://api.weather.gov/stations/PDX",  // alternate Portland naming
+  "https://api.weather.gov/stations/KSEA", // Seattle Airport
+  "https://api.weather.gov/stations/KPDX1" // example — add more as needed
+];
+
+// Try to find a preferred station first
+let stationURL = null;
+for (const pref of preferredStations) {
+  const found = stationFeatures.find(s => s.id === pref);
+  if (found) {
+    stationURL = found.id;
+    break;
+  }
+}
+
+// If no preferred found, use the first one
+if (!stationURL && stationFeatures.length > 0) {
+  stationURL = stationFeatures[0].id;
+}
+
 
 /* last 12 hours */
 const end=new Date().toISOString();
