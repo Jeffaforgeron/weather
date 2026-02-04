@@ -1097,6 +1097,16 @@ const cityWrap=document.getElementById("ccCityWrap");
 const ccCanvas = document.getElementById("ccChart");
 
 let chart;
+const CITY_STATIONS = {
+  "45.5152,-122.6784": "KPDX", // Portland Intl
+  "34.0522,-118.2437": "KLAX", // Los Angeles Intl
+  "47.6062,-122.3321": "KSEA", // SeaTac
+  "40.7128,-74.0060": "KNYC", // NYC Central Park
+  "41.8781,-87.6298": "KMDW", // Chicago Midway
+  "29.7604,-95.3698": "KHOU", // Houston Hobby
+  "25.7617,-80.1918": "KMIA", // Miami Intl
+  "39.7392,-104.9903": "KDEN"  // Denver Intl
+};
 
 async function loadCity(lat,lon){
 
@@ -1109,18 +1119,16 @@ const pj=await p.json();
 const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
 document.getElementById("ccCity").textContent=city;
 
-const stationResp = await fetch(pj.properties.observationStations);
-const stationJSON = await stationResp.json();
+const key = `${lat},${lon}`;
+const station = CITY_STATIONS[key];
 
-let stationURL = stationJSON.features[0].id;
+if(!station){
+  alert("Station not defined for this city.");
+  return;
+}
 
-// Prefer airport-style stations if present
-stationJSON.features.forEach(s=>{
-  const id = s.id.split("/").pop();
-  if(id.startsWith("K")){
-    stationURL = s.id;
-  }
-});
+const stationURL = `https://api.weather.gov/stations/${station}`;
+
 
 
 
