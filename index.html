@@ -842,6 +842,98 @@ setInterval(() => {
   
   
 </script>
+<script>
+/* ===== SAFE 7-DAY FORECAST MODULE ===== */
+(function(){
+
+const grid = document.getElementById("forecastGrid");
+const tsEl = document.getElementById("forecastTimestamp");
+const refreshBtn = document.getElementById("forecastRefreshBtn");
+const citySelect = document.getElementById("forecastCitySelect");
+
+if(!grid || !citySelect) return;
+
+let lat = 45.5152;
+let lon = -122.6784;
+
+async function fetchForecast(){
+  try{
+    grid.innerHTML = '<div class="loader">Loading forecast…</div>';
+
+    const apiPoints = `https://api.weather.gov/points/${lat},${lon}`;
+    const p = await fetch(apiPoints);
+    const pj = await p.json();
+
+    const forecastUrl = pj.properties.forecast;
+    const r = await fetch(forecastUrl);
+    const j = await r.json();
+
+    const periods = j.properties.periods || [];
+
+    const days = [];
+
+    for(let i=0;i<periods.length && days.length<7;i++){
+      if(periods[i].isDaytime){
+        const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
+
+        days.push({
+          name: periods[i].name,
+          icon: periods[i].icon,
+          hi: periods[i].temperature,
+          lo: night ? night.temperature : "",
+          desc: periods[i].shortForecast,
+          wind: periods[i].windSpeed,
+          pop: periods[i].probabilityOfPrecipitation?.value
+        });
+      }
+    }
+
+    grid.innerHTML = "";
+
+    days.forEach(d=>{
+      const card=document.createElement("div");
+      card.className="fc-card";
+
+      card.innerHTML=`
+        <div class="fc-day">${d.name}</div>
+        <div class="fc-icon"><img src="${d.icon}"></div>
+        <div class="fc-temp">
+          <span class="hi">${d.hi}°</span>
+          <span class="lo">${d.lo}°</span>
+        </div>
+        <div class="fc-desc">${d.desc}</div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    tsEl.textContent="Last updated: "+new Date().toLocaleString();
+
+  }catch(e){
+    console.error(e);
+    grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
+  }
+}
+
+/* Initial load */
+fetchForecast();
+
+/* Refresh button */
+refreshBtn.addEventListener("click", fetchForecast);
+
+/* City change */
+citySelect.addEventListener("change",()=>{
+  const parts=citySelect.value.split(",");
+  lat=parts[0];
+  lon=parts[1];
+  fetchForecast();
+});
+
+/* Auto refresh hourly */
+setInterval(fetchForecast,3600000);
+
+})();
+</script>
 
 </div> <!-- last panel / content -->
 
