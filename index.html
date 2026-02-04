@@ -161,11 +161,23 @@ select { font-size: 13px; }
     margin: 10px;
   }
 
-  /* Feels Like hover / active state */
-#feelsToggle:hover,
+/* Feels Like interaction styling */
+#feelsToggle {
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+#feelsToggle:hover {
+  color: #38bdf8;
+  opacity: 1;
+  text-decoration: underline;
+}
+
 #feelsToggle.active {
   color: #38bdf8;
+  text-decoration: underline;
 }
+
   
   /* Move ticker + clocks into normal flow */
   .city-list {
