@@ -601,7 +601,27 @@ canvas{
 
 .cc-left{
   padding-right:6px;
+
+  .cc-left{
+  padding-right:6px;
+
+  /* sunrise / sunset row */
+  #ccRiseSet{
+    margin-top:8px;
+    background:#020617;
+    padding:6px;
+    border-radius:6px;
+    font-size:12px;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  #ccRiseSet span{
+    color:#facc15;
+    font-weight:600;
+  }
 }
+
 
 .cc-right div{
   display:flex;
@@ -796,6 +816,8 @@ canvas{
       <div id="ccDew"></div>
       <div id="ccSun"></div>
       <div id="ccUV"></div>
+      <div id="ccRiseSet"></div>
+
     </div>
 
   </div>
