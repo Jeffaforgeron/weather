@@ -544,21 +544,36 @@ select { font-size: 13px; }
   </div>
 
 <!-- CURRENT CONDITIONS -->
+<!-- CURRENT CONDITIONS -->
 <div class="panel">
-  <div class="panel-title">
-    Current Conditions
-    <span id="feelsToggle" style="float:right; font-size:12px; opacity:.7; cursor:pointer;">
-      Feels Like
-    </span>
+  <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+    <span>Current Conditions</span>
+
+    <select id="currentCitySelect"
+      style="font-size:12px;background:#020617;color:#9ca3af;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:2px 6px;">
+      <option value="">Select City</option>
+      <option value="45.5152,-122.6784">Portland, OR</option>
+      <option value="34.0522,-118.2437">Los Angeles, CA</option>
+      <option value="47.6062,-122.3321">Seattle, WA</option>
+      <option value="40.7128,-74.0060">New York, NY</option>
+      <option value="41.8781,-87.6298">Chicago, IL</option>
+      <option value="29.7604,-95.3698">Houston, TX</option>
+      <option value="25.7617,-80.1918">Miami, FL</option>
+      <option value="39.7392,-104.9903">Denver, CO</option>
+    </select>
   </div>
 
-  <div class="image-box" style="padding:0;">
-    <img id="tempMapImage"
-         src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png"
-         alt="US Air Temperature Map"
-         style="width:100%;height:auto;">
+  <div class="image-box" style="flex-direction:column;gap:10px;padding:16px;text-align:center;">
+    <div id="ccCity" style="color:#9ca3af;"></div>
+    <div id="ccTemp" style="font-size:56px;font-weight:800;">—</div>
+    <div id="ccFeels"></div>
+    <div id="ccWx"></div>
+    <div id="ccWind"></div>
+    <div id="ccHum"></div>
+    <div id="ccUpdated" style="font-size:11px;color:#9ca3af;"></div>
   </div>
 </div>
+
 
 
 
@@ -835,6 +850,67 @@ setInterval(() => {
 }, 300000);
 
 
+
+/* ===== CURRENT CONDITIONS IN-PANEL ===== */
+
+const ccSelect = document.getElementById("currentCitySelect");
+
+async function loadCurrentConditions(lat, lon){
+
+  try{
+    const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+    const pj = await p.json();
+
+    const city =
+      pj.properties.relativeLocation.properties.city + ", " +
+      pj.properties.relativeLocation.properties.state;
+
+    document.getElementById("ccCity").textContent = city;
+
+    const s = await fetch(pj.properties.observationStations);
+    const sj = await s.json();
+    const station = sj.features[0].id;
+
+    const o = await fetch(station + "/observations/latest");
+    const oj = await o.json();
+    const d = oj.properties;
+
+    document.getElementById("ccTemp").textContent =
+      Math.round(d.temperature.value*9/5+32) + "°";
+
+    document.getElementById("ccFeels").textContent =
+      "Feels Like: " + Math.round(d.apparentTemperature.value*9/5+32) + "°";
+
+    document.getElementById("ccWx").textContent = d.textDescription;
+
+    document.getElementById("ccWind").textContent =
+      "Wind: " + (d.windSpeed.value ? Math.round(d.windSpeed.value*2.237)+" mph":"--");
+
+    document.getElementById("ccHum").textContent =
+      "Humidity: " + Math.round(d.relativeHumidity.value) + "%";
+
+    document.getElementById("ccUpdated").textContent =
+      "Updated " + new Date(d.timestamp).toLocaleTimeString();
+
+  }catch(e){
+    console.error(e);
+  }
+}
+
+/* Dropdown change */
+ccSelect.addEventListener("change",()=>{
+  if(!ccSelect.value) return;
+  const parts = ccSelect.value.split(",");
+  loadCurrentConditions(parts[0], parts[1]);
+});
+
+/* Auto refresh every 5 minutes */
+setInterval(()=>{
+  if(ccSelect.value){
+    const parts = ccSelect.value.split(",");
+    loadCurrentConditions(parts[0], parts[1]);
+  }
+},300000);
 
   
 
