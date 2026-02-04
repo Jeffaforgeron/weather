@@ -344,20 +344,23 @@ select { font-size: 13px; }
     </div>
   </div>
 
-  <!-- CURRENT CONDITIONS -->
 <!-- CURRENT CONDITIONS -->
 <div class="panel">
-  <div class="panel-title">Current Conditions</div>
-  
-  <div class="image-box" style="padding: 0;">
-    <a href="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png" target="_blank">
-      <img id="tempMapImage"
-           src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png?cache_bust=1770175267564"
-           alt="Live US Temperature Map">
-    </a>
+  <div class="panel-title">
+    Current Conditions
+    <span id="feelsToggle" style="float:right; font-size:12px; opacity:.7; cursor:pointer;">
+      Feels Like
+    </span>
   </div>
 
+  <div class="image-box" style="padding:0;">
+    <img id="tempMapImage"
+         src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png"
+         alt="US Air Temperature Map"
+         style="width:100%;height:auto;">
+  </div>
 </div>
+
 
 
 
@@ -555,6 +558,40 @@ setInterval(() => {
 
 }, 300000); // 300000 ms = 5 minutes
 
+/* ===== TEMP MAP HOVER / TAP TOGGLE ===== */
+const airTempURL = "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png";
+const feelsLikeURL = "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tapp.png";
+
+const tempMap = document.getElementById("tempMapImage");
+const feelsToggle = document.getElementById("feelsToggle");
+
+if (tempMap && feelsToggle) {
+
+  // Desktop hover
+  feelsToggle.addEventListener("mouseenter", () => {
+    tempMap.src = feelsLikeURL + "?ts=" + Date.now();
+  });
+
+  feelsToggle.addEventListener("mouseleave", () => {
+    tempMap.src = airTempURL + "?ts=" + Date.now();
+  });
+
+  // Mobile tap toggle
+  let showingFeels = false;
+  feelsToggle.addEventListener("click", () => {
+    showingFeels = !showingFeels;
+    tempMap.src = (showingFeels ? feelsLikeURL : airTempURL) + "?ts=" + Date.now();
+  });
+}
+/* ===== FORCE AIR TEMP MAP BACK EVERY 5 MIN ===== */
+setInterval(() => {
+  const tempMap = document.getElementById("tempMapImage");
+  if (tempMap) {
+    tempMap.src =
+      "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png?ts=" +
+      Date.now();
+  }
+}, 300000);
   
 </script>
 
