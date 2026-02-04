@@ -455,6 +455,15 @@ select { font-size: 13px; }
   color: #9ca3af;   /* dark gray */
   font-weight: 600;
 }
+/* Forecast city dropdown styling */
+#forecastCitySelect {
+  background: #020617;
+  color: #9ca3af;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
   
 </style>
 </head>
@@ -560,11 +569,33 @@ select { font-size: 13px; }
   <div class="panel-title">Forecast Tools</div>
   <div class="forecast-tv">
     <div class="forecast-header">
-      <div class="city">Portland, OR</div>
-     <div class="meta">7-Day Outlook via NWS</div>
+  <select id="forecastCitySelect"> 
+    <option value="45.5152,-122.6784" selected>Portland, OR</option>
+    <option value="40.7128,-74.0060">New York, NY</option>
+    <option value="34.0522,-118.2437">Los Angeles, CA</option>
+    <option value="41.8781,-87.6298">Chicago, IL</option>
+    <option value="29.7604,-95.3698">Houston, TX</option>
+    <option value="33.4484,-112.0740">Phoenix, AZ</option>
+    <option value="39.9526,-75.1652">Philadelphia, PA</option>
+    <option value="29.4241,-98.4936">San Antonio, TX</option>
+    <option value="32.7157,-117.1611">San Diego, CA</option>
+    <option value="32.7767,-96.7970">Dallas, TX</option>
+    <option value="37.3382,-121.8863">San Jose, CA</option>
+    <option value="30.2672,-97.7431">Austin, TX</option>
+    <option value="47.6062,-122.3321">Seattle, WA</option>
+    <option value="39.7392,-104.9903">Denver, CO</option>
+    <option value="38.9072,-77.0369">Washington, DC</option>
+    <option value="42.3601,-71.0589">Boston, MA</option>
+    <option value="25.7617,-80.1918">Miami, FL</option>
+    <option value="33.7490,-84.3880">Atlanta, GA</option>
+    <option value="36.1627,-86.7816">Nashville, TN</option>
+    <option value="35.2271,-80.8431">Charlotte, NC</option>
+  </select>
 
-      <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
-    </div>
+  <div class="meta">7-Day Outlook via NWS</div>
+  <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
+</div>
+
 
     <div id="forecastGrid" class="forecast-grid" aria-live="polite">
       <!-- Forecast cards injected here -->
@@ -810,10 +841,16 @@ setInterval(() => {
   const refreshBtn = document.getElementById("forecastRefreshBtn");
 
   // Portland lat/lon
-  const lat = 45.5152, lon = -122.6784;
-  const apiPoints = `https://api.weather.gov/points/${lat},${lon}`;
+  let lat = 45.5152, lon = -122.6784;
+const citySelect = document.getElementById("forecastCitySelect");
+
+const citySelect = document.getElementById("forecastCitySelect");
+
+  
 
   async function fetchForecast(){
+    const apiPoints = `https://api.weather.gov/points/${lat},${lon}`;
+
     try{
       grid.innerHTML = '<div class="loader">Loading forecast…</div>';
       // Step 1: get forecast link for gridpoint
@@ -903,6 +940,13 @@ setInterval(() => {
   refreshBtn && refreshBtn.addEventListener("click", () => {
     fetchForecast();
   });
+// Change city from dropdown
+citySelect.addEventListener("change", () => {
+  const parts = citySelect.value.split(",");
+  lat = parts[0];
+  lon = parts[1];
+  fetchForecast();
+});
 
   // auto refresh hourly (3600000 ms)
   setInterval(fetchForecast, 3600000);
