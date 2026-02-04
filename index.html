@@ -224,106 +224,23 @@ select { font-size: 13px; }
     width: 100%;
   }
 }
-/* ===== SOCIAL ICON BAR ===== */
-/* ===== SOCIAL ICON BAR (BOTTOM CENTER) ===== */
-/* ===== SOCIAL ICONS FOOTER ===== */
-.social-bar a {
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af; /* solid, readable */
-}
+/* ===== CLEAN FOOTER + SOCIAL ICONS ===== */
 
-.social-bar svg {
-  width: 18px;
-  height: 18px;
-  display: block;
-  fill: currentColor;
-}
-
-
-.social-bar a:hover {
-  color: #38bdf8;
-  transform: translateY(-2px);
-}
-
-.social-bar svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-}
-
-}
-
-
-/* Mobile adjustment */
-@media (max-width: 768px) {
-  .social-bar {
-    top: 8px;
-    gap: 12px;
-  }
-
-  .social-bar a {
-    width: 16px;
-    height: 16px;
-  }
-}
-/* Keep social icons above everything */
-.social-bar {
-  z-index: 50;
-}
-
-/* Ensure title sits below icons */
-h1 {
-  position: relative;
-  z-index: 5;
-}
-/* ===== FORCE SOCIAL ICONS ABOVE EVERYTHING ===== */
-.social-bar {
-  position: fixed !important;
-  bottom: 16px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  display: flex;
-  gap: 16px;
-  z-index: 9999 !important;
-  isolation: isolate;
-}
-
-
-
-/* Reserve space so panels don't cover icons */
-body {
-  padding-bottom: 56px;
-}
-/* ===== SOLID FOOTER (NO BLEED-THROUGH) ===== */
-/* ===== SOLID FOOTER ===== */
-/* ===== SOLID FOOTER (TIGHT) ===== */
-/* ===== FOOTER (NO BACKGROUND) ===== */
 .footer {
   margin-top: 32px;
-  padding: 0;
+  padding-bottom: 20px;
   background: transparent;
+  display: flex;
+  justify-content: center;
 }
 
-
-
-
-
-/* ===== SOCIAL ICON BAR (SELF-CONTAINED) ===== */
 .social-bar {
-  display: inline-flex;
-  justify-content: center;
+  display: flex;
   gap: 18px;
   padding: 10px 14px;
-  margin: 0 auto 20px;
-  background: #0b1220; /* solid ONLY behind icons */
+  background: #0b1220;
   border-radius: 10px;
 }
-
-
 
 .social-bar a {
   width: 22px;
@@ -341,53 +258,19 @@ body {
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Individual identity tweaks */
-.social-bar a.ig { font-size: 14px; }
-.social-bar a.fb { font-family: system-ui, sans-serif; font-weight: 700; }
-.social-bar a.th { font-size: 14px; }
-.social-bar a.in { font-family: system-ui, sans-serif; }
-
-/* Hover = trading dashboard accent */
 .social-bar a:hover {
   color: #38bdf8;
   border-color: #38bdf8;
   transform: translateY(-2px);
 }
 
-.footer {
-  margin-top: 32px;
-  padding: 0 0 20px;
-  background: transparent;
-
-  display: flex;
-  justify-content: center;
-}
-
-
-.social-bar {
-  display: flex;
-  gap: 18px;
-  padding: 10px 14px;
-  background: #0b1220;
-  border-radius: 10px;
-}
-
-/* Hide empty placeholder boxes */
-.image-box:empty {
-  display: none;
-}
 
   
 </style>
 </head>
 
 <body>
-<!-- ===== SOCIAL ICONS ===== -->
-<div class="social-bar">
-  <!-- ===== FOOTER ===== -->
 
-
-</div>
 
   
   
