@@ -1117,14 +1117,16 @@ stationJSON.features.forEach(s=>{
   }
 });
 
-const obs = await fetch(stationURL + "/observations/latest");
+
 
 
 /* last 12 hours */
 const end=new Date().toISOString();
 const start=new Date(Date.now()-12*3600000).toISOString();
 
-const obs=await fetch(`${station}/observations?start=${start}&end=${end}`);
+const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
+const oj = await obsResp.json();
+
 const oj=await obs.json();
 
 const temps=[];
