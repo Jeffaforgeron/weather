@@ -1156,25 +1156,25 @@ chart=new Chart(ctx,{
        padding:6
      }
    },
-   scales:{
-   x:{
-  ticks:{
-    color:"#64748b",
-    maxTicksLimit:12
+  scales:{
+  x:{
+    ticks:{
+      color:"#64748b",
+      maxTicksLimit:12
+    },
+    grid:{display:false}
   },
-  grid:{display:false}
+
+  y:{
+    ticks:{
+      color:"#64748b",
+      padding:6
+    },
+    grid:{color:"rgba(255,255,255,.04)"},
+    grace:"20%"
+  }
 }
 
-     y:{
-  ticks:{
-    color:"#64748b",
-    padding:6
-  },
-  grid:{color:"rgba(255,255,255,.04)"},
-  grace:"20%"   // THIS is what stretches the vertical range
-}
-
-   }
  }
 });
 
