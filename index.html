@@ -578,6 +578,47 @@ select { font-size: 13px; }
 canvas{
   filter:drop-shadow(0 0 6px rgba(56,189,248,.6));
 }
+/* ===== SPACE NEON CURRENT CONDITIONS ===== */
+
+#ccCityWrap{
+  background:
+    radial-gradient(circle at 20% 10%, #1e293b 0%, transparent 40%),
+    radial-gradient(circle at 80% 30%, #0ea5e9 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, #9333ea 0%, transparent 50%),
+    linear-gradient(#020617,#020617);
+}
+
+.cc-left{
+  padding-right:6px;
+}
+
+.cc-right div{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.cc-right div span{
+  color:#38bdf8;
+  font-weight:600;
+}
+
+/* Axis labels */
+.chart-title{
+  font-size:12px;
+  opacity:.7;
+  margin-bottom:4px;
+}
+
+/* Neon pulse */
+.cc-temp{
+  text-shadow:0 0 18px rgba(56,189,248,.6);
+}
+
+/* softer chart */
+canvas{
+  filter:drop-shadow(0 0 10px rgba(56,189,248,.7));
+}
   
 </style>
 </head>
@@ -1046,18 +1087,23 @@ ccFeels.textContent = latest.apparentTemperature?.value
   ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
   : "";
 
-ccWx.textContent=latest.textDescription;
-ccWind.textContent = latest.windSpeed?.value
-  ? "Wind " + Math.round(latest.windSpeed.value*2.237) + " mph"
+ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
+
+const windDir = latest.windDirection?.value
+  ? ["N","NE","E","SE","S","SW","W","NW"][Math.round(latest.windDirection.value/45)%8]
   : "";
 
-ccHum.textContent="Humidity "+Math.round(latest.relativeHumidity.value)+"%";
+ccWind.innerHTML="Wind <span>"+Math.round(latest.windSpeed.value*2.237)+" mph "+windDir+"</span>";
 
-ccDew.textContent = latest.dewpoint?.value
-  ? "Dew Point " + Math.round(latest.dewpoint.value*9/5+32) + "°"
-  : "";
+ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
+
+ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
+
+ccSun.innerHTML="Sun <span>—</span>";
+ccUV.innerHTML="UV <span>—</span>";
 
 ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
+
 
 /* Chart */
 if(chart) chart.destroy();
@@ -1070,26 +1116,43 @@ chart=new Chart(ctx,{
    labels,
    datasets:[{
      data:temps,
-     borderColor:"#38bdf8",
-     backgroundColor:"rgba(56,189,248,.25)",
+     borderWidth:3,
      tension:.4,
      fill:true,
      pointRadius:0,
-     borderWidth:3
+     borderColor:"#38bdf8",
+     backgroundColor:(ctx)=>{
+       const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
+       g.addColorStop(0,"rgba(250,204,21,.45)");
+       g.addColorStop(.5,"rgba(56,189,248,.25)");
+       g.addColorStop(1,"rgba(37,99,235,.15)");
+       return g;
+     }
    }]
  },
  options:{
-   plugins:{legend:{display:false}},
-   scales:{
-     x:{display:false},
-     y:{display:false}
+   plugins:{
+     legend:{display:false},
+     title:{
+       display:true,
+       text:"Temperature – Past 12 Hours",
+       color:"#9ca3af",
+       padding:6
+     }
    },
-   animation:{
-     duration:1200,
-     easing:"easeOutQuart"
+   scales:{
+     x:{
+       ticks:{color:"#64748b"},
+       grid:{display:false}
+     },
+     y:{
+       ticks:{color:"#64748b"},
+       grid:{color:"rgba(255,255,255,.04)"}
+     }
    }
  }
 });
+
 
 
 }
