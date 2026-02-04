@@ -400,6 +400,51 @@ select { font-size: 13px; }
 .forecast-footer { display:flex; justify-content:flex-end; }
 .forecast-footer .ts { font-size:11px; color:var(--text-secondary,#9ca3af); }
 
+/* ===== FORECAST READABILITY BOOST ===== */
+
+/* Darken card background */
+.fc-card {
+  background: #0b1220;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Make day labels brighter */
+.fc-day {
+  color: #ffffff;
+}
+
+/* Stronger temps */
+.fc-temp {
+  color: #ffffff;
+}
+
+.fc-temp .hi {
+  color: #facc15; /* warm yellow */
+}
+
+.fc-temp .lo {
+  color: #60a5fa; /* cool blue */
+}
+
+/* Description text clearer */
+.fc-desc {
+  color: #cbd5e1;
+}
+
+/* Header text */
+.forecast-header .city {
+  color: #ffffff;
+}
+
+.forecast-header .meta {
+  color: #9ca3af;
+}
+
+/* Icon container darker */
+.fc-icon {
+  background: #020617;
+}
+
   
 </style>
 </head>
