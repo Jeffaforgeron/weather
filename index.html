@@ -665,6 +665,101 @@ canvas{
 .cc-left{
   flex:1;
 }
+/* ================= GLOBAL DASHBOARD POLISH ================= */
+
+/* Panels become dark glass */
+.panel{
+  background:#020617 !important;
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
+}
+
+/* Titles */
+.panel-title{
+  background:transparent;
+  color:#9ca3af;
+  letter-spacing:.4px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+/* Subtle floating effect */
+.panel:hover{
+  transform:translateY(-2px);
+  transition:.25s ease;
+}
+
+/* Image boxes darker */
+.image-box{
+  background:#020617;
+}
+
+/* Controls glass */
+.controls{
+  background:#020617;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+
+/* Dropdowns unified dark style */
+select{
+  background:#020617;
+  color:#9ca3af;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;
+}
+
+/* Forecast cards glow */
+.fc-card{
+  box-shadow:0 0 14px rgba(56,189,248,.15);
+}
+
+/* Forecast hover neon */
+.fc-card:hover{
+  box-shadow:0 0 24px rgba(56,189,248,.35);
+}
+
+/* Ticker glass */
+.city-list{
+  backdrop-filter:blur(10px);
+}
+
+/* Clock glow */
+.time-pill{
+  box-shadow:0 0 8px rgba(56,189,248,.25);
+}
+
+/* Social bar subtle neon */
+.social-bar{
+  box-shadow:0 0 18px rgba(56,189,248,.25);
+}
+
+/* Links neon hover */
+a:hover{
+  text-shadow:0 0 10px rgba(56,189,248,.8);
+}
+
+/* Forecast grid breathing animation */
+.fc-card{
+  animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+  100%{transform:translateY(0)}
+}
+
+/* Slight chart glow everywhere */
+canvas{
+  filter:drop-shadow(0 0 12px rgba(56,189,248,.6));
+}
+
+/* Headline */
+h1{
+  background:linear-gradient(90deg,#38bdf8,#facc15);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:.6px;
+}
   
 </style>
 </head>
