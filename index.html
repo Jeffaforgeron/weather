@@ -161,6 +161,12 @@ select { font-size: 13px; }
     margin: 10px;
   }
 
+  /* Feels Like hover / active state */
+#feelsToggle:hover,
+#feelsToggle.active {
+  color: #38bdf8;
+}
+  
   /* Move ticker + clocks into normal flow */
   .city-list {
     position: static;
@@ -576,12 +582,16 @@ if (tempMap && feelsToggle) {
     tempMap.src = airTempURL + "?ts=" + Date.now();
   });
 
-  // Mobile tap toggle
-  let showingFeels = false;
-  feelsToggle.addEventListener("click", () => {
-    showingFeels = !showingFeels;
-    tempMap.src = (showingFeels ? feelsLikeURL : airTempURL) + "?ts=" + Date.now();
-  });
+let showingFeels = false;
+feelsToggle.addEventListener("click", () => {
+  showingFeels = !showingFeels;
+
+  tempMap.src = (showingFeels ? feelsLikeURL : airTempURL) + "?ts=" + Date.now();
+
+  // visual active state (mobile)
+  feelsToggle.classList.toggle("active", showingFeels);
+});
+
 }
 /* ===== FORCE AIR TEMP MAP BACK EVERY 5 MIN ===== */
 setInterval(() => {
