@@ -1158,14 +1158,24 @@ chart=new Chart(ctx,{
 }
 
 ccSelect.addEventListener("change",()=>{
+
  if(ccSelect.value==="US"){
    cityWrap.style.display="none";
    mapWrap.style.display="block";
+
+   // Show Feels Like when US map is active
+   if(feelsToggle) feelsToggle.style.display="inline";
+
    return;
  }
+
+ // Hide Feels Like when city mode is active
+ if(feelsToggle) feelsToggle.style.display="none";
+
  const [lat,lon]=ccSelect.value.split(",");
  loadCity(lat,lon);
 });
+
 
   
 
