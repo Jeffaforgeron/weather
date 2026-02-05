@@ -2012,7 +2012,7 @@ if(chart) chart.destroy();
 
 const ctx = ccCanvas.getContext("2d");
 
-// Exactly 3 temp labels: ~latest-2h, -6h, -10h (index-based from right)
+// Broadcast-style glowing + pulsing temp labels
 const tempLabelPlugin = {
   id: 'tempLabels',
   afterDatasetsDraw(chart){
@@ -2024,29 +2024,38 @@ const tempLabelPlugin = {
 
     const n = data.length - 1;
 
-    // Approximate indices for 12h window
-    const idx2  = Math.max(0, Math.round(n * (10/12))); // ~latest -2h
-    const idx6  = Math.max(0, Math.round(n * (6/12)));  // ~latest -6h
-    const idx10 = Math.max(0, Math.round(n * (2/12)));  // ~latest -10h
+    // indices ~ latest-10h, -6h, -2h
+    const idx2  = Math.max(0, Math.round(n * (10/12)));
+    const idx6  = Math.max(0, Math.round(n * (6/12)));
+    const idx10 = Math.max(0, Math.round(n * (2/12)));
 
     const points = [idx10, idx6, idx2];
 
+    // subtle pulse
+    const pulse = Math.sin(Date.now()/600) * 2;
+
     ctx.save();
-    ctx.fillStyle = "#9ca3af";
-    ctx.font = "10px system-ui";
+    ctx.font = "12px system-ui";           // slightly bigger
     ctx.textAlign = "center";
+    ctx.fillStyle = "#e5e7eb";
+
+    ctx.shadowColor = "rgba(56,189,248,.8)";
+    ctx.shadowBlur = 10;
 
     points.forEach(i=>{
       const pt = meta.data[i];
       if(!pt) return;
 
       const val = Math.round(data[i]);
-      ctx.fillText(val + "°", pt.x, pt.y - 10);
+
+      // lift higher + pulse
+      ctx.fillText(val + "°", pt.x, pt.y - 18 + pulse);
     });
 
     ctx.restore();
   }
 };
+
 
 
    
