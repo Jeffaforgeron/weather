@@ -1815,11 +1815,25 @@ const windDir = latest.windDirection?.value
   : "";
 latest.windSpeed = latest.windSpeed || latest.windGust;
 // Use sustained wind, not gusts
-const windMS = latest.windSpeed?.value;
+let windMPH = "—";
 
-const windMPH = windMS != null
-  ? Math.round(windMS * 2.23694)
-  : "—";
+if(latest.windSpeed?.value != null){
+
+  const v = latest.windSpeed.value;
+  const unit = latest.windSpeed.unitCode;
+
+  // meters per second
+  if(unit && unit.includes("m_s-1")){
+    windMPH = Math.round(v * 2.23694);
+  }
+
+  // kilometers per hour
+  else if(unit && unit.includes("km_h-1")){
+    windMPH = Math.round(v * 0.621371);
+  }
+
+}
+
 
 
 
