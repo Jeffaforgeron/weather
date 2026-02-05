@@ -1269,33 +1269,14 @@ text-shadow:
 
 <!-- FORECAST TOOLS (7-day sleek TV style) -->
 <div class="panel" id="forecastPanel">
-  <div class="panel-title">Forecast Tools</div>
+  <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+  <span>Forecast Tools</span>
+  <select id="forecastCitySelect"></select>
+</div>
+
   <div class="forecast-tv">
     <div class="forecast-header">
-  <select id="forecastCitySelect"> 
-    <option value="45.5152,-122.6784" selected>Portland, OR</option>
-    <option value="40.7128,-74.0060">New York, NY</option>
-    <option value="34.0522,-118.2437">Los Angeles, CA</option>
-    <option value="41.8781,-87.6298">Chicago, IL</option>
-    <option value="29.7604,-95.3698">Houston, TX</option>
-    <option value="33.4484,-112.0740">Phoenix, AZ</option>
-    <option value="39.9526,-75.1652">Philadelphia, PA</option>
-    <option value="29.4241,-98.4936">San Antonio, TX</option>
-    <option value="38.2975,-122.2869">Napa, CA</option>
-<option value="33.8303,-116.5453">Palm Springs, CA</option>
-    <option value="32.7157,-117.1611">San Diego, CA</option>
-    <option value="32.7767,-96.7970">Dallas, TX</option>
-    <option value="37.3382,-121.8863">San Jose, CA</option>
-    <option value="30.2672,-97.7431">Austin, TX</option>
-    <option value="47.6062,-122.3321">Seattle, WA</option>
-    <option value="39.7392,-104.9903">Denver, CO</option>
-    <option value="38.9072,-77.0369">Washington, DC</option>
-    <option value="42.3601,-71.0589">Boston, MA</option>
-    <option value="25.7617,-80.1918">Miami, FL</option>
-    <option value="33.7490,-84.3880">Atlanta, GA</option>
-    <option value="36.1627,-86.7816">Nashville, TN</option>
-    <option value="35.2271,-80.8431">Charlotte, NC</option>
-  </select>
+ 
 
   <div class="meta">7-Day Outlook via NWS</div>
   <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
