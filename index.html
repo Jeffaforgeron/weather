@@ -2011,28 +2011,47 @@ ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString()
 if(chart) chart.destroy();
 
 const ctx = ccCanvas.getContext("2d");
-// Subtle temp labels every ~3 hours
-// Subtle temp labels every 3 hours (time-based, not index-based)
+
+// Subtle temp labels at +2h, +6h, +10h from first obs
 const tempLabelPlugin = {
   id: 'tempLabels',
   afterDatasetsDraw(chart){
     const {ctx} = chart;
     const meta = chart.getDatasetMeta(0);
+    const data = chart.data.datasets[0].data;
     const labels = chart.data.labels;
+
+    if(!data.length) return;
+
+    // Starting timestamp (from first label)
+    const start = new Date(labels[0]);
+
+    // Target offsets in hours
+    const targets = [2,6,10].map(h => new Date(start.getTime() + h*3600000));
 
     ctx.save();
     ctx.fillStyle = "#9ca3af";
     ctx.font = "10px system-ui";
     ctx.textAlign = "center";
 
-    meta.data.forEach((pt, i)=>{
+    targets.forEach(target=>{
 
-      const hour = parseInt(labels[i]); // your labels are already hour strings
+      let closestIndex = 0;
+      let smallestDiff = Infinity;
 
-      // Only label every 3 hours (5,8,11,14,etc)
-      if(isNaN(hour) || hour % 3 !== 0) return;
+      labels.forEach((lbl,i)=>{
+        const t = new Date(lbl);
+        const diff = Math.abs(t - target);
+        if(diff < smallestDiff){
+          smallestDiff = diff;
+          closestIndex = i;
+        }
+      });
 
-      const val = Math.round(chart.data.datasets[0].data[i]);
+      const pt = meta.data[closestIndex];
+      if(!pt) return;
+
+      const val = Math.round(data[closestIndex]);
       ctx.fillText(val + "°", pt.x, pt.y - 10);
 
     });
@@ -2040,6 +2059,7 @@ const tempLabelPlugin = {
     ctx.restore();
   }
 };
+
 
 
 
