@@ -1109,6 +1109,13 @@ text-shadow:
   font-weight:600;
   animation:ccHintPulse 1.8s ease-in-out infinite;
 }
+#forecastHint{
+  color:#38bdf8;
+  font-size:12px;
+  font-weight:600;
+  animation:ccHintPulse 1.8s ease-in-out infinite;
+  white-space:nowrap;
+}
 
 @keyframes ccHintPulse{
   0%{opacity:.4}
@@ -1300,6 +1307,7 @@ html, body {
   <div class="panel">
    <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
   <span>Live Radar</span>
+    
 
   <div style="display:flex;gap:6px;">
     <select id="regionSelect"></select>
@@ -1393,10 +1401,15 @@ html, body {
 
 <!-- FORECAST TOOLS (7-day sleek TV style) -->
 <div class="panel" id="forecastPanel">
-  <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+ <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
   <span>Forecast Tools</span>
-  <select id="forecastCitySelect"></select>
+
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="forecastHint">Select a city →</span>
+    <select id="forecastCitySelect"></select>
+  </div>
 </div>
+
 
   <div class="forecast-tv">
     <div class="forecast-header">
