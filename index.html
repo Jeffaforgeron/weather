@@ -777,6 +777,34 @@ text-shadow:
   100%{background-position:0% 50%}
 }
 
+/* ===== HOURLY FORECAST ===== */
+
+#hourlyWrap{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:8px;
+}
+
+.hour-card{
+  min-width:70px;
+  background:#020617;
+  border-radius:8px;
+  padding:6px;
+  text-align:center;
+  box-shadow:0 0 12px rgba(56,189,248,.25);
+  color:#e5e7eb;
+  font-size:11px;
+}
+
+.hour-card img{
+  width:32px;
+}
+
+.hour-temp{
+  font-weight:700;
+  margin-top:4px;
+}
   
 </style>
 </head>
@@ -968,6 +996,7 @@ text-shadow:
       <!-- Forecast cards injected here -->
       <div class="loader">Loading…</div>
     </div>
+<div id="hourlyWrap" style="display:none;margin-top:10px;"></div>
 
     <div class="forecast-footer">
       <div id="forecastTimestamp" class="ts">Last updated: —</div>
@@ -1463,22 +1492,62 @@ async function fetchForecast(){
 
     grid.innerHTML = "";
 
-    days.forEach(d=>{
-      const card=document.createElement("div");
-      card.className="fc-card";
+const hourlyWrap=document.getElementById("hourlyWrap");
+let activeDay=null;
 
-      card.innerHTML=`
-        <div class="fc-day">${d.name}</div>
-        <div class="fc-icon"><img src="${d.icon}"></div>
-        <div class="fc-temp">
-          <span class="hi">${d.hi}°</span>
-          <span class="lo">${d.lo}°</span>
-        </div>
-        <div class="fc-desc">${d.desc}</div>
-      `;
+days.forEach((d,i)=>{
+  const card=document.createElement("div");
+  card.className="fc-card";
 
-      grid.appendChild(card);
-    });
+  card.innerHTML=`
+    <div class="fc-day">${d.name}</div>
+    <div class="fc-icon"><img src="${d.icon}"></div>
+    <div class="fc-temp">
+      <span class="hi">${d.hi}°</span>
+      <span class="lo">${d.lo}°</span>
+    </div>
+    <div class="fc-desc">${d.desc}</div>
+  `;
+
+  card.onclick=async()=>{
+
+    if(activeDay===i){
+      hourlyWrap.style.display="none";
+      hourlyWrap.innerHTML="";
+      activeDay=null;
+      return;
+    }
+
+    activeDay=i;
+    hourlyWrap.style.display="flex";
+    hourlyWrap.innerHTML="<div class='loader'>Loading hourly…</div>";
+
+    const hr=await fetch(pj.properties.forecastHourly);
+    const hj=await hr.json();
+
+    hourlyWrap.innerHTML="";
+
+    hj.properties.periods
+      .filter(h=>h.startTime.startsWith(days[i].start))
+      .slice(0,24)
+      .forEach(h=>{
+        const el=document.createElement("div");
+        el.className="hour-card";
+
+        el.innerHTML=`
+          <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
+          <img src="${h.icon}">
+          <div class="hour-temp">${h.temperature}°</div>
+        `;
+
+        hourlyWrap.appendChild(el);
+      });
+
+  };
+
+  grid.appendChild(card);
+});
+
 
     tsEl.textContent="Last updated: "+new Date().toLocaleString();
 
