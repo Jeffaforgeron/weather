@@ -782,9 +782,28 @@ text-shadow:
 #hourlyWrap{
   display:flex;
   gap:8px;
-  overflow-x:auto;
   padding:8px;
+
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+
+  position:relative;
 }
+
+/* inner scrolling rail */
+#hourlyWrap::-webkit-scrollbar{
+  display:none;
+}
+
+.hour-scroll{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scroll-behavior:smooth;
+  width:100%;
+}
+
 
 .hour-card{
   min-width:70px;
@@ -805,6 +824,27 @@ text-shadow:
   font-weight:700;
   margin-top:4px;
 }
+.hour-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:26px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  color:#38bdf8;
+  background:rgba(2,6,23,.8);
+  cursor:pointer;
+  z-index:5;
+  opacity:.6;
+}
+
+.hour-arrow:hover{opacity:1}
+
+.hour-arrow.left{left:0}
+.hour-arrow.right{right:0}
   
 </style>
 </head>
@@ -996,7 +1036,16 @@ text-shadow:
       <!-- Forecast cards injected here -->
       <div class="loader">Loading…</div>
     </div>
-<div id="hourlyWrap" style="display:none;margin-top:10px;"></div>
+<div id="hourlyWrap" style="display:none;margin-top:10px;">
+
+  <div class="hour-arrow left" onclick="scrollHours(-200)">‹</div>
+
+  <div id="hourRail" class="hour-scroll"></div>
+
+  <div class="hour-arrow right" onclick="scrollHours(200)">›</div>
+
+</div>
+
 
     <div class="forecast-footer">
       <div id="forecastTimestamp" class="ts">Last updated: —</div>
@@ -1545,7 +1594,8 @@ card.onclick=async()=>{
      <div class="hour-temp">${h.temperature}°</div>
    `;
 
-   hourlyWrap.appendChild(el);
+   document.getElementById("hourRail").appendChild(el);
+
  });
 
 };
@@ -1574,6 +1624,10 @@ citySelect.addEventListener("change",()=>{
 
 setInterval(fetchForecast,3600000);
 
+
+  function scrollHours(px){
+  document.getElementById("hourRail").scrollLeft += px;
+}
 })();
 </script>
 
