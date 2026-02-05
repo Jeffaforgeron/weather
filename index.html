@@ -1052,6 +1052,29 @@ text-shadow:
   }
 
 }
+/* ===== MOBILE HOURLY SCROLL FIX ===== */
+@media (max-width:768px){
+
+  #hourlyWrap{
+    overflow:hidden !important;
+    touch-action:pan-x !important;
+  }
+
+  #hourRail{
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    display:flex !important;
+    width:max-content !important;
+    min-width:100% !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding-right:20px;
+  }
+
+  .hour-card{
+    flex:0 0 72px !important;
+  }
+
+}
   
 </style>
 </head>
