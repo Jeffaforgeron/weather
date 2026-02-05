@@ -904,6 +904,21 @@ text-shadow:
 .hour-scroll {
   max-width: 100%;
 }
+#hourlyHint{
+  text-align:center;
+  font-size:12px;
+  color:#38bdf8;
+  opacity:.75;
+  margin-bottom:6px;
+  animation:hintPulse 2.5s ease-in-out infinite;
+  letter-spacing:.3px;
+}
+
+@keyframes hintPulse{
+  0%{opacity:.4}
+  50%{opacity:1}
+  100%{opacity:.4}
+}
   
 </style>
 </head>
@@ -1090,6 +1105,7 @@ text-shadow:
   <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
 </div>
 
+<div id="hourlyHint">Click a day to expand hourly forecast ↓</div>
 
     <div id="forecastGrid" class="forecast-grid" aria-live="polite">
       <!-- Forecast cards injected here -->
@@ -1626,6 +1642,7 @@ card.innerHTML=`
 grid.appendChild(card);
 
 card.onclick=async()=>{
+document.getElementById("hourlyHint").style.display="none";
 
  if(activeDay===i){
    hourlyWrap.style.display="none";
