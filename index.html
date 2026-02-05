@@ -2011,6 +2011,29 @@ ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString()
 if(chart) chart.destroy();
 
 const ctx = ccCanvas.getContext("2d");
+// Subtle temp labels every ~3 hours
+const tempLabelPlugin = {
+  id: 'tempLabels',
+  afterDatasetsDraw(chart){
+    const {ctx} = chart;
+    const meta = chart.getDatasetMeta(0);
+
+    ctx.save();
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "10px system-ui";
+    ctx.textAlign = "center";
+
+    meta.data.forEach((pt, i)=>{
+      // every 3rd point (≈ every 3 hours)
+      if(i % 3 !== 0) return;
+
+      const val = Math.round(chart.data.datasets[0].data[i]);
+      ctx.fillText(val + "°", pt.x, pt.y - 10);
+    });
+
+    ctx.restore();
+  }
+};
 
 
 chart=new Chart(ctx,{
@@ -2033,8 +2056,12 @@ chart=new Chart(ctx,{
      }
    }]
  },
-options:{
+
+ plugins:[tempLabelPlugin],   // 👈 ADD THIS LINE
+
+ options:{
   responsive:true,
+
  
 
   plugins:{
