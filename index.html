@@ -1620,7 +1620,15 @@ card.onclick=async()=>{
 
  hourlyWrap.innerHTML="";
 
- hj.properties.periods.slice(0,24).forEach(h=>{
+const hours = hj?.properties?.periods || [];
+
+if(!hours.length){
+  hourlyWrap.innerHTML="<div class='loader'>Hourly unavailable</div>";
+  return;
+}
+
+hours.slice(0,24).forEach(h=>{
+
 
    const el=document.createElement("div");
    el.className="hour-card";
