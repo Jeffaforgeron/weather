@@ -1663,36 +1663,49 @@ chart=new Chart(ctx,{
      }
    }]
  },
- options:{
-   plugins:{
-     legend:{display:false},
-     title:{
-       display:true,
-       text:"Temperature – Past 12 Hours",
-       color:"#9ca3af",
-       padding:6
-     }
-   },
-  scales:{
-  x:{
-    ticks:{
-      color:"#64748b",
-      maxTicksLimit:12
-    },
-    grid:{display:false}
+options:{
+  responsive:true,
+  maintainAspectRatio:false,
+
+  plugins:{
+    legend:{display:false},
+    title:{
+      display:true,
+      text:"Temperature – Past 12 Hours",
+      color:"#9ca3af",
+      padding: window.innerWidth < 768 ? 2 : 6,
+      font:{
+        size: window.innerWidth < 768 ? 11 : 14
+      }
+    }
   },
 
-  y:{
-    ticks:{
-      color:"#64748b",
-      padding:6
+  scales:{
+    x:{
+      ticks:{
+        color:"#64748b",
+        maxTicksLimit: window.innerWidth < 768 ? 6 : 12,
+        font:{
+          size: window.innerWidth < 768 ? 9 : 11
+        }
+      },
+      grid:{display:false}
     },
-    grid:{color:"rgba(255,255,255,.04)"},
-    grace:"20%"
+
+    y:{
+      ticks:{
+        color:"#64748b",
+        padding:6,
+        font:{
+          size: window.innerWidth < 768 ? 9 : 11
+        }
+      },
+      grid:{color:"rgba(255,255,255,.04)"},
+      grace:"20%"
+    }
   }
 }
 
- }
 });
 
 
