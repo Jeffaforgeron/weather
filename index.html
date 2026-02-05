@@ -1308,16 +1308,21 @@ html, body {
   }
 }
 
-/* ===== TICKER LABEL ===== */
+/* ===== TICKER LABEL (CENTERED) ===== */
 .ticker-label{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+
   font-size:9px;
   text-transform:uppercase;
   letter-spacing:.6px;
   color:#9ca3af;
-  opacity:.7;
-  margin-bottom:2px;
-  padding-left:2px;
+  opacity:.65;
+  pointer-events:none;
 }
+
   
  
 </style>
