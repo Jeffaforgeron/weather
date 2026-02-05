@@ -1936,9 +1936,9 @@ ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
 ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
 
 ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
-/* ===== PRECIP ===== */
+/* ===== PRECIP (PRO MODE) ===== */
 
-// Since midnight (meters → inches)
+// Precip since midnight
 if(latest.precipitationSinceMidnight?.value != null){
   const inches = latest.precipitationSinceMidnight.value * 39.3701;
   ccRainDay.innerHTML = `Precip Today <span>${inches.toFixed(2)} in</span>`;
@@ -1946,20 +1946,14 @@ if(latest.precipitationSinceMidnight?.value != null){
   ccRainDay.innerHTML = "Precip Today <span>—</span>";
 }
 
-/* Monthly estimate by summing observations */
-let monthTotal = 0;
-
-oj.features.forEach(o=>{
-  if(o.properties.precipitationLastHour?.value){
-    monthTotal += o.properties.precipitationLastHour.value;
-  }
-});
-
-if(monthTotal>0){
-  ccRainMonth.innerHTML = `Monthly Precip <span>${(monthTotal*39.3701).toFixed(2)} in</span>`;
+// Precip last hour
+if(latest.precipitationLastHour?.value != null){
+  const hr = latest.precipitationLastHour.value * 39.3701;
+  ccRainMonth.innerHTML = `Last Hour <span>${hr.toFixed(2)} in</span>`;
 }else{
-  ccRainMonth.innerHTML = "Monthly Precip <span>—</span>";
+  ccRainMonth.innerHTML = "Last Hour <span>—</span>";
 }
+
 
 
 
