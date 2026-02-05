@@ -1340,7 +1340,32 @@ html, body {
 
 
   
- 
+/* ===== TV-STYLE 7 DAY FORECAST HEIGHT ===== */
+@media (min-width:769px){
+
+  .forecast-grid{
+    grid-auto-rows: 1fr;
+  }
+
+  .fc-card{
+    min-height:180px;
+    justify-content:space-between;
+  }
+
+}
+/* Subtle broadcast font bump */
+@media (min-width:769px){
+  .fc-day{ font-size:14px; }
+  .fc-temp{ font-size:18px; }
+  .fc-desc{ font-size:12px; }
+}
+
+.fc-wind{
+  font-size:11px;
+  color:#9ca3af;
+}
+
+  
 </style>
 </head>
 
@@ -2078,13 +2103,15 @@ for(let i=0;i<periods.length && days.length<7;i++){
  if(periods[i].isDaytime){
    const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
 
-   days.push({
-     name:periods[i].name,
-     icon:periods[i].icon,
-     hi:periods[i].temperature,
-     lo:night ? night.temperature:"",
-     desc:periods[i].shortForecast
-   });
+days.push({
+  name:periods[i].name,
+  icon:periods[i].icon,
+  hi:periods[i].temperature,
+  lo:night ? night.temperature:"",
+  desc:periods[i].shortForecast,
+  wind: periods[i].windSpeed
+});
+
  }
 }
 
@@ -2102,7 +2129,9 @@ card.innerHTML=`
    <span class="hi">${d.hi}°</span>
    <span class="lo">${d.lo}°</span>
  </div>
- <div class="fc-desc">${d.desc}</div>
+<div class="fc-desc">${d.desc}</div>
+<div class="fc-wind">🌬 ${d.wind}</div>
+
 `;
 
 grid.appendChild(card);
