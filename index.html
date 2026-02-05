@@ -1445,137 +1445,138 @@ ccSelect.addEventListener("change",()=>{
   
 </script>
 <script>
-/* ===== SAFE 7-DAY FORECAST MODULE ===== */
+<script>
+/* ===== SAFE 7-DAY + HOURLY FORECAST MODULE (RESET CLEAN) ===== */
 (function(){
 
 const grid = document.getElementById("forecastGrid");
 const tsEl = document.getElementById("forecastTimestamp");
 const refreshBtn = document.getElementById("forecastRefreshBtn");
 const citySelect = document.getElementById("forecastCitySelect");
+const hourlyWrap = document.getElementById("hourlyWrap");
 
 if(!grid || !citySelect) return;
 
 let lat = 45.5152;
 let lon = -122.6784;
+let activeDay = null;
 
 async function fetchForecast(){
-  try{
-    grid.innerHTML = '<div class="loader">Loading forecast…</div>';
 
-    const apiPoints = `https://api.weather.gov/points/${lat},${lon}`;
-    const p = await fetch(apiPoints);
-    const pj = await p.json();
+try{
 
-    const forecastUrl = pj.properties.forecast;
-    const r = await fetch(forecastUrl);
-    const j = await r.json();
+grid.innerHTML = '<div class="loader">Loading forecast…</div>';
+hourlyWrap.style.display="none";
+hourlyWrap.innerHTML="";
+activeDay=null;
 
-    const periods = j.properties.periods || [];
+const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+const pj = await p.json();
 
-    const days = [];
+const forecastUrl = pj.properties.forecast;
+const hourlyUrl = pj.properties.forecastHourly;
 
-    for(let i=0;i<periods.length && days.length<7;i++){
-      if(periods[i].isDaytime){
-        const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
+const r = await fetch(forecastUrl);
+const j = await r.json();
 
-        days.push({
-          name: periods[i].name,
-          icon: periods[i].icon,
-          hi: periods[i].temperature,
-          lo: night ? night.temperature : "",
-          desc: periods[i].shortForecast,
-          wind: periods[i].windSpeed,
-          pop: periods[i].probabilityOfPrecipitation?.value
-        });
-      }
-    }
+const periods = j.properties.periods || [];
 
-    grid.innerHTML = "";
+const days=[];
 
-const hourlyWrap=document.getElementById("hourlyWrap");
-let activeDay=null;
+for(let i=0;i<periods.length && days.length<7;i++){
+ if(periods[i].isDaytime){
+   const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
 
-days.forEach((d,i)=>{
-  const card=document.createElement("div");
-  card.className="fc-card";
-
-  card.innerHTML=`
-    <div class="fc-day">${d.name}</div>
-    <div class="fc-icon"><img src="${d.icon}"></div>
-    <div class="fc-temp">
-      <span class="hi">${d.hi}°</span>
-      <span class="lo">${d.lo}°</span>
-    </div>
-    <div class="fc-desc">${d.desc}</div>
-  `;
-grid.appendChild(card);
-
-
-  card.onclick=async()=>{
-
-    if(activeDay===i){
-      hourlyWrap.style.display="none";
-      hourlyWrap.innerHTML="";
-      activeDay=null;
-      return;
-    }
-
-    activeDay=i;
-    hourlyWrap.style.display="flex";
-    hourlyWrap.innerHTML="<div class='loader'>Loading hourly…</div>";
-
-    const hr=await fetch(pj.properties.forecastHourly);
-    const hj=await hr.json();
-
-    hourlyWrap.innerHTML="";
-
-   const hours = hj.properties.periods.slice(0,24);
-
-hours.forEach(h=>{
-  const el=document.createElement("div");
-  el.className="hour-card";
-
-  el.innerHTML=`
-    <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
-    <img src="${h.icon}">
-    <div class="hour-temp">${h.temperature}°</div>
-  `;
-
-  hourlyWrap.appendChild(el);
-});
-
-
-
-});
-
-
-    tsEl.textContent="Last updated: "+new Date().toLocaleString();
-
-  }catch(e){
-    console.error(e);
-    grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
-  }
+   days.push({
+     name:periods[i].name,
+     icon:periods[i].icon,
+     hi:periods[i].temperature,
+     lo:night ? night.temperature:"",
+     desc:periods[i].shortForecast
+   });
+ }
 }
 
-/* Initial load */
-fetchForecast();
+grid.innerHTML="";
 
-/* Refresh button */
-refreshBtn.addEventListener("click", fetchForecast);
+days.forEach((d,i)=>{
 
-/* City change */
-citySelect.addEventListener("change",()=>{
-  const parts=citySelect.value.split(",");
-  lat=parts[0];
-  lon=parts[1];
-  fetchForecast();
+const card=document.createElement("div");
+card.className="fc-card";
+
+card.innerHTML=`
+ <div class="fc-day">${d.name}</div>
+ <div class="fc-icon"><img src="${d.icon}"></div>
+ <div class="fc-temp">
+   <span class="hi">${d.hi}°</span>
+   <span class="lo">${d.lo}°</span>
+ </div>
+ <div class="fc-desc">${d.desc}</div>
+`;
+
+grid.appendChild(card);
+
+card.onclick=async()=>{
+
+ if(activeDay===i){
+   hourlyWrap.style.display="none";
+   hourlyWrap.innerHTML="";
+   activeDay=null;
+   return;
+ }
+
+ activeDay=i;
+ hourlyWrap.style.display="flex";
+ hourlyWrap.innerHTML="<div class='loader'>Loading hourly…</div>";
+
+ const hr=await fetch(hourlyUrl);
+ const hj=await hr.json();
+
+ hourlyWrap.innerHTML="";
+
+ hj.properties.periods.slice(0,24).forEach(h=>{
+
+   const el=document.createElement("div");
+   el.className="hour-card";
+
+   el.innerHTML=`
+     <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
+     <img src="${h.icon}">
+     <div class="hour-temp">${h.temperature}°</div>
+   `;
+
+   hourlyWrap.appendChild(el);
+ });
+
+};
+
 });
 
-/* Auto refresh hourly */
+tsEl.textContent="Last updated: "+new Date().toLocaleString();
+
+}catch(e){
+ console.error(e);
+ grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
+}
+
+}
+
+fetchForecast();
+
+refreshBtn.addEventListener("click",fetchForecast);
+
+citySelect.addEventListener("change",()=>{
+ const parts=citySelect.value.split(",");
+ lat=parts[0];
+ lon=parts[1];
+ fetchForecast();
+});
+
 setInterval(fetchForecast,3600000);
 
 })();
 </script>
+
 
 </div> <!-- last panel / content -->
 
