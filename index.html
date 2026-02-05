@@ -1527,26 +1527,21 @@ days.forEach((d,i)=>{
 
     hourlyWrap.innerHTML="";
 
-    hj.properties.periods
-    hj.properties.periods
-      .slice(0,24)
-      .forEach(h=>{
+   const hours = hj.properties.periods.slice(0,24);
 
-      .slice(0,24)
-      .forEach(h=>{
-        const el=document.createElement("div");
-        el.className="hour-card";
+hours.forEach(h=>{
+  const el=document.createElement("div");
+  el.className="hour-card";
 
-        el.innerHTML=`
-          <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
-          <img src="${h.icon}">
-          <div class="hour-temp">${h.temperature}°</div>
-        `;
+  el.innerHTML=`
+    <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
+    <img src="${h.icon}">
+    <div class="hour-temp">${h.temperature}°</div>
+  `;
 
-        hourlyWrap.appendChild(el);
-      });
+  hourlyWrap.appendChild(el);
+});
 
-  };
 
   grid.appendChild(card);
 });
