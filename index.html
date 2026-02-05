@@ -1328,10 +1328,16 @@ html, body {
 <div class="panel">
 
   <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
-    <span>Current Conditions <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span></span>
-<span id="ccHint" style="margin-right:8px;">Select a city →</span>
+  <span>
+    Current Conditions
+    <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span>
+  </span>
+
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="ccHint">Select a city →</span>
 
     <select id="currentCitySelect"
+
       style="font-size:12px;background:#020617;color:#9ca3af;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:2px 6px;">
       <option value="US" selected>United States</option>
       <option value="45.5152,-122.6784">Portland, OR</option>
