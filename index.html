@@ -919,6 +919,49 @@ text-shadow:
   50%{opacity:1}
   100%{opacity:.4}
 }
+/* ================= MOBILE FORECAST FIX ================= */
+@media (max-width:768px){
+
+  /* Keep hourly inside Forecast panel */
+  #hourlyWrap{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:8px;
+  }
+
+  #hourRail{
+    display:flex;
+    gap:10px;
+    min-width:max-content;
+  }
+
+  .hour-card{
+    min-width:64px;
+    padding:8px 6px;
+    font-size:11px;
+  }
+
+  /* Make 7-day cards easier to tap */
+  .fc-card{
+    min-height:130px;
+  }
+
+  .fc-day{
+    font-size:14px;
+  }
+
+  .fc-temp{
+    font-size:18px;
+  }
+
+  /* Hide arrows on mobile (finger scroll instead) */
+  .hour-arrow{
+    display:none;
+  }
+
+}
   
 </style>
 </head>
