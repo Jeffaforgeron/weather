@@ -1176,21 +1176,22 @@ text-shadow:
 
   <!-- RADAR -->
   <div class="panel">
-   <div class="panel-title">Live Radar</div>
+   <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+  <span>Live Radar</span>
+
+  <div style="display:flex;gap:6px;">
+    <select id="regionSelect"></select>
+    <select id="stateSelect"></select>
+    <select id="radarSelect"></select>
+  </div>
+</div>
+
 
     <div class="image-box">
       <img id="radarImage"
            src="https://radar.weather.gov/ridge/standard/PACNORTHWEST_loop.gif">
     </div>
-    <div class="controls">
-      Region:
-      <select id="regionSelect"></select>
-      State:
-      <select id="stateSelect"></select>
-      City:
-      <select id="radarSelect"></select>
-    </div>
-  </div>
+    
 
 <!-- CURRENT CONDITIONS -->
 <div class="panel">
