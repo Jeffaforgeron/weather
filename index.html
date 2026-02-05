@@ -1528,7 +1528,10 @@ days.forEach((d,i)=>{
     hourlyWrap.innerHTML="";
 
     hj.properties.periods
-      .filter(h=>h.startTime.startsWith(days[i].start))
+    hj.properties.periods
+      .slice(0,24)
+      .forEach(h=>{
+
       .slice(0,24)
       .forEach(h=>{
         const el=document.createElement("div");
