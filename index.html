@@ -1952,6 +1952,37 @@ if(latest.precipitationLastHour?.value != null){
   ccRainMonth.innerHTML = `Last Hour <span>${hr.toFixed(2)} in</span>`;
 }else{
   ccRainMonth.innerHTML = "Last Hour <span>—</span>";
+  /* ===== MONTHLY PRECIP (CLIMATE DATA) ===== */
+
+try{
+
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,"0");
+
+  const start = `${y}-${m}-01`;
+  const end = now.toISOString().slice(0,10);
+
+  const climateURL =
+   `https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=${station}&startDate=${start}&endDate=${end}&dataTypes=PRCP&units=standard&format=json`;
+
+  const clim = await fetch(climateURL);
+  const cj = await clim.json();
+
+  let total = 0;
+
+  cj.forEach(d=>{
+    if(d.PRCP) total += parseFloat(d.PRCP);
+  });
+
+  if(total>0){
+    ccRainMonth.innerHTML += `<br>Monthly <span>${total.toFixed(2)} in</span>`;
+  }
+
+}catch(e){
+  console.warn("Monthly precip unavailable");
+}
+
 }
 
 
