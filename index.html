@@ -2012,11 +2012,13 @@ if(chart) chart.destroy();
 
 const ctx = ccCanvas.getContext("2d");
 // Subtle temp labels every ~3 hours
+// Subtle temp labels every 3 hours (time-based, not index-based)
 const tempLabelPlugin = {
   id: 'tempLabels',
   afterDatasetsDraw(chart){
     const {ctx} = chart;
     const meta = chart.getDatasetMeta(0);
+    const labels = chart.data.labels;
 
     ctx.save();
     ctx.fillStyle = "#9ca3af";
@@ -2024,16 +2026,21 @@ const tempLabelPlugin = {
     ctx.textAlign = "center";
 
     meta.data.forEach((pt, i)=>{
-      // every 3rd point (≈ every 3 hours)
-      if(i % 3 !== 0) return;
+
+      const hour = parseInt(labels[i]); // your labels are already hour strings
+
+      // Only label every 3 hours (5,8,11,14,etc)
+      if(isNaN(hour) || hour % 3 !== 0) return;
 
       const val = Math.round(chart.data.datasets[0].data[i]);
       ctx.fillText(val + "°", pt.x, pt.y - 10);
+
     });
 
     ctx.restore();
   }
 };
+
 
 
 chart=new Chart(ctx,{
