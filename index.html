@@ -1326,31 +1326,33 @@ html, body {
 <div class="top-row">
   <!-- SATELLITE -->
   <div class="panel">
-  <div class="panel-title">Satellite (click image to animate)</div>
+ <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+  <span>Satellite (click image to animate)</span>
+
+  <select id="satRegion" onchange="updateSatellite()">
+    <option value="pnw">Pacific Northwest (G18)</option>
+    <option value="wus">West U.S. (G18)</option>
+    <option value="psw">Southwest U.S. (G18)</option>
+    <option value="gwas">CONUS (G18)</option>
+    <option value="eus">East U.S. (G19)</option>
+    <option value="nr">Northern Rockies (G19)</option>
+    <option value="sr">Southern Rockies (G19)</option>
+    <option value="sp">Southern Plains (G19)</option>
+    <option value="can">Canada & Northern U.S. (G19)</option>
+    <option value="umv">Upper Mississippi Valley (G19)</option>
+    <option value="smv">Lower Mississippi Valley (G19)</option>
+    <option value="cgl">Great Lakes (G19)</option>
+    <option value="ne">Northeast (G19)</option>
+  </select>
+</div>
+
     <a id="satLink" target="_blank">
       <div class="image-box">
         <img id="satImage"
              src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/pnw/GEOCOLOR/latest.jpg">
       </div>
     </a>
-    <div class="controls">
-      Region:
-      <select id="satRegion" onchange="updateSatellite()">
-        <option value="pnw">Pacific Northwest (G18)</option>
-        <option value="wus">West U.S. (G18)</option>
-        <option value="psw">Southwest U.S. (G18)</option>
-        <option value="gwas">CONUS (G18)</option>
-        <option value="eus">East U.S. (G19)</option>
-        <option value="nr">Northern Rockies (G19)</option>
-        <option value="sr">Southern Rockies (G19)</option>
-        <option value="sp">Southern Plains (G19)</option>
-        <option value="can">Canada & Northern U.S. (G19)</option>
-        <option value="umv">Upper Mississippi Valley (G19)</option>
-        <option value="smv">Lower Mississippi Valley (G19)</option>
-        <option value="cgl">Great Lakes (G19)</option>
-        <option value="ne">Northeast (G19)</option>
-      </select>
-    </div>
+   
   </div>
 
   <!-- RADAR -->
