@@ -1803,7 +1803,7 @@ document.getElementById("hourlyHint").style.display="none";
  if(activeDay===i){
    hourlyWrap.style.display="none";
 document.getElementById("hourRail").innerHTML="";
-
+document.getElementById("hourlyHint").style.display="block";
    activeDay=null;
    return;
  }
@@ -1811,7 +1811,7 @@ document.getElementById("hourRail").innerHTML="";
  activeDay=i;
  hourlyWrap.style.display="flex";
  document.getElementById("hourRail").innerHTML="";
-
+document.getElementById("hourlyHint").style.display="none";
 
  const hr=await fetch(hourlyUrl);
  const hj=await hr.json();
