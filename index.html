@@ -1809,16 +1809,18 @@ ccFeels.textContent = latest.apparentTemperature?.value
   : "";
 
 ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
-
+latest.windSpeed = latest.windSpeed || latest.windGust;
 const windDir = latest.windDirection?.value
   ? ["N","NE","E","SE","S","SW","W","NW"][Math.round(latest.windDirection.value/45)%8]
   : "";
-
+latest.windSpeed = latest.windSpeed || latest.windGust;
+// Use sustained wind, not gusts
 const windMS = latest.windSpeed?.value;
 
 const windMPH = windMS != null
   ? Math.round(windMS * 2.23694)
   : "—";
+
 
 
 ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
