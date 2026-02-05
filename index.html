@@ -1390,6 +1390,7 @@ html, body {
       <option value="US" selected>United States</option>
       <option value="45.5152,-122.6784">Portland, OR</option>
       <option value="34.0522,-118.2437">Los Angeles, CA</option>
+    <option value="32.7157,-117.1611">San Diego, CA</option>
       <option value="38.2975,-122.2869">Napa, CA</option>
 <option value="33.8303,-116.5453">Palm Springs, CA</option>
       <option value="47.6062,-122.3321">Seattle, WA</option>
@@ -1744,6 +1745,8 @@ let chart;
 const CITY_STATIONS = {
   "45.5152,-122.6784": "KPDX", // Portland Intl
   "34.0522,-118.2437": "KLAX", // Los Angeles Intl
+  "32.7157,-117.1611": "KSAN", // San Diego Intl
+
   "47.6062,-122.3321": "KSEA", // SeaTac
   "40.7128,-74.0060": "KNYC", // NYC Central Park
   "41.8781,-87.6298": "KMDW", // Chicago Midway
@@ -1964,6 +1967,7 @@ citySelect.innerHTML = `
 <option value="45.5152,-122.6784" selected>Portland, OR</option>
 <option value="47.6062,-122.3321">Seattle, WA</option>
 <option value="34.0522,-118.2437">Los Angeles, CA</option>
+<option value="32.7157,-117.1611">San Diego, CA</option>
 <option value="38.2975,-122.2869">Napa, CA</option>
 <option value="33.8303,-116.5453">Palm Springs, CA</option>
 <option value="40.7128,-74.0060">New York, NY</option>
