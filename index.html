@@ -1169,6 +1169,42 @@ text-shadow:
   display:flex;
   flex-direction:column;
 }
+/* ==== HARD LOCK hourly forecast inside Forecast Tools panel ==== */
+
+#forecastPanel {
+  position: relative;
+  overflow: hidden;   /* keeps hourly inside this panel only */
+}
+
+.forecast-tv {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#hourlyWrap {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#hourRail {
+  display: flex;
+  width: max-content;
+  max-width: none;
+}
+
+/* Prevent hourly cards from forcing page wider */
+.hour-card {
+  flex-shrink: 0;
+}
+
+/* Kill any accidental horizontal page stretch */
+html, body {
+  overflow-x: hidden;
+}
 
  
 </style>
