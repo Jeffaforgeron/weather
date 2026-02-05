@@ -1553,7 +1553,8 @@ try{
 
 grid.innerHTML = '<div class="loader">Loading forecast…</div>';
 hourlyWrap.style.display="none";
-hourlyWrap.innerHTML="";
+document.getElementById("hourRail").innerHTML="";
+
 activeDay=null;
 
 const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
@@ -1606,24 +1607,29 @@ card.onclick=async()=>{
 
  if(activeDay===i){
    hourlyWrap.style.display="none";
-   hourlyWrap.innerHTML="";
+document.getElementById("hourRail").innerHTML="";
+
    activeDay=null;
    return;
  }
 
  activeDay=i;
  hourlyWrap.style.display="flex";
- hourlyWrap.innerHTML="<div class='loader'>Loading hourly…</div>";
+ document.getElementById("hourRail").innerHTML="";
+
 
  const hr=await fetch(hourlyUrl);
  const hj=await hr.json();
 
- hourlyWrap.innerHTML="";
+document.getElementById("hourRail").innerHTML="";
+
+
 
 const hours = hj?.properties?.periods || [];
 
 if(!hours.length){
-  hourlyWrap.innerHTML="<div class='loader'>Hourly unavailable</div>";
+  document.getElementById("hourRail").innerHTML="<div class='loader'>Hourly unavailable</div>";
+
   return;
 }
 
