@@ -1252,6 +1252,29 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: #38bdf8 #020617;
 }
+/* === FORCE COMPACT TICKER (DESKTOP) === */
+.city-list{
+  width:240px !important;
+  height:28px !important;
+  padding:4px 6px !important;
+  top:10px !important;
+  left:10px !important;
+  border-radius:7px !important;
+}
+
+/* tighter ticker items */
+.city-item{
+  padding:0 10px !important;
+  gap:4px !important;
+}
+
+/* mobile stays full width */
+@media(max-width:768px){
+  .city-list{
+    width:100% !important;
+    height:auto !important;
+  }
+}
  
 </style>
 </head>
