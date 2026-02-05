@@ -1252,29 +1252,45 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: #38bdf8 #020617;
 }
-/* === FORCE COMPACT TICKER (DESKTOP) === */
+/* ==== HARD LOCK TICKER SIZE (DESKTOP) ==== */
+
 .city-list{
-  width:240px !important;
-  height:28px !important;
-  padding:4px 6px !important;
+  position:absolute !important;
   top:10px !important;
   left:10px !important;
+
+  width:240px !important;
+  max-width:240px !important;
+  height:28px !important;
+
+  padding:4px 6px !important;
   border-radius:7px !important;
+
+  overflow:hidden !important;
 }
 
-/* tighter ticker items */
+/* constrain the scrolling rail */
+.city-track{
+  display:flex !important;
+  width:max-content !important;
+}
+
+/* tighter items */
 .city-item{
   padding:0 10px !important;
   gap:4px !important;
 }
 
-/* mobile stays full width */
+/* mobile still full width */
 @media(max-width:768px){
   .city-list{
+    position:static !important;
     width:100% !important;
+    max-width:100% !important;
     height:auto !important;
   }
 }
+
  
 </style>
 </head>
