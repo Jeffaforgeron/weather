@@ -1144,7 +1144,32 @@ text-shadow:
 #hourlyHint{
   margin-top:2px !important;
 }
-  
+ /* === FORCE 7-DAY FORECAST TO TOP OF PANEL === */
+
+.forecast-tv{
+  min-height:unset !important;
+  padding-top:4px !important;
+  justify-content:flex-start !important;
+}
+
+.forecast-header{
+  margin-top:0 !important;
+}
+
+#hourlyHint{
+  margin-top:4px !important;
+}
+
+#forecastGrid{
+  margin-top:0 !important;
+}
+
+#forecastPanel{
+  display:flex;
+  flex-direction:column;
+}
+
+ 
 </style>
 </head>
 
