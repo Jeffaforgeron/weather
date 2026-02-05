@@ -861,6 +861,27 @@ text-shadow:
 
 .hour-arrow.left{left:0}
 .hour-arrow.right{right:0}
+/* FORCE HOURLY FORECAST TO SHOW */
+
+#hourlyWrap{
+  display:none;
+}
+
+#hourlyWrap[style*="flex"]{
+  display:flex !important;
+  width:100%;
+  max-width:100%;
+  min-height:140px;
+  box-sizing:border-box;
+}
+
+.forecast-tv{
+  overflow:visible !important;
+}
+
+#forecastGrid{
+  width:100%;
+}
   
 </style>
 </head>
