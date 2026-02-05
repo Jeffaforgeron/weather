@@ -1365,6 +1365,12 @@ html, body {
   color:#9ca3af;
 }
 
+.hour-wind{
+  font-size:10px;
+  color:#9ca3af;
+  margin-top:2px;
+}
+
   
 </style>
 </head>
@@ -2173,11 +2179,13 @@ hours.slice(0,24).forEach(h=>{
    const el=document.createElement("div");
    el.className="hour-card";
 
-   el.innerHTML=`
-     <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
-     <img src="${h.icon}">
-     <div class="hour-temp">${h.temperature}°</div>
-   `;
+el.innerHTML=`
+  <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
+  <img src="${h.icon}">
+  <div class="hour-temp">${h.temperature}°</div>
+  <div class="hour-wind">${h.windSpeed}</div>
+`;
+
 
    document.getElementById("hourRail").appendChild(el);
 
