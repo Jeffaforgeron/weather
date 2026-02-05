@@ -1308,20 +1308,36 @@ html, body {
   }
 }
 
-/* ===== TICKER LABEL (CENTERED) ===== */
+/* ===== TICKER LABEL FINAL FIX ===== */
 .ticker-label{
   position:absolute;
-  top:-10px;
+  top:-14px;               /* lift above ticker */
   left:50%;
   transform:translateX(-50%);
 
   font-size:9px;
   text-transform:uppercase;
-  letter-spacing:.6px;
+  letter-spacing:.7px;
   color:#9ca3af;
-  opacity:.65;
+  opacity:.7;
+
+  white-space:nowrap;
   pointer-events:none;
 }
+
+/* Mobile: keep label visible when ticker becomes static */
+@media(max-width:768px){
+  .ticker-label{
+    position:relative;
+    top:0;
+    left:auto;
+    transform:none;
+    display:block;
+    text-align:center;
+    margin-bottom:4px;
+  }
+}
+
 
   
  
