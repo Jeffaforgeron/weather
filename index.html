@@ -298,16 +298,16 @@ select { font-size: 13px; }
 
 /* ===== FORECAST TV (sleek) ===== */
 .forecast-tv {
-  padding: 12px;
+  padding: 6px 12px 12px 12px; /* tighter top */
   display: flex;
   flex-direction: column;
   gap: 10px;
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
   border-radius: 8px;
-  min-height: 220px;
+  min-height: auto;          /* REMOVE forced height */
   color: var(--text-primary, #e5e7eb);
-  flex:1;
 }
+
 
 .forecast-header {
   display:flex;
@@ -887,8 +887,9 @@ text-shadow:
 /* HARD CONTAIN HOURLY FORECAST INSIDE FORECAST PANEL */
 
 #forecastPanel {
-  overflow: hidden;
+  overflow: visible;
 }
+
 
 .forecast-tv {
   max-width: 100%;
