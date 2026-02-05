@@ -1075,6 +1075,30 @@ text-shadow:
   }
 
 }
+/* ===== MOBILE CURRENT CONDITIONS LAYOUT FIX ===== */
+@media (max-width:768px){
+
+  /* Stack chart above stats */
+  .cc-main{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Make chart full width */
+  .cc-left{
+    width:100%;
+  }
+
+  /* Push stats below chart */
+  .cc-right{
+    margin-top:10px;
+  }
+
+  /* Give chart breathing room */
+  #ccChart{
+    min-height:240px;
+  }
+
+}
   
 </style>
 </head>
