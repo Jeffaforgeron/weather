@@ -1435,9 +1435,7 @@ html, body {
       <div id="ccWind"></div>
       <div id="ccHum"></div>
       <div id="ccDew"></div>
-      <div id="ccSun"></div>
-      <div id="ccUV"></div>
-      <div id="ccRiseSet"></div>
+     
 
     </div>
 
@@ -1831,7 +1829,7 @@ ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</
 
 ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
-ccSun.innerHTML = "Sun <span>—</span>";
+
 
 try {
   const gridURL = pj.properties.forecastGridData;
@@ -1847,7 +1845,7 @@ try {
 
 }
 
-ccUV.innerHTML="UV <span>—</span>";
+
 
 ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
 
