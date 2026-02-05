@@ -882,6 +882,28 @@ text-shadow:
 #forecastGrid{
   width:100%;
 }
+/* HARD CONTAIN HOURLY FORECAST INSIDE FORECAST PANEL */
+
+#forecastPanel {
+  overflow: hidden;
+}
+
+.forecast-tv {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#hourlyWrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
+
+.hour-scroll {
+  max-width: 100%;
+}
   
 </style>
 </head>
