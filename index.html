@@ -1371,6 +1371,11 @@ html, body {
   margin-top:2px;
 }
 
+#ccRainDay span,
+#ccRainMonth span{
+  color:#38bdf8;
+  font-weight:600;
+}
   
 </style>
 </head>
@@ -1513,11 +1518,15 @@ html, body {
     </div>
 
     <!-- RIGHT: STATS -->
-    <div class="cc-right">
-      <div id="ccWx"></div>
-      <div id="ccWind"></div>
-      <div id="ccHum"></div>
-      <div id="ccDew"></div>
+<div class="cc-right">
+  <div id="ccWx"></div>
+  <div id="ccWind"></div>
+  <div id="ccHum"></div>
+  <div id="ccDew"></div>
+  <div id="ccRainDay"></div>
+  <div id="ccRainMonth"></div>
+</div>
+
      
 
     </div>
@@ -1927,6 +1936,30 @@ ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
 ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
 
 ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
+/* ===== PRECIP ===== */
+
+// Since midnight (meters → inches)
+if(latest.precipitationSinceMidnight?.value != null){
+  const inches = latest.precipitationSinceMidnight.value * 39.3701;
+  ccRainDay.innerHTML = `Precip Today <span>${inches.toFixed(2)} in</span>`;
+}else{
+  ccRainDay.innerHTML = "Precip Today <span>—</span>";
+}
+
+/* Monthly estimate by summing observations */
+let monthTotal = 0;
+
+oj.features.forEach(o=>{
+  if(o.properties.precipitationLastHour?.value){
+    monthTotal += o.properties.precipitationLastHour.value;
+  }
+});
+
+if(monthTotal>0){
+  ccRainMonth.innerHTML = `Monthly Precip <span>${(monthTotal*39.3701).toFixed(2)} in</span>`;
+}else{
+  ccRainMonth.innerHTML = "Monthly Precip <span>—</span>";
+}
 
 
 
