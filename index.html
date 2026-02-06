@@ -2216,7 +2216,7 @@ const CITY_NAMES = {
 async function fetchRAWS(stationId){
 
   const url =
-    `https://api.synopticdata.com/v2/stations/latest?stid=${stationId}&token=${SYNOPTIC_TOKEN}&units=english`;
+    `https://api.synopticdata.com/v2/stations/latest?stid=${stationId}&token=${SYNOPTIC_TOKEN}&units=english&recent=120`;
 
   const r = await fetch(url);
   const j = await r.json();
@@ -2225,6 +2225,7 @@ async function fetchRAWS(stationId){
 
   return j.STATION[0];
 }
+
   
 async function loadCity(lat,lon){
 
