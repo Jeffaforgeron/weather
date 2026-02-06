@@ -47,7 +47,7 @@ body {
 .top-row .panel:nth-child(4){ order:4; } /* Forecast */
 
 
-}
+
 
 /* ================= CITY TEMP TICKER ================= */
 .city-list {
@@ -881,12 +881,7 @@ h1{
   }
 }
 
-  0%{
-    opacity:.6;
-    text-shadow:
-      0 0 4px rgba(56,189,248,.3),
-      0 0 10px rgba(45,212,191,.2);
-  }
+  
 
   50%{
     opacity:1;
@@ -2258,7 +2253,7 @@ try {
   document.getElementById("ccSunset").textContent = "—";
 }
 
-const forecastZone = pj.properties.forecastZone;
+
 
 const key = `${lat},${lon}`;
 document.getElementById("ccCity").textContent = CITY_NAMES[key] || "Selected City";
@@ -2316,19 +2311,7 @@ if(typeof station === "object" && station.type === "raws"){
   return;
 }
 
-/* SYNOPTIC (CWOP like EW9981) */
-if(typeof station === "object" && station.type === "synoptic"){
 
-  const url =
-   `https://api.synopticdata.com/v2/stations/latest?stid=${station.id}&token=${SYNOPTIC_TOKEN}&units=english&recent=120`;
-
-  const r = await fetch(url);
-  const j = await r.json();
-
-  if(!j.STATION || !j.STATION.length){
-    alert("Station offline");
-    return;
-  }
 
   const obs = j.STATION[0].OBSERVATIONS;
 
