@@ -2210,6 +2210,18 @@ const CITY_NAMES = {
 
 };
 
+async function fetchRAWS(stationId){
+
+  const url =
+    `https://api.synopticdata.com/v2/stations/latest?stid=${stationId}&token=${SYNOPTIC_TOKEN}&units=english`;
+
+  const r = await fetch(url);
+  const j = await r.json();
+
+  if(!j.STATION || !j.STATION.length) return null;
+
+  return j.STATION[0];
+}
   
 async function loadCity(lat,lon){
 
@@ -2247,12 +2259,30 @@ document.getElementById("ccCity").textContent = CITY_NAMES[key] || "Selected Cit
 
 const station = CITY_STATIONS[key];
 
-
 if(!station){
   alert("Station not defined for this city.");
   return;
 }
 
+/* RAWS station */
+if(typeof station === "object"){
+
+  const raws = await fetchRAWS(station.id);
+  if(!raws){
+    alert("RAWS unavailable");
+    return;
+  }
+
+  ccTemp.textContent = Math.round(raws.OBSERVATIONS.air_temp_value_1.value) + "°";
+  ccWx.innerHTML = "Sky <span>—</span>";
+  ccWind.innerHTML = `Wind <span>${Math.round(raws.OBSERVATIONS.wind_speed_value_1.value)} mph</span>`;
+  ccHum.innerHTML = `Humidity <span>${Math.round(raws.OBSERVATIONS.relative_humidity_value_1.value)}%</span>`;
+  ccDew.innerHTML = `Dew Point <span>${Math.round(raws.OBSERVATIONS.dew_point_temperature_value_1.value)}°</span>`;
+
+  return;
+}
+
+/* NOAA METAR continues below */
 const stationURL = `https://api.weather.gov/stations/${station}`;
 
 
