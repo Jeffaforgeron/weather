@@ -2322,18 +2322,20 @@ try{
 const ccUV = document.getElementById("ccUV");
 
 try {
-  const gridURL = pj.properties.forecastGridData;
-  const gridResp = await fetch(gridURL);
-  const gridJSON = await gridResp.json();
 
-  const uv = gridJSON.properties.uvIndex?.values?.[0]?.value;
+  const hourlyResp = await fetch(pj.properties.forecastHourly);
+  const hourlyJSON = await hourlyResp.json();
 
-  ccUV.innerHTML = uv != null
-    ? `UV <span>${Math.round(uv)}</span>`
-    : "UV <span>—</span>";
-} catch {
+  const firstHour = hourlyJSON.properties.periods[0];
+  const uv = firstHour.uvIndex;
 
+  document.getElementById("ccUV").textContent =
+    uv != null ? uv : "—";
+
+} catch(e) {
+  document.getElementById("ccUV").textContent = "—";
 }
+
 
 
 
