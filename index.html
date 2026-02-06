@@ -2348,7 +2348,21 @@ oj.features.reverse().forEach(o=>{
   }
 });
 
-const latest=oj.features[oj.features.length-1].properties;
+let latest;
+
+if(!oj.features.length){
+
+  // CWOP fallback (no history available)
+  const lr = await fetch(`${stationURL}/observations/latest`);
+  const lj = await lr.json();
+  latest = lj.properties;
+
+}else{
+
+  latest = oj.features[oj.features.length-1].properties;
+
+}
+
 
 ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
   const tempF = Math.round(latest.temperature.value*9/5+32);
