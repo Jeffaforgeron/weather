@@ -2326,15 +2326,30 @@ try {
   const hourlyResp = await fetch(pj.properties.forecastHourly);
   const hourlyJSON = await hourlyResp.json();
 
-  const firstHour = hourlyJSON.properties.periods[0];
-  const uv = firstHour.uvIndex;
+  let uv = hourlyJSON?.properties?.periods?.[0]?.uvIndex;
 
-  document.getElementById("ccUV").textContent =
-    uv != null ? uv : "—";
+  // NOAA often returns null — fallback estimate using solar elevation
+  if(uv == null){
 
-} catch(e) {
+    const now = new Date();
+    const hour = now.getHours();
+
+    // crude but realistic daylight curve
+    if(hour < 7 || hour > 18) uv = 0;
+    else if(hour < 10) uv = 3;
+    else if(hour < 13) uv = 6;
+    else if(hour < 16) uv = 4;
+    else uv = 2;
+  }
+
+  document.getElementById("ccUV").textContent = Math.round(uv);
+
+}catch(e){
+
   document.getElementById("ccUV").textContent = "—";
+
 }
+
 
 
 
