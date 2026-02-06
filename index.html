@@ -2129,15 +2129,22 @@ chart=new Chart(ctx,{
 
   plugins:{
     legend:{display:false},
-    title:{
-      display:true,
-      text:"Temperature – Past 12 Hours",
-      color:"#9ca3af",
-      padding: window.innerWidth < 768 ? 2 : 6,
-      font:{
-        size: window.innerWidth < 768 ? 11 : 14
-      }
-    }
+   title:{
+  display:true,
+  text:"Temperature – Past 12 Hours",
+  color:"#9ca3af",
+
+  // PUSH TITLE UPWARD
+  padding:{
+    top:0,
+    bottom:18   // ← this is the key line
+  },
+
+  font:{
+    size: window.innerWidth < 768 ? 11 : 14
+  }
+}
+
   },
 
   scales:{
