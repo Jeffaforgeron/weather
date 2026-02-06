@@ -2198,6 +2198,8 @@ ccSelect.addEventListener("change",()=>{
 </script>
 <script>
 
+<script>
+
 /* ===== SAFE 7-DAY + HOURLY FORECAST MODULE (RESET CLEAN) ===== */
 (function(){
 
@@ -2205,11 +2207,31 @@ const grid = document.getElementById("forecastGrid");
 const tsEl = document.getElementById("forecastTimestamp");
 const refreshBtn = document.getElementById("forecastRefreshBtn");
 const citySelect = document.getElementById("forecastCitySelect");
-  const afdBox = document.getElementById("afdText");
+const hourlyWrap = document.getElementById("hourlyWrap");
+const afdBox = document.getElementById("afdText");
 
+if(!grid || !citySelect) return;
 
+/* -------- Forecast Discussion (simplified from forecast text) -------- */
 
-  /* Populate Forecast Cities */
+function summarizeForecast(periods){
+
+ if(!periods || !periods.length){
+   afdBox.textContent="Forecast discussion unavailable.";
+   return;
+ }
+
+ const parts = [];
+
+ periods.slice(0,4).forEach(p=>{
+   parts.push(`${p.name}: ${p.detailedForecast || p.shortForecast}.`);
+ });
+
+ afdBox.textContent = parts.join(" ").replace(/\s+/g," ").trim();
+}
+
+/* -------- City selector -------- */
+
 citySelect.innerHTML = `
 <option value="45.5152,-122.6784" selected>Portland, OR</option>
 <option value="47.6062,-122.3321">Seattle, WA</option>
@@ -2224,160 +2246,127 @@ citySelect.innerHTML = `
 <option value="39.7392,-104.9903">Denver, CO</option>
 `;
 
-const hourlyWrap = document.getElementById("hourlyWrap");
-const afdBox = document.getElementById("afdText");
-
-function summarizeForecast(periods){
-
- if(!periods || !periods.length){
-   afdBox.textContent="Forecast discussion unavailable.";
-   return;
- }
-
- const chunks = [];
-
- periods.slice(0,4).forEach(p=>{
-   chunks.push(`${p.name}: ${p.detailedForecast || p.shortForecast}.`);
- });
-
- let text = chunks.join(" ");
-
- // Light cleanup
- text = text.replace(/\s+/g," ").trim();
-
- afdBox.textContent = text;
-}
-
-if(!grid || !citySelect) return;
-
 let lat = 45.5152;
 let lon = -122.6784;
 let activeDay = null;
 
+/* -------- Main forecast loader -------- */
+
 async function fetchForecast(){
 
-try{
+ try{
 
-grid.innerHTML = '<div class="loader">Loading forecast…</div>';
-hourlyWrap.style.display="none";
-document.getElementById("hourRail").innerHTML="";
-
-activeDay=null;
-
-const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
-const pj = await p.json();
-
-const forecastUrl = pj.properties.forecast;
-const hourlyUrl = pj.properties.forecastHourly;
-
-const r = await fetch(forecastUrl);
-const j = await r.json();
-
-const periods = j.properties.periods || [];
-summarizeForecast(periods);
-const days=[];
-
-for(let i=0;i<periods.length && days.length<7;i++){
- if(periods[i].isDaytime){
-   const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
-
-days.push({
-  name:periods[i].name,
-  icon:periods[i].icon,
-  hi:periods[i].temperature,
-  lo:night ? night.temperature:"",
-  desc:periods[i].shortForecast,
-  wind: periods[i].windSpeed
-});
-
- }
-}
-
-grid.innerHTML="";
-
-days.forEach((d,i)=>{
-
-const card=document.createElement("div");
-card.className="fc-card";
-
-card.innerHTML=`
- <div class="fc-day">${d.name}</div>
- <div class="fc-icon"><img src="${d.icon}"></div>
- <div class="fc-temp">
-   <span class="hi">${d.hi}°</span>
-   <span class="lo">${d.lo}°</span>
- </div>
-<div class="fc-desc">${d.desc}</div>
-<div class="fc-wind">🌬 ${d.wind}</div>
-
-`;
-
-grid.appendChild(card);
-
-card.onclick=async()=>{
-document.getElementById("hourlyHint").style.display="none";
-
- if(activeDay===i){
-   hourlyWrap.style.display="none";
-document.getElementById("hourRail").innerHTML="";
-document.getElementById("hourlyHint").style.display="block";
-   activeDay=null;
-   return;
- }
-
- activeDay=i;
- hourlyWrap.style.display="flex";
+ grid.innerHTML = '<div class="loader">Loading forecast…</div>';
+ hourlyWrap.style.display="none";
  document.getElementById("hourRail").innerHTML="";
-document.getElementById("hourlyHint").style.display="none";
+ activeDay=null;
 
- const hr=await fetch(hourlyUrl);
- const hj=await hr.json();
+ const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+ const pj = await p.json();
 
-document.getElementById("hourRail").innerHTML="";
+ const forecastUrl = pj.properties.forecast;
+ const hourlyUrl = pj.properties.forecastHourly;
 
+ const r = await fetch(forecastUrl);
+ const j = await r.json();
 
+ const periods = j.properties.periods || [];
 
-const hours = hj?.properties?.periods || [];
+ summarizeForecast(periods);
 
-if(!hours.length){
-  document.getElementById("hourRail").innerHTML="<div class='loader'>Hourly unavailable</div>";
+ const days=[];
 
-  return;
-}
+ for(let i=0;i<periods.length && days.length<7;i++){
+   if(periods[i].isDaytime){
+     const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
 
-hours.slice(0,24).forEach(h=>{
+     days.push({
+       name:periods[i].name,
+       icon:periods[i].icon,
+       hi:periods[i].temperature,
+       lo:night ? night.temperature:"",
+       desc:periods[i].shortForecast,
+       wind:periods[i].windSpeed
+     });
+   }
+ }
 
+ grid.innerHTML="";
 
-   const el=document.createElement("div");
-   el.className="hour-card";
+ days.forEach((d,i)=>{
 
-el.innerHTML=`
-  <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
-  <img src="${h.icon}">
-  <div class="hour-temp">${h.temperature}°</div>
-  <div class="hour-wind">${h.windSpeed}</div>
-`;
+ const card=document.createElement("div");
+ card.className="fc-card";
 
+ card.innerHTML=`
+  <div class="fc-day">${d.name}</div>
+  <div class="fc-icon"><img src="${d.icon}"></div>
+  <div class="fc-temp">
+    <span class="hi">${d.hi}°</span>
+    <span class="lo">${d.lo}°</span>
+  </div>
+  <div class="fc-desc">${d.desc}</div>
+  <div class="fc-wind">🌬 ${d.wind}</div>
+ `;
 
-   document.getElementById("hourRail").appendChild(el);
+ grid.appendChild(card);
+
+ card.onclick=async()=>{
+
+   document.getElementById("hourlyHint").style.display="none";
+
+   if(activeDay===i){
+     hourlyWrap.style.display="none";
+     document.getElementById("hourRail").innerHTML="";
+     document.getElementById("hourlyHint").style.display="block";
+     activeDay=null;
+     return;
+   }
+
+   activeDay=i;
+   hourlyWrap.style.display="flex";
+   document.getElementById("hourRail").innerHTML="";
+
+   const hr=await fetch(hourlyUrl);
+   const hj=await hr.json();
+
+   const hours = hj?.properties?.periods || [];
+
+   if(!hours.length){
+     document.getElementById("hourRail").innerHTML="<div class='loader'>Hourly unavailable</div>";
+     return;
+   }
+
+   hours.slice(0,24).forEach(h=>{
+
+     const el=document.createElement("div");
+     el.className="hour-card";
+
+     el.innerHTML=`
+       <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
+       <img src="${h.icon}">
+       <div class="hour-temp">${h.temperature}°</div>
+       <div class="hour-wind">${h.windSpeed}</div>
+     `;
+
+     document.getElementById("hourRail").appendChild(el);
+   });
+
+ };
 
  });
 
-};
+ tsEl.textContent="Last updated: "+new Date().toLocaleString();
 
-});
-
-tsEl.textContent="Last updated: "+new Date().toLocaleString();
-
-}catch(e){
- console.error(e);
- grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
-}
+ }catch(e){
+   console.error(e);
+   grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
+   afdBox.textContent="Forecast discussion unavailable.";
+ }
 
 }
 
 fetchForecast();
-
 
 refreshBtn.addEventListener("click",fetchForecast);
 
@@ -2386,16 +2375,14 @@ citySelect.addEventListener("change",()=>{
  lat=parts[0];
  lon=parts[1];
  fetchForecast();
-
 });
-
 
 setInterval(fetchForecast,3600000);
 
-
-  function scrollHours(px){
-  document.getElementById("hourRail").scrollLeft += px;
+function scrollHours(px){
+ document.getElementById("hourRail").scrollLeft += px;
 }
+
 })();
 </script>
 
