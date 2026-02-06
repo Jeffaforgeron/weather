@@ -2146,10 +2146,9 @@ const CITY_STATIONS = {
 "33.7397,-116.4128": "KPSP", // Rancho Mirage
 "33.9611,-116.5017": "KPSP", // Desert Hot Springs
 
-
 "34.2439,-116.9114": { id:"BBBC1", type:"raws" },
 "34.2483,-117.1892": { id:"WIDC1", type:"raws", backup:"KONT" }, // Lake Arrowhead
-"33.7400,-116.7183": "EW9981", // Idyllwild Fire (CWOP)
+"33.7400,-116.7183": { id:"EW9981", type:"synoptic" }, // Idyllwild Fire (CWOP)
 
 
 
@@ -2271,7 +2270,8 @@ if(!station){
 }
 
 /* RAWS station */
-if(typeof station === "object"){
+if(typeof station === "object" && station.type === "raws"){
+
 
   let raws = await fetchRAWS(station.id);
 
@@ -2315,6 +2315,43 @@ if(typeof station === "object"){
   return;
 }
 
+/* SYNOPTIC (CWOP like EW9981) */
+if(typeof station === "object" && station.type === "synoptic"){
+
+  const url =
+   `https://api.synopticdata.com/v2/stations/latest?stid=${station.id}&token=${SYNOPTIC_TOKEN}&units=english&recent=120`;
+
+  const r = await fetch(url);
+  const j = await r.json();
+
+  if(!j.STATION || !j.STATION.length){
+    alert("Station offline");
+    return;
+  }
+
+  const obs = j.STATION[0].OBSERVATIONS;
+
+  const temp =
+    obs.air_temp_value_1?.value ??
+    obs.air_temp_value_2?.value;
+
+  if(temp == null){
+    alert("Temperature unavailable");
+    return;
+  }
+
+  const tempF = Math.round(temp);
+  ccTemp.textContent = tempF + "°";
+  applyTempTheme(tempF);
+
+  ccWx.innerHTML = "Sky <span>Idyllwild Fire</span>";
+
+  ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value ? Math.round(obs.wind_speed_value_1.value)+" mph":"—"}</span>`;
+  ccHum.innerHTML = `Humidity <span>${obs.relative_humidity_value_1?.value ? Math.round(obs.relative_humidity_value_1.value)+"%":"—"}</span>`;
+  ccDew.innerHTML = `Dew Point <span>${obs.dew_point_temperature_value_1?.value ? Math.round(obs.dew_point_temperature_value_1.value)+"°":"—"}</span>`;
+
+  return;
+}
 
 
 /* NOAA METAR continues below */
