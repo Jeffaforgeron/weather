@@ -2219,7 +2219,10 @@ async function loadAFD(lat,lon){
   const cwa = pj.properties.cwa;
 
   const afdList = await fetch(`https://api.weather.gov/products/types/AFD/locations/${cwa}`);
+   console.log("AFD list status:", afdList.status);
+
   const afdJson = await afdList.json();
+console.log("AFD JSON:", afdJson);
 
   const latest = afdJson["@graph"] && afdJson["@graph"][0] ? afdJson["@graph"][0].id : null;
 
