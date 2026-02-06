@@ -1376,6 +1376,35 @@ html, body {
   color:#38bdf8;
   font-weight:600;
 }
+/* ===== AFD SUMMARY FOOTER ===== */
+
+.afd-summary{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:12px;
+  color:#cbd5e1;
+  line-height:1.35;
+}
+
+.afd-title{
+  font-size:11px;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  color:#38bdf8;
+  margin-bottom:4px;
+}
+
+#afdText{
+  opacity:.85;
+}
+
+/* mobile: tighter */
+@media(max-width:768px){
+  .afd-summary{
+    font-size:11px;
+  }
+}
   
 </style>
 </head>
@@ -1586,6 +1615,11 @@ html, body {
     <div class="forecast-footer">
       <div id="forecastTimestamp" class="ts">Last updated: —</div>
     </div>
+  <div id="afdSummary" class="afd-summary">
+  <div class="afd-title">Forecast Discussion (simplified)</div>
+  <div id="afdText">Loading local forecast discussion…</div>
+</div>
+
   </div>
 </div>
 
@@ -2171,6 +2205,46 @@ const grid = document.getElementById("forecastGrid");
 const tsEl = document.getElementById("forecastTimestamp");
 const refreshBtn = document.getElementById("forecastRefreshBtn");
 const citySelect = document.getElementById("forecastCitySelect");
+  const afdBox = document.getElementById("afdText");
+
+async function loadAFD(lat,lon){
+
+ try{
+
+  afdBox.textContent = "Loading local forecast discussion…";
+
+  const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+  const pj = await p.json();
+
+  const cwa = pj.properties.cwa;
+
+  const afdList = await fetch(`https://api.weather.gov/products/types/AFD/locations/${cwa}`);
+  const afdJson = await afdList.json();
+
+  const latest = afdJson["@graph"]?.[0]?.id;
+  if(!latest) throw "No AFD";
+
+  const afdRaw = await fetch(latest);
+  const afdText = await afdRaw.json();
+
+  let txt = afdText.properties.text;
+
+  txt = txt.split(".AVIATION")[0];
+  txt = txt.replace(/&&[\s\S]*/,"");
+  txt = txt.replace(/^\s*\.[A-Z\s\/]+\.\.\./gm,"");
+  txt = txt.replace(/\n+/g," ");
+
+  const sentences = txt.match(/[^\.!\?]+[\.!\?]+/g) || [];
+  const summary = sentences.slice(0,5).join(" ").trim();
+
+  afdBox.textContent = summary || "Discussion unavailable.";
+
+ }catch(e){
+   afdBox.textContent = "Local forecast discussion unavailable.";
+ }
+
+}
+
   /* Populate Forecast Cities */
 citySelect.innerHTML = `
 <option value="45.5152,-122.6784" selected>Portland, OR</option>
@@ -2317,6 +2391,7 @@ tsEl.textContent="Last updated: "+new Date().toLocaleString();
 }
 
 fetchForecast();
+loadAFD(lat,lon);
 
 refreshBtn.addEventListener("click",fetchForecast);
 
@@ -2325,7 +2400,9 @@ citySelect.addEventListener("change",()=>{
  lat=parts[0];
  lon=parts[1];
  fetchForecast();
+ loadAFD(lat,lon);
 });
+
 
 setInterval(fetchForecast,3600000);
 
