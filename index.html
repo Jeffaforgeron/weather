@@ -1950,6 +1950,41 @@ const cityWrap=document.getElementById("ccCityWrap");
 const ccCanvas = document.getElementById("ccChart");
 
 let chart;
+function applyTempTheme(tempF){
+
+  let gradient, glow, line;
+
+  if(tempF < 45){
+    gradient = ["#60a5fa", "#9333ea"];       // cold blue → violet
+    glow = "rgba(96,165,250,.7)";
+    line = "#60a5fa";
+  }
+  else if(tempF < 70){
+    gradient = ["#38bdf8", "#4ade80"];       // cool aqua → mint
+    glow = "rgba(56,189,248,.7)";
+    line = "#38bdf8";
+  }
+  else if(tempF < 85){
+    gradient = ["#facc15", "#fb923c"];       // warm yellow → orange
+    glow = "rgba(251,146,60,.7)";
+    line = "#fb923c";
+  }
+  else{
+    gradient = ["#fb923c", "#ef4444"];       // hot orange → red
+    glow = "rgba(239,68,68,.8)";
+    line = "#ef4444";
+  }
+
+  // Main temp number
+  ccTemp.style.background = `linear-gradient(90deg,${gradient[0]},${gradient[1]})`;
+  ccTemp.style.webkitBackgroundClip = "text";
+  ccTemp.style.webkitTextFillColor = "transparent";
+  ccTemp.style.textShadow = `0 0 18px ${glow}`;
+
+  // Save for chart
+  window.currentTempLine = line;
+  window.currentTempGlow = glow;
+}
 
 const CITY_STATIONS = {
   "45.5152,-122.6784": "KPDX", // Portland Intl
@@ -2034,6 +2069,8 @@ oj.features.reverse().forEach(o=>{
 const latest=oj.features[oj.features.length-1].properties;
 
 ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
+  const tempF = Math.round(latest.temperature.value*9/5+32);
+applyTempTheme(tempF);
 ccFeels.textContent = latest.apparentTemperature?.value
   ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
   : "";
@@ -2210,11 +2247,11 @@ chart=new Chart(ctx,{
      tension:.4,
      fill:true,
      pointRadius:0,
-     borderColor:"#38bdf8",
+borderColor: window.currentTempLine || "#38bdf8",
      backgroundColor:(ctx)=>{
        const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
        g.addColorStop(0,"rgba(250,204,21,.45)");
-       g.addColorStop(.5,"rgba(56,189,248,.25)");
+       g.addColorStop(.5, window.currentTempGlow || "rgba(56,189,248,.25)");
        g.addColorStop(1,"rgba(37,99,235,.15)");
        return g;
      }
