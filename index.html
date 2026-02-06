@@ -1498,7 +1498,7 @@ html, body {
   padding-top:10px;
   border-top:1px solid rgba(255,255,255,.06);
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(2,1fr);
   gap:8px;
   font-size:11px;
   color:#9ca3af;
@@ -1720,11 +1720,10 @@ html, body {
 
   <!-- Sun + UV footer -->
   <div id="ccSunUV">
-    <div><span>Sunrise</span><strong id="ccSunrise">—</strong></div>
-    <div><span>Sunset</span><strong id="ccSunset">—</strong></div>
-    <div><span>UV</span><strong id="ccUV">—</strong></div>
-  </div>
+  <div><span>Sunrise</span><strong id="ccSunrise">—</strong></div>
+  <div><span>Sunset</span><strong id="ccSunset">—</strong></div>
 </div>
+
 
 
      
@@ -2319,36 +2318,7 @@ try{
 
 
 
-const ccUV = document.getElementById("ccUV");
 
-try {
-
-  const hourlyResp = await fetch(pj.properties.forecastHourly);
-  const hourlyJSON = await hourlyResp.json();
-
-  let uv = hourlyJSON?.properties?.periods?.[0]?.uvIndex;
-
-  // NOAA often returns null — fallback estimate using solar elevation
-  if(uv == null){
-
-    const now = new Date();
-    const hour = now.getHours();
-
-    // crude but realistic daylight curve
-    if(hour < 7 || hour > 18) uv = 0;
-    else if(hour < 10) uv = 3;
-    else if(hour < 13) uv = 6;
-    else if(hour < 16) uv = 4;
-    else uv = 2;
-  }
-
-  document.getElementById("ccUV").textContent = Math.round(uv);
-
-}catch(e){
-
-  document.getElementById("ccUV").textContent = "—";
-
-}
 
 
 
