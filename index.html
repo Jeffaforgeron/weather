@@ -1573,821 +1573,103 @@ html, body {
 
 
 
-<!-- FORECAST TOOLS (7-day sleek TV style) -->
+<!-- FORECAST TOOLS -->
 <div class="panel" id="forecastPanel">
- <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
-  <span>Forecast Tools</span>
 
-  <div style="display:flex;align-items:center;gap:8px;">
-    <span id="forecastHint">Select a city →</span>
-    <select id="forecastCitySelect"></select>
-  </div>
+<div class="panel-title">
+ Forecast Tools
+ <select id="forecastCitySelect">
+   <option value="45.5152,-122.6784" selected>Portland, OR</option>
+   <option value="47.6062,-122.3321">Seattle, WA</option>
+   <option value="34.0522,-118.2437">Los Angeles, CA</option>
+   <option value="32.7157,-117.1611">San Diego, CA</option>
+   <option value="38.2975,-122.2869">Napa, CA</option>
+   <option value="33.8303,-116.5453">Palm Springs, CA</option>
+   <option value="40.7128,-74.0060">New York, NY</option>
+   <option value="41.8781,-87.6298">Chicago, IL</option>
+   <option value="29.7604,-95.3698">Houston, TX</option>
+   <option value="25.7617,-80.1918">Miami, FL</option>
+   <option value="39.7392,-104.9903">Denver, CO</option>
+ </select>
 </div>
 
+<div class="forecast-tv">
 
-  <div class="forecast-tv">
-    <div class="forecast-header">
- 
+<div id="forecastGrid" class="forecast-grid"></div>
 
-  <div class="meta">7-Day Outlook via NWS</div>
-  <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
-</div>
-<div id="hourlyHint"> Click today to expand hourly forecast below ⬇</div>
-
-
-
-    <div id="forecastGrid" class="forecast-grid" aria-live="polite">
-      <!-- Forecast cards injected here -->
-      <div class="loader">Loading…</div>
-    </div>
-<div id="hourlyWrap" style="display:none;margin-top:10px;">
-
-  <div class="hour-arrow left" onclick="scrollHours(-200)">‹</div>
-
-  <div id="hourRail" class="hour-scroll"></div>
-
-  <div class="hour-arrow right" onclick="scrollHours(200)">›</div>
-
+<div id="hourlyWrap" style="display:none">
+ <div id="hourRail" class="hour-scroll"></div>
 </div>
 
-
-    <div class="forecast-footer">
-      <div id="forecastTimestamp" class="ts">Last updated: —</div>
-    </div>
-  <div id="afdSummary" class="afd-summary">
-  <div class="afd-title">Forecast Discussion (simplified)</div>
-  <div id="afdText">Loading local forecast discussion…</div>
+<div class="forecast-footer">
+ <div id="forecastTimestamp"></div>
 </div>
 
-  </div>
+<div class="afd-summary">
+ <div class="afd-title">Forecast Discussion (simplified)</div>
+ <div id="afdText"></div>
 </div>
 
-
-
-
-
+</div>
+</div>
 
 <script>
+(function(){
 
-const timeBar = document.getElementById("timeBar");
-  
-/* ===== CLOCKS ===== */
-function updateTimes(){
-  const n=new Date();
-  const f=tz=>n.toLocaleTimeString("en-US",{
-    timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
-  });
-  timeBar.innerHTML=`
-    <div class="time-pill"><span>PT</span>${f("America/Los_Angeles")}</div>
-    <div class="time-pill"><span>MT</span>${f("America/Denver")}</div>
-    <div class="time-pill"><span>CT</span>${f("America/Chicago")}</div>
-    <div class="time-pill"><span>ET</span>${f("America/New_York")}</div>
-    <div class="time-pill"><span>UTC</span>${n.toISOString().slice(11,19)}Z</div>
-  `;
-}
-setInterval(updateTimes,1000); updateTimes();
-updateSatellite();
+const grid=document.getElementById("forecastGrid");
+const citySelect=document.getElementById("forecastCitySelect");
+const afdBox=document.getElementById("afdText");
+const hourly=document.getElementById("hourlyWrap");
+const rail=document.getElementById("hourRail");
+const ts=document.getElementById("forecastTimestamp");
 
-/* ===== SATELLITE ===== */
-function updateSatellite(){
-  const r=satRegion.value;
-  const east=["eus","nr","sr","sp","can","umv","smv","cgl","ne"];
-  if(east.includes(r)){
-    satImage.src=`https://cdn.star.nesdis.noaa.gov/GOES19/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
-    satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G19&sector=${r}&band=GEOCOLOR&length=24`;
-  } else {
-    satImage.src=r==="gwas"
-      ? "https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/gwas/GEOCOLOR/1800x1080.jpg"
-      : `https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/${r}/GEOCOLOR/latest.jpg`;
-    satLink.href=`https://www.star.nesdis.noaa.gov/goes/sector_band.php?sat=G18&sector=${r}&band=GEOCOLOR&length=24`;
-  }
-}
+let lat="45.5152", lon="-122.6784";
 
-/* ===== RADAR DATA (FULL, SAFE) ===== */
-const radarRegions = {
-  "CONUS": { loop: "CONUS-LARGE" },
-  "Northwest": { loop:"PACNORTHWEST", states:{
-    "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
-    "OR":[["KRTX","Portland"],["KMAX","Medford"]],
-    "ID":[["KCBX","Boise"]],
-    "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]]
-  }},
-  "Southwest": { loop:"PACSOUTHWEST", states:{
-    "CA":[["KMUX","San Jose"],["KHNX","Hanford"],["KSOX","Santa Ana"],["KVTX","Los Angeles"],["KNKX","San Diego"],["KVBX","Vandenberg"]],
-    "NV":[["KRGX","Reno"],["KLRX","Elko"]],
-    "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"]],
-    "UT":[["KICX","Cedar City"]],
-    "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"]]
-  }},
-  "Northern Plains": { loop:"UPPERMISSVLY", states:{
-    "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
-    "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"]],
-    "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
-    "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]]
-  }},
-  "Southern Plains": { loop:"SOUTHPLAINS", states:{
-    "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"]],
-    "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
-    "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]]
-  }},
-  "Midwest": { loop:"MIDWEST", states:{
-    "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
-    "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
-    "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"]],
-    "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"]],
-    "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
-    "IN":[["KIND","Indianapolis"],["KIWX","Northern Indiana"]],
-    "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"]],
-    "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]]
-  }},
-  "Southeast": { loop:"SOUTHEAST", states:{
-    "FL":[["KJAX","Jacksonville"],["KTBW","Tampa"],["KMLB","Melbourne"],["KAMX","Miami"]],
-    "GA":[["KFFC","Atlanta"]],
-    "AL":[["KBMX","Birmingham"],["KHTX","Huntsville"]],
-    "TN":[["KOHX","Nashville"],["KNQA","Memphis"]],
-    "KY":[["KLVX","Louisville"],["KPAH","Paducah"]],
-    "SC":[["KCAE","Columbia"]],
-    "NC":[["KRAX","Raleigh"],["KLTX","Wilmington"]],
-    "LA":[["KLCH","Lake Charles"],["KSHV","Shreveport"]],
-    "MS":[["KDGX","Jackson"]]
-  }},
-  "Northeast": { loop:"NORTHEAST", states:{
-    "NY":[["KBUF","Buffalo"],["KOKX","New York City"],["KENX","Albany"]],
-    "PA":[["KPBZ","Pittsburgh"],["KCCX","State College"]],
-    "MA":[["KBOX","Boston"]],
-    "NJ":[["KDIX","Mount Holly"]],
-    "CT":[["KBOX","Hartford"]],
-    "VT":[["KBTV","Burlington"]],
-    "NH":[["KGYX","Gray"]],
-    "ME":[["KGYX","Gray"],["KCAR","Caribou"]],
-    "MD":[["KLWX","Washington DC"]],
-    "VA":[["KAKQ","Wakefield"],["KFCX","Blacksburg"]],
-    "WV":[["KRLX","Charleston"]]
-  }}
-};
+async function load(){
 
-function initRadar(){
-  regionSelect.innerHTML="";
-  Object.keys(radarRegions).forEach(r=>{
-    regionSelect.innerHTML+=`<option value="${r}">${r}</option>`;
-  });
-  regionSelect.value="Northwest";
-  handleRegionChange();
-}
-
-function handleRegionChange(){
-  const r=radarRegions[regionSelect.value];
-  if(regionSelect.value==="CONUS"){
-    radarImage.src="https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif";
-    stateSelect.innerHTML="";
-    radarSelect.innerHTML="";
-    return;
-  }
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${r.loop}_loop.gif`;
-  stateSelect.innerHTML=`<option value="">Select State</option>`;
-  radarSelect.innerHTML="";
-  Object.keys(r.states).forEach(s=>{
-    stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
-  });
-}
-
-function populateRadars(){
-  radarSelect.innerHTML=`<option value="">Select City</option>`;
-  const r=radarRegions[regionSelect.value];
-  if(!stateSelect.value) return;
-  r.states[stateSelect.value].forEach(site=>{
-    radarSelect.innerHTML+=`<option value="${site[0]}">${site[1]}</option>`;
-  });
-}
-
-function changeRadar(){
-  if(!radarSelect.value) return;
-  radarImage.src=`https://radar.weather.gov/ridge/standard/${radarSelect.value}_loop.gif`;
-}
-
-regionSelect.onchange=handleRegionChange;
-stateSelect.onchange=populateRadars;
-radarSelect.onchange=changeRadar;
-initRadar();
-
-/* ===== CITY TEMPS ===== */
-async function updateCityTemps(){
-  const items = document.querySelectorAll(".city-item");
-
-  for(const item of items){
-    const s=item.dataset.station;
-    try{
-      const r=await fetch(`https://api.weather.gov/stations/${s}/observations/latest`);
-      const j=await r.json();
-      const c=j.properties.temperature.value;
-      item.querySelector(".city-temp").textContent =
-        c==null?"--":Math.round(c*9/5+32)+"°F";
-    }catch{
-      item.querySelector(".city-temp").textContent="--";
-    }
-  }
-}
-updateCityTemps();
-setInterval(updateCityTemps,300000);
-
-  /* ===== AUTO REFRESH IMAGES (EVERY 5 MINUTES) ===== */
-setInterval(() => {
-
-  /* Current Conditions Temperature Map */
-  const tempMap = document.getElementById("tempMapImage");
-  if (tempMap) {
-    tempMap.src =
-      "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png?ts=" +
-      Date.now();
-  }
-
-  /* Satellite */
-  const sat = document.getElementById("satImage");
-  if (sat) {
-    sat.src = sat.src.split("?")[0] + "?ts=" + Date.now();
-  }
-
-  /* Radar */
-  const radar = document.getElementById("radarImage");
-  if (radar) {
-    radar.src = radar.src.split("?")[0] + "?ts=" + Date.now();
-  }
-
-}, 300000); // 300000 ms = 5 minutes
-
-/* ===== TEMP MAP HOVER / TAP TOGGLE ===== */
-const airTempURL = "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png";
-const feelsLikeURL = "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tapp.png";
-
-const tempMap = document.getElementById("tempMapImage");
-const feelsToggle = document.getElementById("feelsToggle");
-
-if (tempMap && feelsToggle) {
-
-  // Desktop hover
-  feelsToggle.addEventListener("mouseenter", () => {
-    tempMap.src = feelsLikeURL + "?ts=" + Date.now();
-  });
-
-  feelsToggle.addEventListener("mouseleave", () => {
-    tempMap.src = airTempURL + "?ts=" + Date.now();
-  });
-
-let showingFeels = false;
-feelsToggle.addEventListener("click", () => {
-  showingFeels = !showingFeels;
-
-  tempMap.src = (showingFeels ? feelsLikeURL : airTempURL) + "?ts=" + Date.now();
-
-  // visual active state (mobile)
-  feelsToggle.classList.toggle("active", showingFeels);
-});
-
-}
-/* ===== FORCE AIR TEMP MAP BACK EVERY 5 MIN ===== */
-setInterval(() => {
-  const tempMap = document.getElementById("tempMapImage");
-  if (tempMap) {
-    tempMap.src =
-      "https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png?ts=" +
-      Date.now();
-  }
-}, 300000);
-
-
-
-/* ===== <script> ===== */
-
-const ccSelect=document.getElementById("currentCitySelect");
-const mapWrap=document.getElementById("ccMapWrap");
-const cityWrap=document.getElementById("ccCityWrap");
-
-const ccCanvas = document.getElementById("ccChart");
-
-let chart;
-
-const CITY_STATIONS = {
-  "45.5152,-122.6784": "KPDX", // Portland Intl
-  "34.0522,-118.2437": "KLAX", // Los Angeles Intl
-  "32.7157,-117.1611": "KSAN", // San Diego Intl
-
-  "47.6062,-122.3321": "KSEA", // SeaTac
-  "40.7128,-74.0060": "KNYC", // NYC Central Park
-  "41.8781,-87.6298": "KMDW", // Chicago Midway
-  "29.7604,-95.3698": "KHOU", // Houston Hobby
-  "25.7617,-80.1918": "KMIA", // Miami Intl
-  "39.7392,-104.9903": "KDEN", // Denver Intl
-
-  "38.2975,-122.2869": "KAPC", // Napa County Airport
-  "33.8303,-116.5453": "KPSP"  // Palm Springs Intl
-};
-
-
-async function loadCity(lat,lon){
-
-mapWrap.style.display="none";
-cityWrap.style.display="block";
+grid.innerHTML="Loading…";
+rail.innerHTML="";
+hourly.style.display="none";
 
 const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
 const pj=await p.json();
-const forecastZone = pj.properties.forecastZone;
 
-const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
-document.getElementById("ccCity").textContent=city;
+const f=await fetch(pj.properties.forecast);
+const fj=await f.json();
 
-const key = `${lat},${lon}`;
-const station = CITY_STATIONS[key];
+const periods=fj.properties.periods;
 
-if(!station){
-  alert("Station not defined for this city.");
-  return;
-}
+afdBox.textContent=periods.slice(0,4).map(p=>`${p.name}: ${p.shortForecast}.`).join(" ");
 
-const stationURL = `https://api.weather.gov/stations/${station}`;
+const days=periods.filter(p=>p.isDaytime).slice(0,7);
 
+grid.innerHTML="";
 
-
-
-
-/* last 12 hours */
-const end=new Date().toISOString();
-const start=new Date(Date.now()-12*3600000).toISOString();
-
-const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
-const oj = await obsResp.json();
-
-
-const temps=[];
-const labels=[];
-
-oj.features.reverse().forEach(o=>{
-  if(o.properties.temperature.value){
-    temps.push(o.properties.temperature.value*9/5+32);
-    labels.push(new Date(o.properties.timestamp).toLocaleTimeString([], {hour:'2-digit'}));
-  }
+days.forEach(d=>{
+ const c=document.createElement("div");
+ c.className="fc-card";
+ c.innerHTML=`
+  <div class="fc-day">${d.name}</div>
+  <img src="${d.icon}">
+  <div>${d.temperature}°</div>
+ `;
+ grid.appendChild(c);
 });
 
-const latest=oj.features[oj.features.length-1].properties;
-
-ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
-ccFeels.textContent = latest.apparentTemperature?.value
-  ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
-  : "";
-
-ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
-latest.windSpeed = latest.windSpeed || latest.windGust;
-const windDir = latest.windDirection?.value
-  ? ["N","NE","E","SE","S","SW","W","NW"][Math.round(latest.windDirection.value/45)%8]
-  : "";
-latest.windSpeed = latest.windSpeed || latest.windGust;
-// Use sustained wind, not gusts
-let windMPH = "—";
-
-if(latest.windSpeed?.value != null){
-
-  const v = latest.windSpeed.value;
-  const unit = latest.windSpeed.unitCode;
-
-  // meters per second
-  if(unit && unit.includes("m_s-1")){
-    windMPH = Math.round(v * 2.23694);
-  }
-
-  // kilometers per hour
-  else if(unit && unit.includes("km_h-1")){
-    windMPH = Math.round(v * 0.621371);
-  }
+ts.textContent="Updated "+new Date().toLocaleTimeString();
 
 }
 
-
-
-
-ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
-
-
-
-ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
-
-ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
-/* ===== PRECIP (PRO MODE) ===== */
-
-// Precip since midnight
-if(latest.precipitationSinceMidnight?.value != null){
-  const inches = latest.precipitationSinceMidnight.value * 39.3701;
-  ccRainDay.innerHTML = `Precip Today <span>${inches.toFixed(2)} in</span>`;
-}else{
-  ccRainDay.innerHTML = "Precip Today <span>—</span>";
-}
-
-// Precip last hour
-if(latest.precipitationLastHour?.value != null){
-  const hr = latest.precipitationLastHour.value * 39.3701;
-  ccRainMonth.innerHTML = `Last Hour <span>${hr.toFixed(2)} in</span>`;
-}else{
-  ccRainMonth.innerHTML = "Last Hour <span>—</span>";
-  /* ===== MONTHLY PRECIP (CLIMATE DATA) ===== */
-
-try{
-
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth()+1).padStart(2,"0");
-
-  const start = `${y}-${m}-01`;
-  const end = now.toISOString().slice(0,10);
-
-  const climateURL =
-   `https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=${station}&startDate=${start}&endDate=${end}&dataTypes=PRCP&units=standard&format=json`;
-
-  const clim = await fetch(climateURL);
-  const cj = await clim.json();
-
-  let total = 0;
-
-  cj.forEach(d=>{
-    if(d.PRCP) total += parseFloat(d.PRCP);
-  });
-
-  if(total>0){
-    ccRainMonth.innerHTML += `<br>Monthly <span>${total.toFixed(2)} in</span>`;
-  }
-
-}catch(e){
-  console.warn("Monthly precip unavailable");
-}
-
-}
-
-
-
-
-try {
-  const gridURL = pj.properties.forecastGridData;
-  const gridResp = await fetch(gridURL);
-  const gridJSON = await gridResp.json();
-
-  const uv = gridJSON.properties.uvIndex?.values?.[0]?.value;
-
-  ccUV.innerHTML = uv != null
-    ? `UV <span>${Math.round(uv)}</span>`
-    : "UV <span>—</span>";
-} catch {
-
-}
-
-
-
-ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
-
-
-/* Chart */
-if(chart) chart.destroy();
-
-const ctx = ccCanvas.getContext("2d");
-
-// Broadcast-style glowing + pulsing temp labels
-const tempLabelPlugin = {
-  id: 'tempLabels',
-  afterDatasetsDraw(chart){
-    const {ctx} = chart;
-    const meta = chart.getDatasetMeta(0);
-    const data = chart.data.datasets[0].data;
-
-    if(!data.length) return;
-
-    const n = data.length - 1;
-
-    // indices ~ latest-10h, -6h, -2h
-    const idx2  = Math.max(0, Math.round(n * (10/12)));
-    const idx6  = Math.max(0, Math.round(n * (6/12)));
-    const idx10 = Math.max(0, Math.round(n * (2/12)));
-
-    const points = [idx10, idx6, idx2];
-
-    // subtle pulse
-    const pulse = Math.sin(Date.now()/600) * 2;
-
-    ctx.save();
-    ctx.font = "12px system-ui";           // slightly bigger
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#e5e7eb";
-
-    ctx.shadowColor = "rgba(56,189,248,.8)";
-    ctx.shadowBlur = 10;
-
-    points.forEach(i=>{
-      const pt = meta.data[i];
-      if(!pt) return;
-
-      const val = Math.round(data[i]);
-
-      // lift higher + pulse
-      ctx.fillText(val + "°", pt.x, pt.y - 18 + pulse);
-    });
-
-    ctx.restore();
-  }
+citySelect.onchange=()=>{
+ [lat,lon]=citySelect.value.split(",");
+ load();
 };
 
-
-
-   
-
-
-
-chart=new Chart(ctx,{
- type:"line",
- data:{
-   labels,
-   datasets:[{
-     data:temps,
-     borderWidth:3,
-     tension:.4,
-     fill:true,
-     pointRadius:0,
-     borderColor:"#38bdf8",
-     backgroundColor:(ctx)=>{
-       const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
-       g.addColorStop(0,"rgba(250,204,21,.45)");
-       g.addColorStop(.5,"rgba(56,189,248,.25)");
-       g.addColorStop(1,"rgba(37,99,235,.15)");
-       return g;
-     }
-   }]
- },
-
- plugins:[tempLabelPlugin],   // 👈 ADD THIS LINE
-
- options:{
-  responsive:true,
-
- 
-
-  plugins:{
-    legend:{display:false},
-    title:{
-      display:true,
-      text:"Temperature – Past 12 Hours",
-      color:"#9ca3af",
-      padding: window.innerWidth < 768 ? 2 : 6,
-      font:{
-        size: window.innerWidth < 768 ? 11 : 14
-      }
-    }
-  },
-
-  scales:{
-    x:{
-      ticks:{
-        color:"#64748b",
-        maxTicksLimit: window.innerWidth < 768 ? 6 : 12,
-        font:{
-          size: window.innerWidth < 768 ? 9 : 11
-        }
-      },
-      grid:{display:false}
-    },
-
-    y:{
-      ticks:{
-        color:"#64748b",
-        padding:6,
-        font:{
-          size: window.innerWidth < 768 ? 9 : 11
-        }
-      },
-      grid:{color:"rgba(255,255,255,.04)"},
-      grace:"20%"
-    }
-  }
-}
-
-});
-
-
-
-}
-
-ccSelect.addEventListener("change",()=>{
-
- if(ccSelect.value==="US"){
-   cityWrap.style.display="none";
-   mapWrap.style.display="block";
-
-   // Show Feels Like when US map is active
-   if(feelsToggle) feelsToggle.style.display="inline";
-
-   return;
- }
-
- // Hide Feels Like when city mode is active
- if(feelsToggle) feelsToggle.style.display="none";
-
- const [lat,lon]=ccSelect.value.split(",");
- loadCity(lat,lon);
-});
-
-
-  
-
-
-  
-  
-
-
-<script>
-
-/* ===== SAFE 7-DAY + HOURLY FORECAST MODULE (RESET CLEAN) ===== */
-(function(){
-
-const grid = document.getElementById("forecastGrid");
-const tsEl = document.getElementById("forecastTimestamp");
-const refreshBtn = document.getElementById("forecastRefreshBtn");
-const citySelect = document.getElementById("forecastCitySelect");
-const hourlyWrap = document.getElementById("hourlyWrap");
-const afdBox = document.getElementById("afdText");
-
-if(!grid || !citySelect) return;
-
-/* -------- Forecast Discussion (simplified from forecast text) -------- */
-
-function summarizeForecast(periods){
-
- if(!periods || !periods.length){
-   afdBox.textContent="Forecast discussion unavailable.";
-   return;
- }
-
- const parts = [];
-
- periods.slice(0,4).forEach(p=>{
-   parts.push(`${p.name}: ${p.detailedForecast || p.shortForecast}.`);
- });
-
- afdBox.textContent = parts.join(" ").replace(/\s+/g," ").trim();
-}
-
-/* -------- City selector -------- */
-
-citySelect.innerHTML = `
-<option value="45.5152,-122.6784" selected>Portland, OR</option>
-<option value="47.6062,-122.3321">Seattle, WA</option>
-<option value="34.0522,-118.2437">Los Angeles, CA</option>
-<option value="32.7157,-117.1611">San Diego, CA</option>
-<option value="38.2975,-122.2869">Napa, CA</option>
-<option value="33.8303,-116.5453">Palm Springs, CA</option>
-<option value="40.7128,-74.0060">New York, NY</option>
-<option value="41.8781,-87.6298">Chicago, IL</option>
-<option value="29.7604,-95.3698">Houston, TX</option>
-<option value="25.7617,-80.1918">Miami, FL</option>
-<option value="39.7392,-104.9903">Denver, CO</option>
-`;
-
-let lat = 45.5152;
-let lon = -122.6784;
-let activeDay = null;
-
-/* -------- Main forecast loader -------- */
-
-async function fetchForecast(){
-
- try{
-
- grid.innerHTML = '<div class="loader">Loading forecast…</div>';
- hourlyWrap.style.display="none";
- document.getElementById("hourRail").innerHTML="";
- activeDay=null;
-
- const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
- const pj = await p.json();
-
- const forecastUrl = pj.properties.forecast;
- const hourlyUrl = pj.properties.forecastHourly;
-
- const r = await fetch(forecastUrl);
- const j = await r.json();
-
- const periods = j.properties.periods || [];
-
- summarizeForecast(periods);
-
- const days=[];
-
- for(let i=0;i<periods.length && days.length<7;i++){
-   if(periods[i].isDaytime){
-     const night = periods[i+1] && !periods[i+1].isDaytime ? periods[i+1] : null;
-
-     days.push({
-       name:periods[i].name,
-       icon:periods[i].icon,
-       hi:periods[i].temperature,
-       lo:night ? night.temperature:"",
-       desc:periods[i].shortForecast,
-       wind:periods[i].windSpeed
-     });
-   }
- }
-
- grid.innerHTML="";
-
- days.forEach((d,i)=>{
-
- const card=document.createElement("div");
- card.className="fc-card";
-
- card.innerHTML=`
-  <div class="fc-day">${d.name}</div>
-  <div class="fc-icon"><img src="${d.icon}"></div>
-  <div class="fc-temp">
-    <span class="hi">${d.hi}°</span>
-    <span class="lo">${d.lo}°</span>
-  </div>
-  <div class="fc-desc">${d.desc}</div>
-  <div class="fc-wind">🌬 ${d.wind}</div>
- `;
-
- grid.appendChild(card);
-
- card.onclick=async()=>{
-
-   document.getElementById("hourlyHint").style.display="none";
-
-   if(activeDay===i){
-     hourlyWrap.style.display="none";
-     document.getElementById("hourRail").innerHTML="";
-     document.getElementById("hourlyHint").style.display="block";
-     activeDay=null;
-     return;
-   }
-
-   activeDay=i;
-   hourlyWrap.style.display="flex";
-   document.getElementById("hourRail").innerHTML="";
-
-   const hr=await fetch(hourlyUrl);
-   const hj=await hr.json();
-
-   const hours = hj?.properties?.periods || [];
-
-   if(!hours.length){
-     document.getElementById("hourRail").innerHTML="<div class='loader'>Hourly unavailable</div>";
-     return;
-   }
-
-   hours.slice(0,24).forEach(h=>{
-
-     const el=document.createElement("div");
-     el.className="hour-card";
-
-     el.innerHTML=`
-       <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
-       <img src="${h.icon}">
-       <div class="hour-temp">${h.temperature}°</div>
-       <div class="hour-wind">${h.windSpeed}</div>
-     `;
-
-     document.getElementById("hourRail").appendChild(el);
-   });
-
- };
-
- });
-
- tsEl.textContent="Last updated: "+new Date().toLocaleString();
-
- }catch(e){
-   console.error(e);
-   grid.innerHTML="<div class='loader'>Forecast unavailable</div>";
-   afdBox.textContent="Forecast discussion unavailable.";
- }
-
-}
-
-fetchForecast();
-
-refreshBtn.addEventListener("click",fetchForecast);
-
-citySelect.addEventListener("change",()=>{
- const parts=citySelect.value.split(",");
- lat=parts[0];
- lon=parts[1];
- fetchForecast();
-});
-
-setInterval(fetchForecast,3600000);
-
-function scrollHours(px){
- document.getElementById("hourRail").scrollLeft += px;
-}
+load();
 
 })();
 </script>
 
-
-</div> <!-- last panel / content -->
-
-<div class="footer">
   <div class="social-bar">
     <a class="ig" href="https://www.instagram.com/iloveweather/" target="_blank">◎</a>
     <a class="fb" href="https://www.facebook.com/WeatherJefe/" target="_blank">f</a>
