@@ -1929,7 +1929,20 @@ const CITY_STATIONS = {
   "33.8303,-116.5453": "KPSP"  // Palm Springs Intl
 };
 
-
+const CITY_NAMES = {
+  "45.5152,-122.6784": "Portland, OR",
+  "34.0522,-118.2437": "Los Angeles, CA",
+  "32.7157,-117.1611": "San Diego, CA",
+  "47.6062,-122.3321": "Seattle, WA",
+  "40.7128,-74.0060": "New York, NY",
+  "41.8781,-87.6298": "Chicago, IL",
+  "29.7604,-95.3698": "Houston, TX",
+  "25.7617,-80.1918": "Miami, FL",
+  "39.7392,-104.9903": "Denver, CO",
+  "38.2975,-122.2869": "Napa, CA",
+  "33.8303,-116.5453": "Palm Springs, CA"
+};
+  
 async function loadCity(lat,lon){
 
 mapWrap.style.display="none";
@@ -1939,8 +1952,9 @@ const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
 const pj=await p.json();
 const forecastZone = pj.properties.forecastZone;
 
-const city=pj.properties.relativeLocation.properties.city+", "+pj.properties.relativeLocation.properties.state;
-document.getElementById("ccCity").textContent=city;
+const key = `${lat},${lon}`;
+document.getElementById("ccCity").textContent = CITY_NAMES[key] || "Selected City";
+
 
 const key = `${lat},${lon}`;
 const station = CITY_STATIONS[key];
