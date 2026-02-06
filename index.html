@@ -2221,7 +2221,8 @@ async function loadAFD(lat,lon){
   const afdList = await fetch(`https://api.weather.gov/products/types/AFD/locations/${cwa}`);
   const afdJson = await afdList.json();
 
-  const latest = afdJson["@graph"]?.[0]?.id;
+  const latest = afdJson["@graph"] && afdJson["@graph"][0] ? afdJson["@graph"][0].id : null;
+
   if(!latest) throw "No AFD";
 
   const afdRaw = await fetch(latest);
