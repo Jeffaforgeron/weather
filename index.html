@@ -1606,6 +1606,13 @@ html, body {
       <option value="29.7604,-95.3698">Houston, TX</option>
       <option value="25.7617,-80.1918">Miami, FL</option>
       <option value="39.7392,-104.9903">Denver, CO</option>
+    <option value="45.6205,-122.6560">Vancouver, WA</option>
+<option value="45.5404,-122.9498">Hillsboro, OR</option>
+<option value="44.9095,-123.0020">Salem, OR</option>
+<option value="44.1246,-123.2119">Eugene, OR</option>
+<option value="46.1580,-123.8787">Astoria, OR</option>
+<option value="46.9694,-122.9025">Olympia, WA</option>
+
     </select>
   </div>
 
@@ -2002,7 +2009,13 @@ const CITY_STATIONS = {
   "39.7392,-104.9903": "KDEN", // Denver Intl
 
   "38.2975,-122.2869": "KAPC", // Napa County Airport
-  "33.8303,-116.5453": "KPSP"  // Palm Springs Intl
+  "33.8303,-116.5453": "KPSP",  // Palm Springs Intl
+  "45.6205,-122.6560": "KVUO", // Vancouver Pearson
+"45.5404,-122.9498": "KHIO", // Hillsboro
+"44.9095,-123.0020": "KSLE", // Salem
+"44.1246,-123.2119": "KEUG", // Eugene
+"46.1580,-123.8787": "KAST", // Astoria
+"46.9694,-122.9025": "KOLM"  // Olympia
 };
 
 const CITY_NAMES = {
@@ -2018,7 +2031,18 @@ const CITY_NAMES = {
   "25.7617,-80.1918": "Miami, FL",
   "39.7392,-104.9903": "Denver, CO",
   "38.2975,-122.2869": "Napa, CA",
-  "33.8303,-116.5453": "Palm Springs, CA"
+  "33.8303,-116.5453": "Palm Springs, CA",
+  "33.8303,-116.5453": "Palm Springs, CA",
+
+"45.6205,-122.6560": "Vancouver, WA",
+"45.5404,-122.9498": "Hillsboro, OR",
+"44.9095,-123.0020": "Salem, OR",
+"44.1246,-123.2119": "Eugene, OR",
+"46.1580,-123.8787": "Astoria, OR",
+"46.9694,-122.9025": "Olympia, WA"
+
+};
+
 };
   
 async function loadCity(lat,lon){
@@ -2372,6 +2396,13 @@ citySelect.innerHTML = `
 <option value="29.7604,-95.3698">Houston, TX</option>
 <option value="25.7617,-80.1918">Miami, FL</option>
 <option value="39.7392,-104.9903">Denver, CO</option>
+<option value="45.6205,-122.6560">Vancouver, WA</option>
+<option value="45.5404,-122.9498">Hillsboro, OR</option>
+<option value="44.9095,-123.0020">Salem, OR</option>
+<option value="44.1246,-123.2119">Eugene, OR</option>
+<option value="46.1580,-123.8787">Astoria, OR</option>
+<option value="46.9694,-122.9025">Olympia, WA</option>
+
 `;
 
 const hourlyWrap = document.getElementById("hourlyWrap");
