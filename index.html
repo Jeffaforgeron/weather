@@ -1993,9 +1993,8 @@ const forecastZone = pj.properties.forecastZone;
 const key = `${lat},${lon}`;
 document.getElementById("ccCity").textContent = CITY_NAMES[key] || "Selected City";
 
-
-const key = `${lat},${lon}`;
 const station = CITY_STATIONS[key];
+
 
 if(!station){
   alert("Station not defined for this city.");
