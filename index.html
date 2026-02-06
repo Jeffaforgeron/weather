@@ -1484,6 +1484,7 @@ html, body {
   <span>Satellite (click image to animate)</span>
 
   <select id="satRegion" onchange="updateSatellite()">
+    <option value="gwas" selected>CONUS (G18)</option>
     <option value="pnw">Pacific Northwest (G18)</option>
     <option value="wus">West U.S. (G18)</option>
     <option value="psw">Southwest U.S. (G18)</option>
@@ -1764,7 +1765,8 @@ function initRadar(){
   Object.keys(radarRegions).forEach(r=>{
     regionSelect.innerHTML+=`<option value="${r}">${r}</option>`;
   });
-  regionSelect.value="Northwest";
+  regionSelect.value="CONUS";
+
   handleRegionChange();
 }
 
