@@ -1889,7 +1889,13 @@ const labels=[];
 oj.features.reverse().forEach(o=>{
   if(o.properties.temperature.value){
     temps.push(o.properties.temperature.value*9/5+32);
-    labels.push(new Date(o.properties.timestamp).toLocaleTimeString([], {hour:'2-digit'}));
+    labels.push(
+  new Date(o.properties.timestamp).toLocaleTimeString([], {
+    hour: 'numeric',
+    hour12: true
+  })
+);
+
   }
 });
 
