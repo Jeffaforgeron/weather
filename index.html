@@ -2364,9 +2364,16 @@ if(!oj.features.length){
 }
 
 
-ccTemp.textContent=Math.round(latest.temperature.value*9/5+32)+"°";
-  const tempF = Math.round(latest.temperature.value*9/5+32);
+if(latest.temperature?.value == null){
+  ccTemp.textContent = "—";
+  ccWx.innerHTML = "Sky <span>Station offline</span>";
+  return;
+}
+
+const tempF = Math.round(latest.temperature.value*9/5+32);
+ccTemp.textContent = tempF + "°";
 applyTempTheme(tempF);
+
 ccFeels.textContent = latest.apparentTemperature?.value
   ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
   : "";
