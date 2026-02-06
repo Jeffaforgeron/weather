@@ -2013,7 +2013,6 @@ if (tempMap && feelsToggle) {
 let showingFeels = false;
 feelsToggle.addEventListener("click", () => {
   showingFeels = !showingFeels;
-
   tempMap.src = (showingFeels ? feelsLikeURL : airTempURL) + "?ts=" + Date.now();
 
   // visual active state (mobile)
@@ -2309,33 +2308,7 @@ if(typeof station === "object" && station.type === "raws"){
   ccWx.innerHTML = "Sky <span>Mountain Station</span>";
 
   return;
-}
 
-
-
-  const obs = j.STATION[0].OBSERVATIONS;
-
-  const temp =
-    obs.air_temp_value_1?.value ??
-    obs.air_temp_value_2?.value;
-
-  if(temp == null){
-    alert("Temperature unavailable");
-    return;
-  }
-
-  const tempF = Math.round(temp);
-  ccTemp.textContent = tempF + "°";
-  applyTempTheme(tempF);
-
-  ccWx.innerHTML = "Sky <span>Idyllwild Fire</span>";
-
-  ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value ? Math.round(obs.wind_speed_value_1.value)+" mph":"—"}</span>`;
-  ccHum.innerHTML = `Humidity <span>${obs.relative_humidity_value_1?.value ? Math.round(obs.relative_humidity_value_1.value)+"%":"—"}</span>`;
-  ccDew.innerHTML = `Dew Point <span>${obs.dew_point_temperature_value_1?.value ? Math.round(obs.dew_point_temperature_value_1.value)+"°":"—"}</span>`;
-
-  return;
-}
 
 
 /* NOAA METAR continues below */
