@@ -2277,14 +2277,37 @@ if(typeof station === "object"){
     return;
   }
 
-  ccTemp.textContent = Math.round(raws.OBSERVATIONS.air_temp_value_1.value) + "°";
-  ccWx.innerHTML = "Sky <span>—</span>";
-  ccWind.innerHTML = `Wind <span>${Math.round(raws.OBSERVATIONS.wind_speed_value_1.value)} mph</span>`;
-  ccHum.innerHTML = `Humidity <span>${Math.round(raws.OBSERVATIONS.relative_humidity_value_1.value)}%</span>`;
-  ccDew.innerHTML = `Dew Point <span>${Math.round(raws.OBSERVATIONS.dew_point_temperature_value_1.value)}°</span>`;
+  const obs = raws.OBSERVATIONS;
+
+  // temperature (try multiple slots)
+  const temp =
+    obs.air_temp_value_1?.value ??
+    obs.air_temp_value_2?.value;
+
+  if(temp == null){
+    alert("Temperature unavailable");
+    return;
+  }
+
+  ccTemp.textContent = Math.round(temp) + "°";
+
+  // humidity
+  const rh = obs.relative_humidity_value_1?.value;
+  ccHum.innerHTML = `Humidity <span>${rh != null ? Math.round(rh) + "%" : "—"}</span>`;
+
+  // dewpoint
+  const dew = obs.dew_point_temperature_value_1?.value;
+  ccDew.innerHTML = `Dew Point <span>${dew != null ? Math.round(dew) + "°" : "—"}</span>`;
+
+  // wind
+  const wind = obs.wind_speed_value_1?.value;
+  ccWind.innerHTML = `Wind <span>${wind != null ? Math.round(wind) + " mph" : "—"}</span>`;
+
+  ccWx.innerHTML = "Sky <span>Mountain Station</span>";
 
   return;
 }
+
 
 /* NOAA METAR continues below */
 const stationURL = `https://api.weather.gov/stations/${station}`;
