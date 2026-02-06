@@ -2207,48 +2207,7 @@ const refreshBtn = document.getElementById("forecastRefreshBtn");
 const citySelect = document.getElementById("forecastCitySelect");
   const afdBox = document.getElementById("afdText");
 
-async function loadAFD(lat,lon){
 
- try{
-
-  afdBox.textContent = "Loading local forecast discussion…";
-
-  const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
-  const pj = await p.json();
-
-  const cwa = pj.properties.cwa;
-
-  const afdList = await fetch(`https://api.weather.gov/products/types/AFD/locations/${cwa}`);
-  
-
-  const afdJson = await afdList.json();
-
-
- const latest = afdJson.graph && afdJson.graph[0] ? afdJson.graph[0].id : null;
-
-
-  if(!latest) throw "No AFD";
-
-  const afdRaw = await fetch(latest);
-  const afdText = await afdRaw.json();
-
-  let txt = afdText.properties.text;
-
-  txt = txt.split(".AVIATION")[0];
-  txt = txt.replace(/&&[\s\S]*/,"");
-  txt = txt.replace(/^\s*\.[A-Z\s\/]+\.\.\./gm,"");
-  txt = txt.replace(/\n+/g," ");
-
-  const sentences = txt.match(/[^\.!\?]+[\.!\?]+/g) || [];
-  const summary = sentences.slice(0,5).join(" ").trim();
-
-  afdBox.textContent = summary || "Discussion unavailable.";
-
- }catch(e){
-   afdBox.textContent = "Local forecast discussion unavailable.";
- }
-
-}
 
   /* Populate Forecast Cities */
 citySelect.innerHTML = `
@@ -2266,6 +2225,28 @@ citySelect.innerHTML = `
 `;
 
 const hourlyWrap = document.getElementById("hourlyWrap");
+const afdBox = document.getElementById("afdText");
+
+function summarizeForecast(periods){
+
+ if(!periods || !periods.length){
+   afdBox.textContent="Forecast discussion unavailable.";
+   return;
+ }
+
+ const chunks = [];
+
+ periods.slice(0,4).forEach(p=>{
+   chunks.push(`${p.name}: ${p.detailedForecast || p.shortForecast}.`);
+ });
+
+ let text = chunks.join(" ");
+
+ // Light cleanup
+ text = text.replace(/\s+/g," ").trim();
+
+ afdBox.textContent = text;
+}
 
 if(!grid || !citySelect) return;
 
@@ -2293,7 +2274,7 @@ const r = await fetch(forecastUrl);
 const j = await r.json();
 
 const periods = j.properties.periods || [];
-
+summarizeForecast(periods);
 const days=[];
 
 for(let i=0;i<periods.length && days.length<7;i++){
@@ -2396,7 +2377,7 @@ tsEl.textContent="Last updated: "+new Date().toLocaleString();
 }
 
 fetchForecast();
-loadAFD(lat,lon);
+
 
 refreshBtn.addEventListener("click",fetchForecast);
 
@@ -2405,7 +2386,7 @@ citySelect.addEventListener("change",()=>{
  lat=parts[0];
  lon=parts[1];
  fetchForecast();
- loadAFD(lat,lon);
+
 });
 
 
