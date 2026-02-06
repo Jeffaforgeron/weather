@@ -2148,8 +2148,9 @@ const CITY_STATIONS = {
 
 
 "34.2439,-116.9114": { id:"BBBC1", type:"raws" },
-"34.2483,-117.1892": { id:"WIDC1", type:"raws" }, // Lake Arrowhead (Running Springs RAWS)
-"33.7400,-116.7183": { id:"PLMC1", type:"raws" }, // Idyllwild (Pine Cove RAWS)
+"34.2483,-117.1892": { id:"WIDC1", type:"raws", backup:"KONT" }, // Lake Arrowhead
+"33.7400,-116.7183": { id:"PLMC1", type:"raws", backup:"KRAL" }, // Idyllwild
+
 
 "33.81528,-116.64194": { id:"MSJC1", type:"raws" },
  
@@ -2271,15 +2272,30 @@ if(!station){
 /* RAWS station */
 if(typeof station === "object"){
 
-  const raws = await fetchRAWS(station.id);
+  let raws = await fetchRAWS(station.id);
+
+  // fallback to airport if RAWS dead
+  if(!raws && station.backup){
+
+    const r = await fetch(`https://api.weather.gov/stations/${station.backup}/observations/latest`);
+    const j = await r.json();
+    const latest = j.properties;
+
+    ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
+    ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
+    ccWind.innerHTML="Wind <span>"+Math.round(latest.windSpeed.value*2.23694)+" mph</span>";
+    ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
+    ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
+
+    return;
+  }
+
   if(!raws){
-    alert("RAWS unavailable");
+    alert("Mountain station offline");
     return;
   }
 
   const obs = raws.OBSERVATIONS;
-
-  // temperature (try multiple slots)
   const temp =
     obs.air_temp_value_1?.value ??
     obs.air_temp_value_2?.value;
@@ -2290,23 +2306,14 @@ if(typeof station === "object"){
   }
 
   ccTemp.textContent = Math.round(temp) + "°";
-
-  // humidity
-  const rh = obs.relative_humidity_value_1?.value;
-  ccHum.innerHTML = `Humidity <span>${rh != null ? Math.round(rh) + "%" : "—"}</span>`;
-
-  // dewpoint
-  const dew = obs.dew_point_temperature_value_1?.value;
-  ccDew.innerHTML = `Dew Point <span>${dew != null ? Math.round(dew) + "°" : "—"}</span>`;
-
-  // wind
-  const wind = obs.wind_speed_value_1?.value;
-  ccWind.innerHTML = `Wind <span>${wind != null ? Math.round(wind) + " mph" : "—"}</span>`;
-
+  ccHum.innerHTML = `Humidity <span>${obs.relative_humidity_value_1?.value != null ? Math.round(obs.relative_humidity_value_1.value)+"%" : "—"}</span>`;
+  ccDew.innerHTML = `Dew Point <span>${obs.dew_point_temperature_value_1?.value != null ? Math.round(obs.dew_point_temperature_value_1.value)+"°" : "—"}</span>`;
+  ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value != null ? Math.round(obs.wind_speed_value_1.value)+" mph" : "—"}</span>`;
   ccWx.innerHTML = "Sky <span>Mountain Station</span>";
 
   return;
 }
+
 
 
 /* NOAA METAR continues below */
