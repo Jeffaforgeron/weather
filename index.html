@@ -1563,13 +1563,14 @@ html, body {
   <span>Current Conditions <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span></span>
 <span id="ccHint" style="margin-right:8px;">Select a city →</span>
 
-  <select id="currentCitySelect"
+  <select id="currentCitySelect">
 
 
       style="font-size:12px;background:#020617;color:#9ca3af;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:2px 6px;">
       <option value="US" selected>United States</option>
      
 
+    
 
 <!-- California -->
 <option value="35.3733,-119.0187">Bakersfield, CA</option>
@@ -1577,6 +1578,7 @@ html, body {
 <option value="34.2007,-118.3587">Burbank, CA</option>
 <option value="33.7805,-116.4668">Cathedral City, CA</option>
 <option value="33.9611,-116.5017">Desert Hot Springs, CA</option>
+<option value="40.8021,-124.1637">Eureka, CA</option>    
 <option value="36.7378,-119.7871">Fresno, CA</option>
 <option value="33.7400,-116.7183">Idyllwild, CA</option>
 <option value="33.7206,-116.2156">Indio, CA</option>
@@ -1615,15 +1617,18 @@ html, body {
 
 <!-- Oregon -->
 <option value="46.1580,-123.8787">Astoria, OR</option>
+<option value="43.1189,-124.4084">Bandon, OR</option>    
 <option value="45.4871,-122.8037">Beaverton, OR</option>
 <option value="44.0582,-121.3153">Bend, OR</option>
 <option value="44.5646,-123.2620">Corvallis, OR</option>
 <option value="44.1246,-123.2119">Eugene, OR</option>
+<option value="45.3046,-121.7545">Government Camp, OR</option>    
 <option value="45.4982,-122.4315">Gresham, OR</option>
 <option value="45.5404,-122.9498">Hillsboro, OR</option>
 <option value="45.2101,-123.1987">McMinnville, OR</option>
 <option value="45.5152,-122.6784">Portland, OR</option>
 <option value="44.9095,-123.0020">Salem, OR</option>
+<option value="45.5946,-121.1787">The Dalles, OR</option>    
 
 
 <!-- Texas -->
@@ -2090,7 +2095,11 @@ const CITY_STATIONS = {
 "33.7400,-116.7183": { id:"PNVC1", type:"raws", backup:{ id:"MSJC1", type:"raws" } }, // Idyllwild Pine Cove → fallback Mt San Jacinto
 
 
-
+// ===== NEW ADDITIONS =====
+"43.1189,-124.4084": "KOTH", // Bandon (North Bend)
+"45.3046,-121.7545": "KTTD", // Government Camp (Troutdale proxy)
+"45.5946,-121.1787": "KDLS", // The Dalles
+"40.8021,-124.1637": "KEKA", // Eureka CA
 
 
 
@@ -2114,7 +2123,11 @@ const CITY_NAMES = {
   "39.7392,-104.9903": "Denver, CO",
   "38.2975,-122.2869": "Napa, CA",
   "33.8303,-116.5453": "Palm Springs, CA",
-  
+  "43.1189,-124.4084": "Bandon, OR",
+"45.3046,-121.7545": "Government Camp, OR",
+"45.5946,-121.1787": "The Dalles, OR",
+"40.8021,-124.1637": "Eureka, CA",
+
 
 "45.6205,-122.6560": "Vancouver, WA",
 "45.5404,-122.9498": "Hillsboro, OR",
@@ -2595,6 +2608,8 @@ citySelect.innerHTML = `
 <option value="34.2007,-118.3587">Burbank, CA</option>
 <option value="33.7805,-116.4668">Cathedral City, CA</option>
 <option value="33.9611,-116.5017">Desert Hot Springs, CA</option>
+<option value="40.8021,-124.1637">Eureka, CA</option>
+
 <option value="36.7378,-119.7871">Fresno, CA</option>
 <option value="33.7400,-116.7183">Idyllwild, CA</option>
 <option value="33.7206,-116.2156">Indio, CA</option>
@@ -2628,15 +2643,19 @@ citySelect.innerHTML = `
 <option value="40.7128,-74.0060">New York, NY</option>
 
 <option value="46.1580,-123.8787">Astoria, OR</option>
+<option value="43.1189,-124.4084">Bandon, OR</option>
 <option value="45.4871,-122.8037">Beaverton, OR</option>
 <option value="44.0582,-121.3153">Bend, OR</option>
 <option value="44.5646,-123.2620">Corvallis, OR</option>
 <option value="44.1246,-123.2119">Eugene, OR</option>
+<option value="45.3046,-121.7545">Government Camp, OR</option>
+
 <option value="45.4982,-122.4315">Gresham, OR</option>
 <option value="45.5404,-122.9498">Hillsboro, OR</option>
 <option value="45.2101,-123.1987">McMinnville, OR</option>
 <option value="45.5152,-122.6784" selected>Portland, OR</option>
 <option value="44.9095,-123.0020">Salem, OR</option>
+<option value="45.5946,-121.1787">The Dalles, OR</option>
 
 <option value="46.9694,-122.9025">Olympia, WA</option>
 <option value="47.6062,-122.3321">Seattle, WA</option>
