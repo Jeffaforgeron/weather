@@ -1213,6 +1213,35 @@ h1{
   white-space:nowrap;
 }
 
+  #forecastHint{
+  color:#38bdf8;
+  font-size:12px;
+  font-weight:600;
+  animation:ccHintPulse 1.8s ease-in-out infinite;
+  white-space:nowrap;
+}
+
+/* === Satellite hint (click image to animate) === */
+#satHint{
+  color:#38bdf8;
+  font-size:12px;
+  font-weight:600;
+  margin-left:6px;
+  animation:ccHintPulse 1.8s ease-in-out infinite;
+  white-space:nowrap;
+  opacity:.8;
+}
+
+/* Mobile polish */
+@media (max-width:768px){
+  #satHint{
+    display:block;
+    margin-left:0;
+    margin-top:4px;
+  }
+}
+
+  
 @keyframes ccHintPulse{
   0%{opacity:.4}
   50%{opacity:1}
@@ -1519,7 +1548,8 @@ html, body {
   <!-- SATELLITE -->
   <div class="panel">
  <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
-  <span>Satellite (click image to animate)</span>
+<span>Satellite <span id="satHint">(click image to animate)</span></span>
+
 
   <select id="satRegion" onchange="updateSatellite()">
     <option value="gwas" selected>CONUS (G18)</option>
