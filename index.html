@@ -679,9 +679,12 @@ canvas{
 /* Axis labels */
 .chart-title{
   font-size:12px;
-  opacity:.7;
-  margin-bottom:4px;
+  color:#9ca3af;
+  margin-bottom:6px;
+  letter-spacing:.4px;
+  text-align:left;
 }
+
 
 /* Neon pulse */
 .cc-temp{
@@ -1725,7 +1728,8 @@ html, body {
       <div id="ccTemp" class="cc-temp">—</div>
       <div id="ccFeels" class="cc-feels"></div>
 
-      <canvas id="ccChart"></canvas>
+      <div class="chart-title">Temperature – Past 12 Hours</div>
+<canvas id="ccChart"></canvas>
 
     </div>
 
@@ -2568,21 +2572,7 @@ borderColor: window.currentTempLine || "#38bdf8",
 
   plugins:{
     legend:{display:false},
-   title:{
-  display:true,
-  text:"Temperature – Past 12 Hours",
-  color:"#9ca3af",
-
-  // PUSH TITLE UPWARD
-  padding:{
-    top:0,
-    bottom:18   // ← this is the key line
-  },
-
-  font:{
-    size: window.innerWidth < 768 ? 11 : 14
-  }
-}
+  
 
   },
 
