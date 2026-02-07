@@ -1510,8 +1510,7 @@ html, body {
   text-align:center;
   box-shadow:inset 0 0 8px rgba(56,189,248,.25);
 }
-
-
+  
 #ccSunUV span{
   display:block;
   font-size:10px;
@@ -1528,6 +1527,25 @@ html, body {
   text-shadow:0 0 8px rgba(56,189,248,.7);
 }
 
+.sun-icon{
+  margin-right:4px;
+  font-size:13px;
+  filter: drop-shadow(0 0 6px rgba(250,204,21,.6));
+}
+
+/* Sunrise slightly warmer */
+.sun-icon.rise{
+  filter:
+    drop-shadow(0 0 6px rgba(250,204,21,.8))
+    drop-shadow(0 0 12px rgba(251,146,60,.4));
+}
+
+/* Sunset slightly softer */
+.sun-icon.set{
+  filter:
+    drop-shadow(0 0 6px rgba(251,146,60,.7))
+    drop-shadow(0 0 10px rgba(239,68,68,.3));
+}
 
   
 </style>
@@ -1752,10 +1770,18 @@ html, body {
   <div id="ccRainMonth"></div>
 
   <!-- Sun + UV footer -->
-  <div id="ccSunUV">
-  <div><span>Sunrise</span><strong id="ccSunrise">—</strong></div>
-  <div><span>Sunset</span><strong id="ccSunset">—</strong></div>
+ <div id="ccSunUV">
+  <div>
+    <span><span class="sun-icon rise">🌅</span> Sunrise</span>
+    <strong id="ccSunrise">—</strong>
+  </div>
+
+  <div>
+    <span><span class="sun-icon set">🌇</span> Sunset</span>
+    <strong id="ccSunset">—</strong>
+  </div>
 </div>
+
 
 
 
