@@ -2529,7 +2529,9 @@ const tempLabelPlugin = {
       const val = Math.round(data[i]);
 
       // lift higher + pulse
-      ctx.fillText(val + "°", pt.x, pt.y - 32 + pulse);
+      const y = Math.max(pt.y - 32 + pulse, 22);  // prevents flying off top
+ctx.fillText(val + "°", pt.x, y);
+
     });
 
     ctx.restore();
