@@ -2529,8 +2529,10 @@ const tempLabelPlugin = {
       const val = Math.round(data[i]);
 
       // lift higher + pulse
-      const y = Math.max(pt.y - 32 + pulse, 22);  // prevents flying off top
+    const minY = window.innerWidth < 768 ? 34 : -999; // clamp only on mobile
+const y = Math.max(pt.y - 32 + pulse, minY);
 ctx.fillText(val + "°", pt.x, y);
+
 
     });
 
