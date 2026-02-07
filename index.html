@@ -2538,9 +2538,16 @@ const tempLabelPlugin = {
       const val = Math.round(data[i]);
 
       // lift higher + pulse
-    const minY = window.innerWidth < 768 ? 34 : -999; // clamp only on mobile
-const y = Math.max(pt.y - 32 + pulse, minY);
+   const minY = window.innerWidth < 768 ? 34 : -999;
+
+// always keep at least 18px above the line
+const desiredY = pt.y - 32 + pulse;
+const safeY = pt.y - 18;
+
+const y = Math.max(Math.min(desiredY, safeY), minY);
+
 ctx.fillText(val + "°", pt.x, y);
+
 
 
     });
