@@ -2349,6 +2349,10 @@ if(!station){
 
 /* RAWS station */
 if(typeof station === "object" && station.type === "raws"){
+if(chart){
+  chart.destroy();
+  chart = null;
+}
 
 
   let raws = await fetchRAWS(station.id);
@@ -2442,10 +2446,17 @@ if(!oj.features.length){
 
 
 if(latest.temperature?.value == null){
-  ccTemp.textContent = "—";
-  ccWx.innerHTML = "Sky <span>Station offline</span>";
-  return;
+
+if(chart){
+  chart.destroy();
+  chart = null;
 }
+
+ccTemp.textContent = "—";
+ccWx.innerHTML = "Sky <span>Station offline</span>";
+return;
+}
+
 
 const tempF = Math.round(latest.temperature.value*9/5+32);
 ccTemp.textContent = tempF + "°";
