@@ -1817,7 +1817,7 @@ html, body {
   <div class="refresh" id="forecastRefreshBtn" title="Refresh now">⟳</div>
 </div>
 </div> <!-- CLOSE forecast-header -->
-<div id="hourlyHint"> Click today to expand hourly forecast below ⬇</div>
+
 
 
 
@@ -1825,13 +1825,14 @@ html, body {
       <!-- Forecast cards injected here -->
       <div class="loader">Loading…</div>
     </div>
-<div id="hourlyWrap" style="display:none;margin-top:10px;">
+<div id="hourlyWrap" style="display:flex;margin-top:10px;">
 
-  <div class="hour-arrow left" onclick="scrollHours(-200)">‹</div>
+
+ 
 
   <div id="hourRail" class="hour-scroll"></div>
 
-  <div class="hour-arrow right" onclick="scrollHours(200)">›</div>
+  
 
 </div>
 
@@ -2845,56 +2846,31 @@ card.innerHTML=`
 
 grid.appendChild(card);
 
-card.onclick=async()=>{
-document.getElementById("hourlyHint").style.display="none";
+});
+/* AUTO LOAD HOURLY FORECAST */
 
- if(activeDay===i){
-   hourlyWrap.style.display="none";
-document.getElementById("hourRail").innerHTML="";
-document.getElementById("hourlyHint").style.display="block";
-   activeDay=null;
-   return;
- }
+hourlyWrap.style.display="flex";
 
- activeDay=i;
- hourlyWrap.style.display="flex";
- document.getElementById("hourRail").innerHTML="";
-document.getElementById("hourlyHint").style.display="none";
-
- const hr=await fetch(hourlyUrl);
- const hj=await hr.json();
+const hr=await fetch(hourlyUrl);
+const hj=await hr.json();
 
 document.getElementById("hourRail").innerHTML="";
-
-
 
 const hours = hj?.properties?.periods || [];
 
-if(!hours.length){
-  document.getElementById("hourRail").innerHTML="<div class='loader'>Hourly unavailable</div>";
-
-  return;
-}
-
 hours.slice(0,24).forEach(h=>{
 
+ const el=document.createElement("div");
+ el.className="hour-card";
 
-   const el=document.createElement("div");
-   el.className="hour-card";
-
-el.innerHTML=`
+ el.innerHTML=`
   <div>${new Date(h.startTime).toLocaleTimeString([], {hour:'numeric'})}</div>
   <img src="${h.icon}">
   <div class="hour-temp">${h.temperature}°</div>
   <div class="hour-wind">${h.windSpeed}</div>
-`;
+ `;
 
-
-   document.getElementById("hourRail").appendChild(el);
-
- });
-
-};
+ document.getElementById("hourRail").appendChild(el);
 
 });
 
