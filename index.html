@@ -1656,6 +1656,7 @@ html, body {
 
 <!-- California -->
 <option value="35.3733,-119.0187">Bakersfield, CA</option>
+<option value="35.1569,-118.6534">Bear Valley Springs, CA</option>
 <option value="34.2439,-116.9114">Big Bear Lake, CA</option>
 <option value="34.2007,-118.3587">Burbank, CA</option>
 <option value="33.7805,-116.4668">Cathedral City, CA</option>
@@ -1682,6 +1683,8 @@ html, body {
 <option value="34.4208,-119.6982">Santa Barbara, CA</option>
 <option value="36.98217,-122.01533">Santa Cruz, CA</option>
 <option value="37.9577,-121.2908">Stockton, CA</option>
+<option value="35.1322,-118.4481">Tehachapi, CA</option>
+    
 
 
 
@@ -2124,6 +2127,9 @@ const CITY_STATIONS = {
   "34.0522,-118.2437": "KLAX", // Los Angeles Intl
   "32.7157,-117.1611": "KSAN", // San Diego Intl
 "37.35917,-121.92417": "KSJC", // San Jose Intl
+  "35.1322,-118.4481": { id:"TEHC1", type:"raws", backup:"KMHV" },
+"35.1569,-118.6534": { id:"BVSC1", type:"raws", backup:"KMHV" },
+
 
   "47.6062,-122.3321": "KSEA", // SeaTac
   "40.7128,-74.0060": "KNYC", // NYC Central Park
@@ -2219,6 +2225,9 @@ const CITY_NAMES = {
 "45.3046,-121.7545": "Government Camp, OR",
 "45.5946,-121.1787": "The Dalles, OR",
 "40.8021,-124.1637": "Eureka, CA",
+  "35.1322,-118.4481": "Tehachapi, CA",
+"35.1569,-118.6534": "Bear Valley Springs, CA",
+
 
 
 "45.6205,-122.6560": "Vancouver, WA",
@@ -2700,6 +2709,7 @@ const citySelect = document.getElementById("forecastCitySelect");
   /* Populate Forecast Cities */
 citySelect.innerHTML = `
 <option value="35.3733,-119.0187">Bakersfield, CA</option>
+<option value="35.1569,-118.6534">Bear Valley Springs, CA</option>
 <option value="34.2439,-116.9114">Big Bear Lake, CA</option>
 <option value="34.2007,-118.3587">Burbank, CA</option>
 <option value="33.7805,-116.4668">Cathedral City, CA</option>
@@ -2727,6 +2737,8 @@ citySelect.innerHTML = `
 <option value="36.98217,-122.01533">Santa Cruz, CA</option>
 <option value="34.4208,-119.6982">Santa Barbara, CA</option>
 <option value="37.9577,-121.2908">Stockton, CA</option>
+<option value="35.1322,-118.4481">Tehachapi, CA</option>
+
 
 
 
