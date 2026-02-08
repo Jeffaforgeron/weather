@@ -1563,13 +1563,15 @@ html, body {
 
     <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
-    <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
+    
     <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
 
     <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
-    <div class="city-item" data-station="KSFO">San Francisco <span class="city-temp">--</span></div>
+    <div class="city-item" data-station="KSFO" data-backup="KOAK">San Francisco <span class="city-temp">--</span></div>
+
+
     <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
   </div>
@@ -1994,21 +1996,38 @@ initRadar();
 
 /* ===== CITY TEMPS ===== */
 async function updateCityTemps(){
-  const items = document.querySelectorAll(".city-item");
 
-  for(const item of items){
-    const s=item.dataset.station;
+  const items = [...document.querySelectorAll(".city-item")];
+
+  await Promise.all(items.map(async item=>{
+
+    const primary = item.dataset.station;
+    const backup = item.dataset.backup;
+
     try{
-      const r=await fetch(`https://api.weather.gov/stations/${s}/observations/latest`);
-      const j=await r.json();
-      const c=j.properties.temperature.value;
+
+      let r = await fetch(`https://api.weather.gov/stations/${primary}/observations/latest`);
+      let j = await r.json();
+      let c = j?.properties?.temperature?.value;
+
+      // fallback if null
+      if((c==null) && backup){
+        r = await fetch(`https://api.weather.gov/stations/${backup}/observations/latest`);
+        j = await r.json();
+        c = j?.properties?.temperature?.value;
+      }
+
       item.querySelector(".city-temp").textContent =
-        c==null?"--":Math.round(c*9/5+32)+"°F";
+        c==null ? "--" : Math.round(c*9/5+32)+"°F";
+
     }catch{
       item.querySelector(".city-temp").textContent="--";
     }
-  }
+
+  }));
+
 }
+
 updateCityTemps();
 setInterval(updateCityTemps,300000);
 
