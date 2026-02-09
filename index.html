@@ -2041,25 +2041,21 @@ const ccSelect=document.getElementById("currentCitySelect");
   const ccStateSelect = document.getElementById("currentStateSelect");
 
 
-const CURRENT_CITY_LIST = {
-  CA: {
-    "Bakersfield, CA":"35.3733,-119.0187",
-    "Bear Valley Springs, CA":"35.0886,-118.6434",
-    "Big Bear Lake, CA":"34.2439,-116.9114",
-    "Tehachapi, CA":"35.1322,-118.4481"
-  },
+const CURRENT_CITY_LIST = {};
 
-  OR: {
-    "Portland, OR":"45.5152,-122.6784",
-    "Salem, OR":"44.9095,-123.0020",
-    "Bend, OR":"44.0582,-121.3153"
-  },
+Object.entries(CITY_NAMES).forEach(([coords,name])=>{
 
-  WA: {
-    "Seattle, WA":"47.6062,-122.3321",
-    "Tacoma, WA":"47.2529,-122.4443"
-  }
-};
+  const parts = name.split(", ");
+  if(parts.length<2) return;
+
+  const state = parts[1];
+
+  if(!CURRENT_CITY_LIST[state]) CURRENT_CITY_LIST[state]={};
+
+  CURRENT_CITY_LIST[state][name]=coords;
+
+});
+
 ccStateSelect.addEventListener("change",()=>{
 
 
