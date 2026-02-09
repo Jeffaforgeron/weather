@@ -479,6 +479,10 @@ select { font-size: 13px; }
   background: #0b1220;
   border: 1px solid rgba(255,255,255,0.08);
 }
+.fc-card.active{
+  outline:2px solid #38bdf8;
+  box-shadow:0 0 20px rgba(56,189,248,.6);
+}
 
 /* Make day labels brighter */
 .fc-day {
@@ -1567,8 +1571,7 @@ html, body {
     <div class="city-item" data-station="KLAX">Los Angeles <span class="city-temp">--</span></div>
     <div class="city-item" data-station="KSAN">San Diego <span class="city-temp">--</span></div>
 
-    <div class="city-item" data-station="KSEA">Seattle <span class="city-temp">--</span></div>
-    <div class="city-item" data-station="KPDX">Portland <span class="city-temp">--</span></div>
+    
     <div class="city-item" data-station="KSFO" data-backup="KOAK">San Francisco <span class="city-temp">--</span></div>
 
 
@@ -2148,7 +2151,8 @@ const CITY_STATIONS = {
   "34.0522,-118.2437": "KLAX", // Los Angeles Intl
   "32.7157,-117.1611": "KSAN", // San Diego Intl
 "37.35917,-121.92417": "KSJC", // San Jose Intl
-  "35.1322,-118.4481": { id:"TEHC1", type:"raws", backup:"KMHV" },
+  "35.1322,-118.4481": "KTSP", // Tehachapi Municipal Airport
+
 "35.0886,-118.6434": "KSVE", // Bear Valley Springs → Stallion Springs Airport
 
 
@@ -2860,6 +2864,7 @@ days.push({
 }
 
 grid.innerHTML="";
+let cards=[];
 
 days.forEach((d,i)=>{
 
@@ -2879,9 +2884,11 @@ card.innerHTML=`
 `;
 
 grid.appendChild(card);
+cards.push(card);
 
 });
 /* AUTO LOAD HOURLY FORECAST */
+cards[0]?.classList.add("active");
 
 hourlyWrap.style.display="flex";
 
