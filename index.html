@@ -2041,21 +2041,7 @@ const ccSelect=document.getElementById("currentCitySelect");
   const ccStateSelect = document.getElementById("currentStateSelect");
 
 
-const CURRENT_CITY_LIST = {};
 
-Object.entries(CITY_NAMES).forEach(([coords,name])=>{
-
-  const parts = name.split(", ");
-  if(parts.length<2) return;
-
-  const state = parts[1].trim();
-
-
-  if(!CURRENT_CITY_LIST[state]) CURRENT_CITY_LIST[state]={};
-
-  CURRENT_CITY_LIST[state][name]=coords;
-
-});
 
 ccStateSelect.addEventListener("change",()=>{
 
@@ -2268,6 +2254,24 @@ const CITY_NAMES = {
 "33.81528,-116.64194": "Mt San Jacinto, CA",
 
 };
+const CITY_NAMES = {
+  ...
+};
+
+const CURRENT_CITY_LIST = {};
+
+Object.entries(CITY_NAMES).forEach(([coords,name])=>{
+
+  const parts = name.split(", ");
+  if(parts.length<2) return;
+
+  const state = parts[1].trim();
+
+  if(!CURRENT_CITY_LIST[state]) CURRENT_CITY_LIST[state]={};
+
+  CURRENT_CITY_LIST[state][name]=coords;
+
+});
 
 async function fetchRAWS(stationId){
 
