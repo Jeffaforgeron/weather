@@ -2048,7 +2048,8 @@ Object.entries(CITY_NAMES).forEach(([coords,name])=>{
   const parts = name.split(", ");
   if(parts.length<2) return;
 
-  const state = parts[1];
+  const state = parts[1].trim();
+
 
   if(!CURRENT_CITY_LIST[state]) CURRENT_CITY_LIST[state]={};
 
