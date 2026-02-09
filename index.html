@@ -2254,21 +2254,7 @@ const CITY_NAMES = {
 "33.81528,-116.64194": "Mt San Jacinto, CA",
 
 };
-const CURRENT_CITY_LIST = {};
 
-Object.entries(CITY_NAMES).forEach(([coords,name])=>{
-
-  if(!name.includes(",")) return;
-
-  const state = name.split(",")[1].trim();
-
-  if(!CURRENT_CITY_LIST[state]){
-    CURRENT_CITY_LIST[state] = {};
-  }
-
-  CURRENT_CITY_LIST[state][name] = coords;
-
-});
 
 
 const CURRENT_CITY_LIST = {};
