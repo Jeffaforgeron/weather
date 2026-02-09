@@ -2038,7 +2038,8 @@ setInterval(() => {
 /* ===== <script> ===== */
 
 const ccSelect=document.getElementById("currentCitySelect");
-  const stateSelect = document.getElementById("currentStateSelect");
+  const ccStateSelect = document.getElementById("currentStateSelect");
+
 
 const CURRENT_CITY_LIST = {
   CA: {
@@ -2059,11 +2060,13 @@ const CURRENT_CITY_LIST = {
     "Tacoma, WA":"47.2529,-122.4443"
   }
 };
-stateSelect.addEventListener("change",()=>{
+ccStateSelect.addEventListener("change",()=>{
+
 
   ccSelect.innerHTML='<option value="">Select City</option>';
 
-  const cities = CURRENT_CITY_LIST[stateSelect.value];
+  const cities = CURRENT_CITY_LIST[ccStateSelect.value];
+
   if(!cities) return;
 
   Object.entries(cities).forEach(([name,val])=>{
@@ -2680,15 +2683,13 @@ borderColor: window.currentTempLine || "#38bdf8",
 
 ccSelect.addEventListener("change",()=>{
 
- if(ccSelect.value==="US"){
-   cityWrap.style.display="none";
-   mapWrap.style.display="block";
+if(!ccSelect.value){
+  cityWrap.style.display="none";
+  mapWrap.style.display="block";
+  if(feelsToggle) feelsToggle.style.display="inline";
+  return;
+}
 
-   // Show Feels Like when US map is active
-   if(feelsToggle) feelsToggle.style.display="inline";
-
-   return;
- }
 
  // Hide Feels Like when city mode is active
  if(feelsToggle) feelsToggle.style.display="none";
