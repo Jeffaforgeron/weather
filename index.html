@@ -1551,6 +1551,29 @@ html, body {
     drop-shadow(0 0 10px rgba(239,68,68,.3));
 }
 
+/* ===== MOBILE FIX: CURRENT CONDITIONS DROPDOWNS FULL WIDTH ===== */
+@media (max-width:768px){
+
+  /* Allow header row to wrap */
+  .panel-title{
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Force state + city selects onto full rows */
+  #currentStateSelect,
+  #currentCitySelect{
+    width:100%;
+    max-width:100%;
+  }
+
+  /* Push hint above dropdowns */
+  #ccHint{
+    width:100%;
+    text-align:right;
+    margin:0;
+  }
+}
   
 </style>
 </head>
