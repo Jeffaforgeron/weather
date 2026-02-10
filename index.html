@@ -2094,12 +2094,7 @@ setInterval(() => {
 const ccSelect=document.getElementById("currentCitySelect");
   const ccStateSelect = document.getElementById("currentStateSelect");
 
-// Alphabetize Current Conditions state dropdown
-Object.keys(CURRENT_CITY_LIST)
-  .sort()
-  .forEach(state=>{
-    ccStateSelect.innerHTML += `<option value="${state}">${state}</option>`;
-  });
+
 
 
 
@@ -2331,6 +2326,14 @@ Object.entries(CITY_NAMES).forEach(([coords,name])=>{
   CURRENT_CITY_LIST[state][name]=coords;
 
 });
+// Populate State dropdown (alphabetized)
+ccStateSelect.innerHTML = '<option value="">Select State</option>';
+
+Object.keys(CURRENT_CITY_LIST)
+  .sort()
+  .forEach(state=>{
+    ccStateSelect.innerHTML += `<option value="${state}">${state}</option>`;
+  });
 
 async function fetchRAWS(stationId){
 
