@@ -1213,12 +1213,16 @@ h1{
 /* Mobile polish */
 @media (max-width:768px){
   #ccHint{
-    margin-left:8px;     /* <-- adds space from "Current Conditions" */
+    margin-left:8px;
     margin-top:4px;
     display:block;
     text-align:right;
+    white-space:normal;      /* allow wrap */
+    max-width:100%;
+    line-height:1.2;
   }
 }
+
 
 
 #forecastHint{
@@ -1685,7 +1689,8 @@ html, body {
 
 <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
   <span>Current Conditions <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span></span>
-<span id="ccHint" style="margin-right:8px;">Select a city →</span>
+<span id="ccHint" style="margin-right:8px;">Select a state, then city →</span>
+
 
   <select id="currentStateSelect">
   <option value="">Select State</option>
