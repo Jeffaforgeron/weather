@@ -2107,9 +2107,19 @@ ccStateSelect.addEventListener("change",()=>{
 
   if(!cities) return;
 
-  Object.entries(cities).forEach(([name,val])=>{
-    ccSelect.innerHTML += `<option value="${val}">${name}</option>`;
+Object.entries(cities)
+  .sort((a,b)=>{
+    const cityA = a[0].split(",")[0];
+    const cityB = b[0].split(",")[0];
+    return cityA.localeCompare(cityB);
+  })
+  .forEach(([name,val])=>{
+
+    const cityOnly = name.split(",")[0];
+    ccSelect.innerHTML += `<option value="${val}">${cityOnly}</option>`;
+
   });
+
 
 });
 
