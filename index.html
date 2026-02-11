@@ -2789,8 +2789,8 @@ if(!ccSelect.value){
 </script>
 
 <script>
+<script>
 (function(){
-
 
 const grid=document.getElementById("forecastGrid");
 const tsEl=document.getElementById("forecastTimestamp");
@@ -2800,14 +2800,19 @@ const stateSelect=document.getElementById("forecastStateSelect");
 const hourlyWrap=document.getElementById("hourlyWrap");
 const hourRail=document.getElementById("hourRail");
 
+if(!grid || !citySelect || !stateSelect){
+ console.error("Forecast DOM not found");
+ return;
+}
+
 const FORECAST_POINTS={
-OR:{
-"Portland":"45.5152,-122.6784",
-"Bend":"44.0582,-121.3153"
-},
 CA:{
 "Los Angeles":"34.0522,-118.2437",
 "San Diego":"32.7157,-117.1611"
+},
+OR:{
+"Portland":"45.5152,-122.6784",
+"Bend":"44.0582,-121.3153"
 },
 WA:{
 "Seattle":"47.6062,-122.3321",
@@ -2815,11 +2820,13 @@ WA:{
 }
 };
 
+// populate states
 stateSelect.innerHTML='<option value="">Select State</option>';
 Object.keys(FORECAST_POINTS).sort().forEach(s=>{
  stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
 });
 
+// populate cities
 stateSelect.addEventListener("change",()=>{
  citySelect.innerHTML='<option value="">Select City</option>';
  const cities=FORECAST_POINTS[stateSelect.value];
@@ -2859,11 +2866,7 @@ async function fetchForecast(){
  days.forEach(d=>{
    const c=document.createElement("div");
    c.className="fc-card";
-   c.innerHTML=`
-     <div class="fc-day">${d.name}</div>
-     <img src="${d.icon}">
-     <div>${d.temperature}°</div>
-   `;
+   c.innerHTML=`<div class="fc-day">${d.name}</div><div>${d.temperature}°</div>`;
    grid.appendChild(c);
  });
 
@@ -2888,6 +2891,7 @@ refreshBtn.onclick=fetchForecast;
 
 })();
 </script>
+
 
 
 
