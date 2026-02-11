@@ -2873,20 +2873,28 @@ daytime.forEach((d,i)=>{
   const c=document.createElement("div");
   c.className="fc-card";
 
-  c.innerHTML=`
-    <div class="fc-day">${d.name}</div>
+const wind = d.windSpeed || "—";
+const gust = d.windGust ? ` / Gust ${d.windGust}` : "";
 
-    <div class="fc-icon">
-      <img src="${d.icon}">
-    </div>
+c.innerHTML=`
+  <div class="fc-day">${d.name}</div>
 
-    <div class="fc-temp">
-      <span class="hi">${hi}°</span>
-      <span class="lo">${lo}°</span>
-    </div>
+  <div class="fc-icon">
+    <img src="${d.icon}">
+  </div>
 
-    <div class="fc-desc">${d.shortForecast}</div>
-  `;
+  <div class="fc-temp">
+    <span class="hi">${hi}°</span>
+    <span class="lo">${lo}°</span>
+  </div>
+
+  <div class="fc-desc">${d.shortForecast}</div>
+
+  <div class="fc-wind">
+    Wind ${wind}${gust}
+  </div>
+`;
+
 
   grid.appendChild(c);
 });
