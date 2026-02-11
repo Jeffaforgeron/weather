@@ -2915,11 +2915,30 @@ c.innerHTML=`
  hourlyWrap.style.display="flex";
 (hj.properties?.periods || []).slice(0,24).forEach(h=>{
 
-   const el=document.createElement("div");
-   el.className="hour-card";
-   el.innerHTML=`<div>${new Date(h.startTime).getHours()}</div><div>${h.temperature}°</div>`;
-   hourRail.appendChild(el);
- });
+  const el=document.createElement("div");
+  el.className="hour-card";
+
+  const hour = new Date(h.startTime).toLocaleTimeString([], {
+    hour: "numeric"
+  });
+
+  const wind = h.windSpeed || "—";
+  const dir = h.windDirection || "";
+
+  el.innerHTML = `
+    <div>${hour}</div>
+
+    <img src="${h.icon}">
+
+    <div class="hour-temp">${h.temperature}°</div>
+
+    <div class="hour-wind">${wind} ${dir}</div>
+  `;
+
+  hourRail.appendChild(el);
+
+});
+
 
  tsEl.textContent="Updated "+new Date().toLocaleTimeString();
 
