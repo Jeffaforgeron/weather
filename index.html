@@ -1797,10 +1797,18 @@ html, body {
  <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
   <span>Forecast Tools</span>
 
-  <div style="display:flex;align-items:center;gap:8px;">
-    <span id="forecastHint">Select a city →</span>
-    <select id="forecastCitySelect"></select>
-  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+  <span id="forecastHint">Select a state, then city →</span>
+
+  <select id="forecastStateSelect">
+    <option value="">Select State</option>
+  </select>
+
+  <select id="forecastCitySelect">
+    <option value="">Select City</option>
+  </select>
+</div>
+
 </div>
 
 
@@ -2787,7 +2795,53 @@ if(!ccSelect.value){
 const grid = document.getElementById("forecastGrid");
 const tsEl = document.getElementById("forecastTimestamp");
 const refreshBtn = document.getElementById("forecastRefreshBtn");
-const citySelect = document.getElementById("forecastCitySelect");
+const citySelect = document.getElementById("forecastCitySelect
+                                           const forecastStateSelect = document.getElementById("forecastStateSelect");
+
+/* ===== FORECAST POINTS (CUSTOM / RIDGE / PROXY LOCATIONS) ===== */
+const FORECAST_POINTS = {
+  CA: {
+    "Bear Valley Springs": "35.1500,-118.5200",
+    "Big Bear Lake": "34.2439,-116.9114",
+    "Mt San Jacinto": "33.81528,-116.64194",
+    "Bakersfield": "35.3733,-119.0187",
+    "Palm Springs": "33.8303,-116.5453"
+  },
+
+  OR: {
+    "Portland": "45.5152,-122.6784",
+    "Government Camp": "45.3046,-121.7545",
+    "Bend": "44.0582,-121.3153"
+  },
+
+  WA: {
+    "Seattle": "47.6062,-122.3321",
+    "Tacoma": "47.2529,-122.4443"
+  }
+};
+/* Populate Forecast States */
+Object.keys(FORECAST_POINTS)
+  .sort()
+  .forEach(state=>{
+    forecastStateSelect.innerHTML += `<option value="${state}">${state}</option>`;
+  });
+
+/* Populate Cities when State changes */
+forecastStateSelect.addEventListener("change",()=>{
+
+  citySelect.innerHTML = '<option value="">Select City</option>';
+
+  const cities = FORECAST_POINTS[forecastStateSelect.value];
+  if(!cities) return;
+
+  Object.entries(cities)
+    .sort((a,b)=>a[0].localeCompare(b[0]))
+    .forEach(([name,val])=>{
+      citySelect.innerHTML += `<option value="${val}">${name}</option>`;
+    });
+
+});
+
   /* Populate Forecast Cities */
 citySelect.innerHTML = `
 <option value="35.3733,-119.0187">Bakersfield, CA</option>
