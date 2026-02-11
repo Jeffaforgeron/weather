@@ -2856,16 +2856,41 @@ async function fetchForecast(){
  const hr=await fetch(pj.properties.forecastHourly);
  const hj=await hr.json();
 
- const days = fj.properties.periods.slice(0,7);
+const periods = fj.properties.periods;
 
+// grab daytime entries only
+const daytime = periods.filter(p => p.isDaytime).slice(0,7);
 
- grid.innerHTML="";
- days.forEach(d=>{
-   const c=document.createElement("div");
-   c.className="fc-card";
-   c.innerHTML=`<div class="fc-day">${d.name}</div><div>${d.temperature}°</div>`;
-   grid.appendChild(c);
- });
+grid.innerHTML="";
+
+daytime.forEach((d,i)=>{
+
+  const night = periods[periods.indexOf(d)+1];
+
+  const hi = d.temperature;
+  const lo = night?.temperature ?? "—";
+
+  const c=document.createElement("div");
+  c.className="fc-card";
+
+  c.innerHTML=`
+    <div class="fc-day">${d.name}</div>
+
+    <div class="fc-icon">
+      <img src="${d.icon}">
+    </div>
+
+    <div class="fc-temp">
+      <span class="hi">${hi}°</span>
+      <span class="lo">${lo}°</span>
+    </div>
+
+    <div class="fc-desc">${d.shortForecast}</div>
+  `;
+
+  grid.appendChild(c);
+});
+
 
  hourlyWrap.style.display="flex";
 (hj.properties?.periods || []).slice(0,24).forEach(h=>{
