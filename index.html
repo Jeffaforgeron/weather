@@ -2795,8 +2795,8 @@ if(!ccSelect.value){
 const grid = document.getElementById("forecastGrid");
 const tsEl = document.getElementById("forecastTimestamp");
 const refreshBtn = document.getElementById("forecastRefreshBtn");
-const citySelect = document.getElementById("forecastCitySelect
-                                           const forecastStateSelect = document.getElementById("forecastStateSelect");
+const citySelect = document.getElementById("forecastCitySelect");
+const forecastStateSelect = document.getElementById("forecastStateSelect");
 
 /* ===== FORECAST POINTS (CUSTOM / RIDGE / PROXY LOCATIONS) ===== */
 const FORECAST_POINTS = {
@@ -2845,76 +2845,7 @@ forecastStateSelect.addEventListener("change",()=>{
 
 });
 
-  /* Populate Forecast Cities */
-citySelect.innerHTML = `
-<option value="35.3733,-119.0187">Bakersfield, CA</option>
-<option value="35.1500,-118.5200">Bear Valley Springs, CA</option>
 
-<option value="34.2439,-116.9114">Big Bear Lake, CA</option>
-<option value="34.2007,-118.3587">Burbank, CA</option>
-<option value="33.7805,-116.4668">Cathedral City, CA</option>
-<option value="33.9611,-116.5017">Desert Hot Springs, CA</option>
-<option value="40.8021,-124.1637">Eureka, CA</option>
-
-<option value="36.7378,-119.7871">Fresno, CA</option>
-<option value="33.7400,-116.7183">Idyllwild, CA</option>
-<option value="33.7206,-116.2156">Indio, CA</option>
-<option value="33.6634,-116.3100">La Quinta, CA</option>
-<option value="34.2483,-117.1892">Lake Arrowhead, CA</option>
-<option value="33.8178,-118.1516">Long Beach, CA</option>
-<option value="34.0522,-118.2437">Los Angeles, CA</option>
-<option value="36.6002,-121.8947">Monterey, CA</option>
-<option value="33.81528,-116.64194">Mt San Jacinto, CA</option>
-<option value="38.2975,-122.2869">Napa, CA</option>
-<option value="37.7213,-122.2216">Oakland, CA</option>
-<option value="33.8303,-116.5453">Palm Springs, CA</option>
-<option value="33.7222,-116.3745">Palm Desert, CA</option>
-<option value="33.7397,-116.4128">Rancho Mirage, CA</option>
-<option value="38.5816,-121.4944">Sacramento, CA</option>
-<option value="32.7157,-117.1611">San Diego, CA</option>
-<option value="37.35917,-121.92417">San Jose, CA</option>
-<option value="35.2828,-120.6596">San Luis Obispo, CA</option>
-<option value="36.98217,-122.01533">Santa Cruz, CA</option>
-<option value="34.4208,-119.6982">Santa Barbara, CA</option>
-<option value="37.9577,-121.2908">Stockton, CA</option>
-<option value="35.1322,-118.4481">Tehachapi, CA</option>
-
-
-
-
-<option value="39.7392,-104.9903">Denver, CO</option>
-
-<option value="25.7617,-80.1918">Miami, FL</option>
-
-<option value="41.8781,-87.6298">Chicago, IL</option>
-
-<option value="40.7128,-74.0060">New York, NY</option>
-
-<option value="46.1580,-123.8787">Astoria, OR</option>
-<option value="43.1189,-124.4084">Bandon, OR</option>
-<option value="45.4871,-122.8037">Beaverton, OR</option>
-<option value="44.0582,-121.3153">Bend, OR</option>
-<option value="44.5646,-123.2620">Corvallis, OR</option>
-<option value="44.1246,-123.2119">Eugene, OR</option>
-<option value="45.3046,-121.7545">Government Camp, OR</option>
-
-<option value="45.4982,-122.4315">Gresham, OR</option>
-<option value="45.5404,-122.9498">Hillsboro, OR</option>
-<option value="45.2101,-123.1987">McMinnville, OR</option>
-<option value="45.5152,-122.6784" selected>Portland, OR</option>
-<option value="44.9095,-123.0020">Salem, OR</option>
-<option value="45.5946,-121.1787">The Dalles, OR</option>
-
-<option value="46.9694,-122.9025">Olympia, WA</option>
-<option value="47.6062,-122.3321">Seattle, WA</option>
-<option value="47.2529,-122.4443">Tacoma, WA</option>
-<option value="45.6205,-122.6560">Vancouver, WA</option>
-<option value="46.6021,-120.5059">Yakima, WA</option>
-<option value="48.7519,-122.4787">Bellingham, WA</option>
-<option value="47.9789,-122.2021">Everett, WA</option>
-<option value="46.1382,-122.9382">Longview, WA</option>
-
-`;
 
 
 const hourlyWrap = document.getElementById("hourlyWrap");
