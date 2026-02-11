@@ -2929,8 +2929,12 @@ c.innerHTML=`
  }
 }
 
+// Default city label on load (Portland)
+document.getElementById("forecastCityLabel").textContent = "Portland, OR";
+
 fetchForecast();
 refreshBtn.onclick=fetchForecast;
+
 
 })();
 </script>
