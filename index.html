@@ -2856,7 +2856,8 @@ async function fetchForecast(){
  const hr=await fetch(pj.properties.forecastHourly);
  const hj=await hr.json();
 
- const days=fj.properties.periods.filter(p=>p.isDaytime).slice(0,7);
+ const days = fj.properties.periods.slice(0,7);
+
 
  grid.innerHTML="";
  days.forEach(d=>{
@@ -2867,7 +2868,8 @@ async function fetchForecast(){
  });
 
  hourlyWrap.style.display="flex";
- hj.properties.periods.slice(0,24).forEach(h=>{
+(hj.properties?.periods || []).slice(0,24).forEach(h=>{
+
    const el=document.createElement("div");
    el.className="hour-card";
    el.innerHTML=`<div>${new Date(h.startTime).getHours()}</div><div>${h.temperature}°</div>`;
