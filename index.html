@@ -2819,12 +2819,15 @@ const FORECAST_POINTS = {
     "Tacoma": "47.2529,-122.4443"
   }
 };
-/* Populate Forecast States */
+// Populate Forecast States (alphabetized)
+forecastStateSelect.innerHTML = '<option value="">Select State</option>';
+
 Object.keys(FORECAST_POINTS)
   .sort()
   .forEach(state=>{
     forecastStateSelect.innerHTML += `<option value="${state}">${state}</option>`;
   });
+
 
 /* Populate Cities when State changes */
 forecastStateSelect.addEventListener("change",()=>{
@@ -3022,9 +3025,25 @@ tsEl.textContent="Last updated: "+new Date().toLocaleString();
 
 }
 
+// Load default forecast (Portland)
 fetchForecast();
 
+
 refreshBtn.addEventListener("click",fetchForecast);
+forecastStateSelect.addEventListener("change",()=>{
+
+  citySelect.innerHTML = '<option value="">Select City</option>';
+
+  const cities = FORECAST_POINTS[forecastStateSelect.value];
+  if(!cities) return;
+
+  Object.entries(cities)
+    .sort((a,b)=>a[0].localeCompare(b[0]))
+    .forEach(([name,val])=>{
+      citySelect.innerHTML += `<option value="${val}">${name}</option>`;
+    });
+
+});
 
 citySelect.addEventListener("change",()=>{
  const parts=citySelect.value.split(",");
