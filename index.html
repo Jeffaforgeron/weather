@@ -2925,15 +2925,21 @@ c.innerHTML=`
   const wind = h.windSpeed || "—";
   const dir = h.windDirection || "";
 
-  el.innerHTML = `
-    <div>${hour}</div>
+const pop = h.probabilityOfPrecipitation?.value;
+const precip = pop != null ? `${pop}%` : "—";
 
-    <img src="${h.icon}">
+el.innerHTML = `
+  <div>${hour}</div>
 
-    <div class="hour-temp">${h.temperature}°</div>
+  <img src="${h.icon}">
 
-    <div class="hour-wind">${wind} ${dir}</div>
-  `;
+  <div class="hour-temp">${h.temperature}°</div>
+
+  <div class="hour-wind">${wind} ${dir}</div>
+
+  <div class="hour-pop">${precip} ${h.shortForecast}</div>
+`;
+
 
   hourRail.appendChild(el);
 
