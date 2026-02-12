@@ -1599,16 +1599,14 @@ html, body {
 /* Mobile: change arrow to DOWN for Current Conditions hint */
 @media (max-width:768px){
 
-  /* hide the original text */
   #ccHint{
     font-size:0;
     white-space:normal;
     max-width:100%;
     line-height:1.2;
-    text-align:right;
+    text-align:left;     /* 👈 match Forecast Tools */
   }
 
-  /* inject mobile-friendly text */
   #ccHint::before{
     content:"Select a state, then city ↓";
     font-size:12px;
@@ -1616,6 +1614,7 @@ html, body {
     font-weight:600;
   }
 }
+
  /* Mobile: change arrow to DOWN for Forecast Tools hint */
 @media (max-width:768px){
 
