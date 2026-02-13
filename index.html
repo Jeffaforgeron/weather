@@ -1914,6 +1914,16 @@ html, body {
   <div id="ccDew"></div>
   <div id="ccRainDay"></div>
   <div id="ccRainMonth"></div>
+<!-- Webcam -->
+<div id="ccWebcam" style="margin:10px 0; display:none;">
+  <iframe
+    id="ccWebcamFrame"
+    width="100%"
+    height="220"
+    style="border-radius:10px;border:0;"
+    loading="lazy">
+  </iframe>
+</div>
 
   <!-- Sun + UV footer -->
  <div id="ccSunUV">
@@ -2582,6 +2592,27 @@ async function fetchRAWS(stationId){
   return j.STATION[0];
 }
 
+function renderWebcam(lat){
+
+  const cam = document.getElementById("ccWebcam");
+  const frame = document.getElementById("ccWebcamFrame");
+
+  if(!cam || !frame) return;
+
+  // Portland only (for now)
+  if(lat === "45.5152"){
+
+    cam.style.display = "block";
+
+    frame.src =
+      "https://www.youtube.com/embed/Jm8T6B0Jx4Q?autoplay=1&mute=1";
+
+  } else {
+
+    cam.style.display = "none";
+    frame.src = "";
+  }
+}
   
 async function loadCity(lat,lon){
 
@@ -2627,6 +2658,8 @@ if(now > sunrise && now < sunset){
 
 
 const key = `${lat},${lon}`;
+  renderWebcam(lat);
+
 document.getElementById("ccCity").textContent = CITY_NAMES[key] || "Selected City";
 
 const station = CITY_STATIONS[key];
