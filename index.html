@@ -2246,11 +2246,16 @@ setInterval(() => {
 
 
 
-const ccSelect=document.getElementById("currentCitySelect");
-  const ccStateSelect = document.getElementById("currentStateSelect");
 
 
 
+
+const ccSelect = document.getElementById("currentCitySelect");
+const ccStateSelect = document.getElementById("currentStateSelect");
+
+if(!ccSelect || !ccStateSelect){
+  console.error("Current Conditions dropdowns not found");
+}
 
 
 ccStateSelect.addEventListener("change",()=>{
