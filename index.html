@@ -1921,8 +1921,24 @@ function updateSatellite(){
 const radarRegions = {
   "CONUS": { loop: "CONUS-LARGE" },
   "Northwest": { loop:"PACNORTHWEST", states:{
-    "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
-    "OR":[["KRTX","Portland"],["KMAX","Medford"]],
+  "WA":[
+  ["KATX","Seattle"],
+  ["KLGX","Langley Hill"],
+  ["KOTX","Spokane"],
+  ["KRTX","Olympia"],
+  ["KPDT","Pendleton"],
+  ["KSKX","Yakima"]
+],
+
+"OR":[
+  ["KRTX","Portland"],
+  ["KMAX","Medford"],
+  ["KPDT","Pendleton"],
+  ["KLGX","Astoria"],
+  ["KDAX","Central Oregon"],
+  ["KCBX","Eastern Oregon"]
+],
+
     "ID":[["KCBX","Boise"]],
     "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]]
   }},
