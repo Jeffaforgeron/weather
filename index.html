@@ -524,8 +524,23 @@ select { font-size: 13px; }
 }
 
 /* timestamp footer */
-.forecast-footer { display:flex; justify-content:flex-end; }
-.forecast-footer .ts { font-size:11px; color:var(--text-secondary,#9ca3af); }
+.forecast-footer{
+  display:flex;
+  justify-content:flex-end;
+  padding:4px 6px;
+}
+
+.forecast-footer .ts{
+  font-size:11px;
+  color:var(--text-secondary,#9ca3af);
+  white-space:nowrap;
+}
+
+@media(max-width:768px){
+  .forecast-footer{
+    justify-content:center;
+  }
+}
 
 /* ===== FORECAST READABILITY BOOST ===== */
 
