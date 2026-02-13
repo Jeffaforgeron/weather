@@ -3012,14 +3012,61 @@ const citySelect=document.getElementById("forecastCitySelect");
 const stateSelect=document.getElementById("forecastStateSelect");
 const hourlyWrap=document.getElementById("hourlyWrap");
 const hourRail=document.getElementById("hourRail");
+const webcamStrip=document.getElementById("webcamStrip");
 
 if(!grid || !citySelect || !stateSelect){
  console.error("Forecast DOM not found");
  return;
 }
+const WEBCAMS={
+  "Portland":[
+    {
+      name:"Downtown Portland",
+      url:"https://tripcheck.com/RoadCams/cams/Portland%20Downtown_pid1860.JPG"
+    },
+    {
+      name:"Multnomah Falls",
+      url:"https://tripcheck.com/RoadCams/cams/Multnomah%20Falls_pid1848.JPG"
+    },
+    {
+      name:"Government Camp",
+      url:"https://tripcheck.com/RoadCams/cams/Government%20Camp_pid1855.JPG"
+    }
+  ]
+};
 
 const FORECAST_POINTS={
 
+  function loadWebcams(city){
+
+  if(!webcamStrip) return;
+
+  if(!WEBCAMS[city]){
+    webcamStrip.innerHTML="";
+    webcamStrip.classList.remove("active");
+    return;
+  }
+
+  webcamStrip.innerHTML="";
+  webcamStrip.classList.add("active");
+
+  WEBCAMS[city].forEach(cam=>{
+
+    const card=document.createElement("div");
+    card.className="webcam-card";
+
+    card.innerHTML = `
+      <img src="${cam.url}?ts=${Date.now()}">
+      <div class="webcam-label">${cam.name}</div>
+    `;
+
+    webcamStrip.appendChild(card);
+  });
+
+}
+
+  
+  
 // ================= CALIFORNIA (38) =================
 CA:{
 "Anaheim":"33.8366,-117.9143",
@@ -3147,12 +3194,13 @@ stateSelect.addEventListener("change",()=>{
 let lat="45.5152";
 let lon="-122.6784";
 
-citySelect.addEventListener("change",()=>{
+})();
 
  if(!citySelect.value) return;
 
  const cityName = citySelect.options[citySelect.selectedIndex].text;
  document.getElementById("forecastCityLabel").textContent = cityName;
+loadWebcams(cityName);
 
  [lat,lon]=citySelect.value.split(",");
  fetchForecast();
@@ -3285,6 +3333,10 @@ document.getElementById("forecastCityLabel").textContent = "Portland, OR";
 fetchForecast();
 refreshBtn.onclick=fetchForecast;
 
+setInterval(()=>{
+  const city = document.getElementById("forecastCityLabel").textContent;
+  loadWebcams(city);
+},60000);
 
 })();
 </script>
