@@ -833,6 +833,54 @@ select{
 .fc-card{
   box-shadow:0 0 14px rgba(56,189,248,.15);
 }
+/* ===== WEBCAM UI ===== */
+
+.webcam-strip{
+  display:none;
+  gap:10px;
+  overflow-x:auto;
+  padding:10px;
+  margin-top:8px;
+}
+
+.webcam-strip.active{
+  display:flex;
+}
+
+.webcam-card{
+  min-width:180px;
+  background:#020617;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 0 14px rgba(56,189,248,.25);
+}
+
+.webcam-card img{
+  width:100%;
+  display:block;
+}
+
+.webcam-label{
+  padding:6px;
+  font-size:11px;
+  text-align:center;
+  color:#9ca3af;
+}
+
+/* Mobile trigger card */
+.webcam-trigger{
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#38bdf8;
+}
+
+/* Hide trigger on desktop */
+@media(min-width:769px){
+  .webcam-trigger{display:none;}
+}
 
 /* Forecast hover neon */
 .fc-card:hover{
@@ -1923,6 +1971,7 @@ html, body {
   
 
 </div>
+<div id="webcamStrip" class="webcam-strip"></div>
 
 
     <div class="forecast-footer">
@@ -3072,6 +3121,54 @@ TX:{ "Houston":"29.7604,-95.3698","San Antonio":"29.4241,-98.4936","Dallas":"32.
 
 };
 
+// ===== PORTLAND WEBCAMS (v1) =====
+
+const WEBCAMS = {
+  "Portland":[
+    {
+      name:"Downtown Portland",
+      url:"https://tripcheck.com/RoadCams/cams/Portland%20Downtown_pid1860.JPG"
+    },
+    {
+      name:"I-84 Gorge",
+      url:"https://tripcheck.com/RoadCams/cams/Multnomah%20Falls_pid1848.JPG"
+    },
+    {
+      name:"Mt Hood Approach",
+      url:"https://tripcheck.com/RoadCams/cams/Government%20Camp_pid1855.JPG"
+    }
+  ]
+};
+
+const webcamStrip = document.getElementById("webcamStrip");
+
+function loadWebcams(city){
+
+  webcamStrip.innerHTML="";
+  webcamStrip.classList.remove("active");
+
+  if(!WEBCAMS[city]) return;
+
+  WEBCAMS[city].forEach(cam=>{
+
+    const c=document.createElement("div");
+    c.className="webcam-card";
+
+    c.innerHTML=`
+      <img src="${cam.url}?ts=${Date.now()}">
+      <div class="webcam-label">${cam.name}</div>
+    `;
+
+    webcamStrip.appendChild(c);
+  });
+
+}
+
+// refresh every 60s
+setInterval(()=>{
+  const city=document.getElementById("forecastCityLabel").textContent;
+  loadWebcams(city);
+},60000);
 
 // populate states
 stateSelect.innerHTML='<option value="">Select State</option>';
@@ -3177,6 +3274,26 @@ c.innerHTML=`
 
   grid.appendChild(c);
 });
+// Mobile webcam trigger (Portland only)
+if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textContent==="Portland"){
+
+  const t=document.createElement("div");
+  t.className="fc-card webcam-trigger";
+  t.textContent="📷 Live Cams";
+
+  t.onclick=()=>{
+    webcamStrip.classList.toggle("active");
+    loadWebcams("Portland");
+  };
+
+  grid.appendChild(t);
+}
+
+// Desktop auto load webcams
+if(window.innerWidth >= 768 && document.getElementById("forecastCityLabel").textContent==="Portland"){
+  webcamStrip.classList.add("active");
+  loadWebcams("Portland");
+}
 
 
  hourlyWrap.style.display="flex";
