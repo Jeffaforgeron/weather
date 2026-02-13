@@ -841,6 +841,9 @@ select{
   overflow-x:auto;
   padding:10px;
   margin-top:8px;
+  width:100%;
+flex-wrap:nowrap;
+
 }
 
 .webcam-strip.active{
@@ -1426,7 +1429,7 @@ h1{
 
 #forecastPanel {
   position: relative;
-  overflow: hidden;   /* keeps hourly inside this panel only */
+  overflow: visible;   /* keeps hourly inside this panel only */
 }
 
 .forecast-tv {
@@ -3283,9 +3286,11 @@ if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textC
   t.textContent="📷 Live Cams";
 
   t.onclick=()=>{
-    webcamStrip.classList.toggle("active");
-    loadWebcams("Portland");
-  };
+  webcamStrip.classList.add("active");
+  loadWebcams("Portland");
+  webcamStrip.scrollIntoView({behavior:"smooth"});
+};
+
 
   grid.appendChild(t);
 }
