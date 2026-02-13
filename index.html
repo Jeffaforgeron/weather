@@ -1920,153 +1920,39 @@ function updateSatellite(){
 /* ===== RADAR DATA (FULL, SAFE) ===== */
 const radarRegions = {
   "CONUS": { loop: "CONUS-LARGE" },
+
   "Northwest": { loop:"PACNORTHWEST", states:{
-  "WA":[
-  ["KATX","Seattle"],
-  ["KLGX","Langley Hill (Coast)"],
-  ["KOTX","Spokane"]
-],
-
-
-"OR":[
-  ["KRTX","Portland"],
-  ["KMAX","Medford"],
-  ["KPDT","Pendleton"],
-  ["KLGX","Astoria (Coast)"]
-],
-
-
+    "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+    "OR":[["KRTX","Portland"],["KMAX","Medford"],["KPDT","Pendleton"]],
     "ID":[["KCBX","Boise"]],
     "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]]
   }},
+
   "Southwest": { loop:"PACSOUTHWEST", states:{
-    "CA":[
-  ["KMUX","San Jose (Bay Area)"],
-  ["KDAX","Sacramento"],
-  ["KHNX","Hanford (Central Valley)"],
-  ["KVTX","Los Angeles"],
-  ["KSOX","Santa Ana (OC/Inland Empire)"],
-  ["KNKX","San Diego"],
-  ["KVBX","Vandenberg (Central Coast)"],
-  ["KBHX","Eureka (North Coast)"],
-  ["KBBX","Beale AFB (Northern Sierra)"],
-  ["KRGX","Reno (Tahoe / Eastern Sierra fringe)"]
-],
-
+    "CA":[["KMUX","San Jose"],["KDAX","Sacramento"],["KHNX","Hanford"],["KVTX","Los Angeles"],["KNKX","San Diego"]],
     "NV":[["KRGX","Reno"],["KLRX","Elko"]],
-    "AZ":[
-  ["KIWA","Phoenix"],
-  ["KEMX","Tucson"],
-  ["KFSX","Flagstaff"],
-  ["KYUX","Yuma"]
-],
-
-   "UT":[
-  ["KMTX","Salt Lake City"],
-  ["KICX","Cedar City"]
-],
-
-    "NM":[
-  ["KABX","Albuquerque"],
-  ["KFDX","Cannon AFB"],
-  ["KHDX","Holloman AFB"]
-],
-
+    "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"],["KYUX","Yuma"]],
+    "UT":[["KMTX","Salt Lake City"],["KICX","Cedar City"]],
+    "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"],["KHDX","Holloman AFB"]]
   }},
-"Northern Plains": { loop:"UPPERMISSVLY", states:{
-  "ND":[
-    ["KBIS","Bismarck"],
-    ["KMBX","Minot"]
-  ],
-  "SD":[
-    ["KFSD","Sioux Falls"],
-    ["KABR","Aberdeen"],
-    ["KUDX","Rapid City"]
-  ],
-  "NE":[
-    ["KOAX","Omaha"],
-    ["KUEX","Hastings"],
-    ["KLNX","North Platte"]
-  ],
-  "WY":[
-    ["KCYS","Cheyenne"],
-    ["KRIW","Riverton"]
-  ],
-  "MT":[
-    ["KTFX","Great Falls"],
-    ["KMSX","Missoula"],
-    ["KGGW","Glasgow"]
-  ],
-  "ID":[
-    ["KCBX","Boise"],
-    ["KSFX","Pocatello"]
-  ]
-}},
+
+  "Northern Plains": { loop:"UPPERMISSVLY", states:{
+    "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
+    "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"],["KUDX","Rapid City"]],
+    "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
+    "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]],
+    "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]],
+    "ID":[["KCBX","Boise"],["KSFX","Pocatello"]]
+  }},
 
   "Southern Plains": { loop:"SOUTHPLAINS", states:{
-  "TX":[
-    ["KFWS","Fort Worth"],
-    ["KHGX","Houston"],
-    ["KBRO","Brownsville"],
-    ["KAMA","Amarillo"],
-    ["KLBB","Lubbock"],
-    ["KEWX","Austin / San Antonio"],
-    ["KCRP","Corpus Christi"],
-    ["KMAF","Midland"]
-  ],
-  "OK":[
-    ["KTLX","Oklahoma City"],
-    ["KINX","Tulsa"],
-    ["KFDR","Frederick"]
-  ],
-  "KS":[
-    ["KICT","Wichita"],
-    ["KDDC","Dodge City"],
-    ["KTWX","Topeka"]
-  ],
-  "CO":[
-    ["KFTG","Denver"],
-    ["KGJX","Grand Junction"],
-    ["KPUX","Pueblo"]
-  ]
-}},
-
-  }},
-  "Midwest": { loop:"MIDWEST", states:{
-    "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
-    "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
-    "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"]],
-    "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"]],
-    "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
-    "IN":[["KIND","Indianapolis"],["KIWX","Northern Indiana"]],
-    "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"]],
-    "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]]
-  }},
-  "Southeast": { loop:"SOUTHEAST", states:{
-    "FL":[["KJAX","Jacksonville"],["KTBW","Tampa"],["KMLB","Melbourne"],["KAMX","Miami"]],
-    "GA":[["KFFC","Atlanta"]],
-    "AL":[["KBMX","Birmingham"],["KHTX","Huntsville"]],
-    "TN":[["KOHX","Nashville"],["KNQA","Memphis"]],
-    "KY":[["KLVX","Louisville"],["KPAH","Paducah"]],
-    "SC":[["KCAE","Columbia"]],
-    "NC":[["KRAX","Raleigh"],["KLTX","Wilmington"]],
-    "LA":[["KLCH","Lake Charles"],["KSHV","Shreveport"]],
-    "MS":[["KDGX","Jackson"]]
-  }},
-  "Northeast": { loop:"NORTHEAST", states:{
-    "NY":[["KBUF","Buffalo"],["KOKX","New York City"],["KENX","Albany"]],
-    "PA":[["KPBZ","Pittsburgh"],["KCCX","State College"]],
-    "MA":[["KBOX","Boston"]],
-    "NJ":[["KDIX","Mount Holly"]],
-    "CT":[["KBOX","Hartford"]],
-    "VT":[["KBTV","Burlington"]],
-    "NH":[["KGYX","Gray"]],
-    "ME":[["KGYX","Gray"],["KCAR","Caribou"]],
-    "MD":[["KLWX","Washington DC"]],
-    "VA":[["KAKQ","Wakefield"],["KFCX","Blacksburg"]],
-    "WV":[["KRLX","Charleston"]]
+    "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"],["KEWX","Austin"],["KCRP","Corpus Christi"],["KMAF","Midland"]],
+    "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
+    "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
+    "CO":[["KFTG","Denver"],["KGJX","Grand Junction"],["KPUX","Pueblo"]]
   }}
 };
+
 
 function initRadar(){
   regionSelect.innerHTML="";
