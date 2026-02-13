@@ -3310,22 +3310,30 @@ lon = "-122.6784";
   if(o.text==="Portland") o.selected=true;
 });
 
-// ===== DEFAULT PORTLAND ON LOAD (SAFE WAIT) =====
+
+// ===== DEFAULT PORTLAND ON LOAD (STATE + CITY) =====
 function selectDefaultPortland(){
 
   const trySelect = setInterval(()=>{
 
-    const opts = [...citySelect.options];
+    // wait for states first
+    if(stateSelect.options.length > 1){
 
-    if(opts.length > 1){
+      stateSelect.value = "OR";
+      stateSelect.dispatchEvent(new Event("change"));
 
-      opts.forEach(o=>{
-        if(o.text === "Portland"){
-          o.selected = true;
-          citySelect.dispatchEvent(new Event("change"));
-          clearInterval(trySelect);
-        }
-      });
+      // now wait for cities
+      setTimeout(()=>{
+
+        [...citySelect.options].forEach(o=>{
+          if(o.text === "Portland"){
+            o.selected = true;
+            citySelect.dispatchEvent(new Event("change"));
+            clearInterval(trySelect);
+          }
+        });
+
+      },150);
 
     }
 
@@ -3334,6 +3342,7 @@ function selectDefaultPortland(){
 }
 
 selectDefaultPortland();
+
 
 
 
