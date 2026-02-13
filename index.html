@@ -3310,7 +3310,22 @@ lon = "-122.6784";
   if(o.text==="Portland") o.selected=true;
 });
 
-fetchForecast();
+// ===== DEFAULT PORTLAND ON LOAD =====
+lat = "45.5152";
+lon = "-122.6784";
+
+// wait for dropdown to exist
+setTimeout(()=>{
+
+  [...citySelect.options].forEach(o=>{
+    if(o.text==="Portland"){
+      o.selected = true;
+      citySelect.dispatchEvent(new Event("change"));
+    }
+  });
+
+},300);
+
 
 refreshBtn.onclick=fetchForecast;
 
