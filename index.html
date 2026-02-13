@@ -3164,7 +3164,6 @@ citySelect.addEventListener("change",async ()=>{
 
  [lat,lon]=citySelect.value.split(",");
 
- // pull elevation from NWS point metadata
  try{
    const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
    const pj = await p.json();
@@ -3182,6 +3181,7 @@ citySelect.addEventListener("change",async ()=>{
  fetchForecast();
 
 });
+
 
 
 
