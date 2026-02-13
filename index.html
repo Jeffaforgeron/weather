@@ -3151,18 +3151,20 @@ stateSelect.addEventListener("change",()=>{
 let lat="45.5152";
 let lon="-122.6784";
 
-})();
+
+
+citySelect.addEventListener("change",()=>{
 
  if(!citySelect.value) return;
 
  const cityName = citySelect.options[citySelect.selectedIndex].text;
  document.getElementById("forecastCityLabel").textContent = cityName;
 
-
  [lat,lon]=citySelect.value.split(",");
  fetchForecast();
 
 });
+
 
 
 async function fetchForecast(){
