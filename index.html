@@ -3333,10 +3333,7 @@ document.getElementById("forecastCityLabel").textContent = "Portland, OR";
 fetchForecast();
 refreshBtn.onclick=fetchForecast;
 
-setInterval(()=>{
-  const city = document.getElementById("forecastCityLabel").textContent;
-  loadWebcams(city);
-},60000);
+
 
 })();
 </script>
