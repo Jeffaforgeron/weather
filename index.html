@@ -1919,49 +1919,53 @@ function updateSatellite(){
 
 /* ===== RADAR DATA (FULL, SAFE) ===== */
 const radarRegions = {
-  "CONUS": { loop: "CONUS-LARGE" },
 
-  "Northwest": { loop:"PACNORTHWEST", states:{
-    "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
-    "OR":[["KRTX","Portland"],["KMAX","Medford"],["KPDT","Pendleton"]],
-    "ID":[["KCBX","Boise"]],
-    "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]]
-  }},
+"CONUS": { loop: "CONUS-LARGE" },
 
-  "Southwest": { loop:"PACSOUTHWEST", states:{
-    "CA":[["KMUX","San Jose"],["KDAX","Sacramento"],["KHNX","Hanford"],["KVTX","Los Angeles"],["KNKX","San Diego"]],
-    "NV":[["KRGX","Reno"],["KLRX","Elko"]],
-    "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"],["KYUX","Yuma"]],
-    "UT":[["KMTX","Salt Lake City"],["KICX","Cedar City"]],
-    "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"],["KHDX","Holloman AFB"]]
-  }},
+"Northwest": { loop:"PACNORTHWEST", states:{
+  "WA":[["KATX","Seattle"],["KLGX","Langley Hill"],["KOTX","Spokane"]],
+  "OR":[["KRTX","Portland"],["KMAX","Medford"],["KPDT","Pendleton"]],
+  "ID":[["KCBX","Boise"]],
+  "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]]
+}},
 
-  "Northern Plains": { loop:"UPPERMISSVLY", states:{
-    "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
-    "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"],["KUDX","Rapid City"]],
-    "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
-    "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]],
-    "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]],
-    "ID":[["KCBX","Boise"],["KSFX","Pocatello"]]
-  }},
+"Southwest": { loop:"PACSOUTHWEST", states:{
+  "CA":[["KMUX","San Jose"],["KDAX","Sacramento"],["KHNX","Hanford"],["KVTX","Los Angeles"],["KNKX","San Diego"]],
+  "NV":[["KRGX","Reno"],["KLRX","Elko"]],
+  "AZ":[["KIWA","Phoenix"],["KEMX","Tucson"],["KFSX","Flagstaff"],["KYUX","Yuma"]],
+  "UT":[["KMTX","Salt Lake City"],["KICX","Cedar City"]],
+  "NM":[["KABX","Albuquerque"],["KFDX","Cannon AFB"],["KHDX","Holloman AFB"]]
+}},
 
-  "Southern Plains": { loop:"SOUTHPLAINS", states:{
-    "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"],["KEWX","Austin"],["KCRP","Corpus Christi"],["KMAF","Midland"]],
-    "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
-    "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
-    "CO":[["KFTG","Denver"],["KGJX","Grand Junction"],["KPUX","Pueblo"]]
-  }}
-  "Midwest": { loop:"MIDWEST", states:{
-    "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
-    "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
-    "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"],["KSGF","Springfield"]],
-    "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"],["KARX","La Crosse"]],
-    "IL":[["KLOT","Chicago"],["KILX","Lincoln"],["KDVN","Quad Cities"]],
-    "IN":[["KIND","Indianapolis"],["KIWX","Northern Indiana"]],
-    "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"],["KAPX","Gaylord"]],
-    "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]]
-  }}
+"Northern Plains": { loop:"UPPERMISSVLY", states:{
+  "ND":[["KBIS","Bismarck"],["KMBX","Minot"]],
+  "SD":[["KFSD","Sioux Falls"],["KABR","Aberdeen"],["KUDX","Rapid City"]],
+  "NE":[["KOAX","Omaha"],["KUEX","Hastings"],["KLNX","North Platte"]],
+  "WY":[["KCYS","Cheyenne"],["KRIW","Riverton"]],
+  "MT":[["KTFX","Great Falls"],["KMSX","Missoula"],["KGGW","Glasgow"]],
+  "ID":[["KCBX","Boise"],["KSFX","Pocatello"]]
+}},
+
+"Southern Plains": { loop:"SOUTHPLAINS", states:{
+  "TX":[["KFWS","Fort Worth"],["KHGX","Houston"],["KBRO","Brownsville"],["KAMA","Amarillo"],["KLBB","Lubbock"],["KEWX","Austin"],["KCRP","Corpus Christi"],["KMAF","Midland"]],
+  "OK":[["KTLX","Oklahoma City"],["KINX","Tulsa"],["KFDR","Frederick"]],
+  "KS":[["KICT","Wichita"],["KDDC","Dodge City"],["KTWX","Topeka"]],
+  "CO":[["KFTG","Denver"],["KGJX","Grand Junction"],["KPUX","Pueblo"]]
+}},
+
+"Midwest": { loop:"MIDWEST", states:{
+  "MN":[["KMPX","Minneapolis"],["KDLH","Duluth"]],
+  "IA":[["KDMX","Des Moines"],["KDVN","Davenport"]],
+  "MO":[["KLSX","St. Louis"],["KEAX","Kansas City"],["KSGF","Springfield"]],
+  "WI":[["KMKX","Milwaukee"],["KGRB","Green Bay"],["KARX","La Crosse"]],
+  "IL":[["KLOT","Chicago"],["KILX","Lincoln"]],
+  "IN":[["KIND","Indianapolis"],["KIWX","Northern Indiana"]],
+  "MI":[["KDTX","Detroit"],["KGRR","Grand Rapids"],["KAPX","Gaylord"]],
+  "OH":[["KCLE","Cleveland"],["KILN","Wilmington"]]
+}}
+
 };
+
 
 
 
