@@ -3156,31 +3156,16 @@ let lon="-122.6784";
 
 
 
-citySelect.addEventListener("change",async ()=>{
+citySelect.addEventListener("change",()=>{
 
  if(!citySelect.value) return;
 
- const cityName = citySelect.options[citySelect.selectedIndex].text;
-
  [lat,lon]=citySelect.value.split(",");
-
- try{
-   const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
-   const pj = await p.json();
-
-   const meters = pj.properties.elevation?.value;
-   const feet = meters != null ? Math.round(meters * 3.28084) : null;
-
-   document.getElementById("forecastCityLabel").textContent =
-     feet ? `${cityName} (Elev. ${feet} ft)` : cityName;
-
- }catch{
-   document.getElementById("forecastCityLabel").textContent = cityName;
- }
 
  fetchForecast();
 
 });
+
 
 
 
@@ -3194,6 +3179,15 @@ async function fetchForecast(){
 
  const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
  const pj=await p.json();
+// ---- Set City Label + Elevation ----
+const cityName =
+  citySelect.options[citySelect.selectedIndex]?.text || "Selected City";
+
+const meters = pj.properties.elevation?.value;
+const feet = meters != null ? Math.round(meters * 3.28084) : null;
+
+document.getElementById("forecastCityLabel").textContent =
+  feet ? `${cityName} (Elev. ${feet} ft)` : cityName;
 
  const fr=await fetch(pj.properties.forecast);
  const fj=await fr.json();
@@ -3305,8 +3299,7 @@ el.innerHTML = `
  }
 }
 
-// Default city label on load (Portland)
-document.getElementById("forecastCityLabel").textContent = "Portland, OR";
+
 
 fetchForecast();
 refreshBtn.onclick=fetchForecast;
