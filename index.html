@@ -3301,8 +3301,19 @@ el.innerHTML = `
 
 
 
+// Default to Portland on load
+lat = "45.5152";
+lon = "-122.6784";
+
+// visually select Portland in dropdown if present
+[...citySelect.options].forEach(o=>{
+  if(o.text==="Portland") o.selected=true;
+});
+
 fetchForecast();
+
 refreshBtn.onclick=fetchForecast;
+
 
 
 
