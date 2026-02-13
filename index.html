@@ -1479,6 +1479,12 @@ html, body {
   font-size:11px;
   color:#9ca3af;
 }
+.fc-snow{
+  font-size:11px;
+  color:#60a5fa;
+  text-align:center;
+  line-height:1.1;
+}
 
 .hour-wind{
   font-size:10px;
@@ -3039,6 +3045,19 @@ const daytime = periods.filter(p => p.isDaytime).slice(0,7);
 grid.innerHTML="";
 
 daytime.forEach((d,i)=>{
+// --- Snow amount extraction ---
+let snowText = "";
+
+if(d.detailedForecast && d.detailedForecast.toLowerCase().includes("snow")){
+
+  const match = d.detailedForecast.match(/snow accumulation[^.]*\./i);
+
+  if(match){
+    snowText = match[0];
+  } else {
+    snowText = "Snow possible";
+  }
+}
 
   const night = periods[periods.indexOf(d)+1];
 
@@ -3064,6 +3083,8 @@ c.innerHTML=`
   </div>
 
   <div class="fc-desc">${d.shortForecast}</div>
+
+  ${snowText ? `<div class="fc-snow">${snowText}</div>` : ""}
 
   <div class="fc-wind">
     Wind ${wind}${gust}
