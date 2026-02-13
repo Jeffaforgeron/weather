@@ -3275,7 +3275,8 @@ c.innerHTML=`
   grid.appendChild(c);
 });
 // Mobile webcam trigger (Portland only)
-if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textContent==="Portland"){
+if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textContent==="Portland, OR"){
+
 
   const t=document.createElement("div");
   t.className="fc-card webcam-trigger";
@@ -3290,7 +3291,8 @@ if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textC
 }
 
 // Desktop auto load webcams
-if(window.innerWidth >= 768 && document.getElementById("forecastCityLabel").textContent==="Portland"){
+if(window.innerWidth < 768 && document.getElementById("forecastCityLabel").textContent==="Portland, OR"){
+
   webcamStrip.classList.add("active");
   loadWebcams("Portland");
 }
