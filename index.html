@@ -1857,37 +1857,26 @@ html, body {
 
 <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
   <span>Current Conditions <span id="feelsToggle" style="opacity:.6;margin-left:6px;cursor:pointer;">Feels Like</span></span>
-<span id="ccHint" style="margin-right:8px;">Select a state, then city →</span>
+  <span id="ccHint" style="margin-right:8px;">Select a state, then city →</span>
 
-<select id="currentStateSelect">
-  <option value="">Select State</option>
-</select>
+  <select id="currentStateSelect">
+    <option value="">Select State</option>
+  </select>
 
-<select id="currentCitySelect">
-  <option value="">Select City</option>
-</select>
+  <select id="currentCitySelect">
+    <option value="">Select City</option>
+  </select>
+</div>
 
+<!-- MAP MODE -->
+<div id="ccMapWrap" class="image-box" style="padding:0;display:flex;">
+  <img id="tempMapImage"
+    src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png"
+    style="width:100%;height:auto;">
+</div>
 
-
-
-    
-
-
-
-
-    
-  </div>
-
-  <!-- MAP MODE -->
-  <div id="ccMapWrap" class="image-box" style="padding:0;display:flex;">
-
-    <img id="tempMapImage"
-      src="https://data.mesonet.org/data/public/noaa/metar/maps/realtime/latest.tair.png"
-      style="width:100%;height:auto;">
-  </div>
-
-  <!-- CITY MODE -->
- <div id="ccCityWrap" style="display:none;padding:14px;">
+<!-- CITY MODE -->
+<div id="ccCityWrap" style="display:none;padding:14px;">
 
   <div class="cc-header">
     <div id="ccCity" class="cc-city"></div>
@@ -1896,49 +1885,38 @@ html, body {
 
   <div class="cc-main">
 
-    <!-- LEFT: TEMP + CHART -->
     <div class="cc-left">
       <div id="ccTemp" class="cc-temp">—</div>
       <div id="ccFeels" class="cc-feels"></div>
-
       <div class="chart-title">Temperature – Past 12 Hours</div>
-<canvas id="ccChart"></canvas>
-
+      <canvas id="ccChart"></canvas>
     </div>
 
-    <!-- RIGHT: STATS -->
-<div class="cc-right">
-  <div id="ccWx"></div>
-  <div id="ccWind"></div>
-  <div id="ccHum"></div>
-  <div id="ccDew"></div>
-  <div id="ccRainDay"></div>
-  <div id="ccRainMonth"></div>
+    <div class="cc-right">
+      <div id="ccWx"></div>
+      <div id="ccWind"></div>
+      <div id="ccHum"></div>
+      <div id="ccDew"></div>
+      <div id="ccRainDay"></div>
+      <div id="ccRainMonth"></div>
 
+      <div id="ccSunUV">
+        <div>
+          <span>🌅 Sunrise</span>
+          <strong id="ccSunrise">—</strong>
+        </div>
+        <div>
+          <span>🌇 Sunset</span>
+          <strong id="ccSunset">—</strong>
+        </div>
+      </div>
 
-  <!-- Sun + UV footer -->
- <div id="ccSunUV">
-  <div>
-    <span><span class="sun-icon rise">🌅</span> Sunrise</span>
-    <strong id="ccSunrise">—</strong>
+    </div>
   </div>
-
-  <div>
-    <span><span class="sun-icon set">🌇</span> Sunset</span>
-    <strong id="ccSunset">—</strong>
-  </div>
 </div>
 
-
-
-
-     
-
-</div>
 </div>
 
-
-</div>   <!-- ✅ CLOSE CURRENT CONDITIONS PANEL -->
 
 <!-- FORECAST TOOLS (7-day sleek TV style) -->
 <div class="panel" id="forecastPanel">
