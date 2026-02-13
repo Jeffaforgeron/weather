@@ -3012,7 +3012,7 @@ const citySelect=document.getElementById("forecastCitySelect");
 const stateSelect=document.getElementById("forecastStateSelect");
 const hourlyWrap=document.getElementById("hourlyWrap");
 const hourRail=document.getElementById("hourRail");
-const webcamStrip=document.getElementById("webcamStrip");
+
 
 if(!grid || !citySelect || !stateSelect){
  console.error("Forecast DOM not found");
@@ -3037,15 +3037,7 @@ const WEBCAMS={
 
 const FORECAST_POINTS={
 
-  function loadWebcams(city){
 
-  if(!webcamStrip) return;
-
-  if(!WEBCAMS[city]){
-    webcamStrip.innerHTML="";
-    webcamStrip.classList.remove("active");
-    return;
-  }
 
   webcamStrip.innerHTML="";
   webcamStrip.classList.add("active");
@@ -3200,7 +3192,7 @@ let lon="-122.6784";
 
  const cityName = citySelect.options[citySelect.selectedIndex].text;
  document.getElementById("forecastCityLabel").textContent = cityName;
-loadWebcams(cityName);
+
 
  [lat,lon]=citySelect.value.split(",");
  fetchForecast();
