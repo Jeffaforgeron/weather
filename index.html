@@ -3310,21 +3310,31 @@ lon = "-122.6784";
   if(o.text==="Portland") o.selected=true;
 });
 
-// ===== DEFAULT PORTLAND ON LOAD =====
-lat = "45.5152";
-lon = "-122.6784";
+// ===== DEFAULT PORTLAND ON LOAD (SAFE WAIT) =====
+function selectDefaultPortland(){
 
-// wait for dropdown to exist
-setTimeout(()=>{
+  const trySelect = setInterval(()=>{
 
-  [...citySelect.options].forEach(o=>{
-    if(o.text==="Portland"){
-      o.selected = true;
-      citySelect.dispatchEvent(new Event("change"));
+    const opts = [...citySelect.options];
+
+    if(opts.length > 1){
+
+      opts.forEach(o=>{
+        if(o.text === "Portland"){
+          o.selected = true;
+          citySelect.dispatchEvent(new Event("change"));
+          clearInterval(trySelect);
+        }
+      });
+
     }
-  });
 
-},300);
+  },200);
+
+}
+
+selectDefaultPortland();
+
 
 
 refreshBtn.onclick=fetchForecast;
