@@ -1021,12 +1021,9 @@ h1{
 }
 
 
-  width:100%;
-  max-width:100%;
-  overflow-x:hidden;
 
-  position:relative;
-}
+
+
 
 /* inner scrolling rail */
 #hourlyWrap::-webkit-scrollbar{
@@ -2688,7 +2685,7 @@ const CITY_NAMES = {
 "44.8851,-123.0262": "Stayton, OR",
 "44.6365,-123.1059": "Tangent, OR",
 "45.3835,-122.7426": "Rivergrove, OR",
-"45.4396,-122.6948": "Oak Grove, OR"
+"45.4396,-122.6948": "Oak Grove, OR",
 
   
   "41.8781,-87.6298": "Chicago, IL",
@@ -3436,12 +3433,14 @@ const grid=document.getElementById("forecastGrid");
 const tsEl=document.getElementById("forecastTimestamp");
 const refreshBtn=document.getElementById("forecastRefreshBtn");
 const citySelect=document.getElementById("forecastCitySelect");
-const stateSelect=document.getElementById("forecastStateSelect");
+const forecastStateSelect=document.getElementById("forecastStateSelect");
+
 const hourlyWrap=document.getElementById("hourlyWrap");
 const hourRail=document.getElementById("hourRail");
 
 
-if(!grid || !citySelect || !stateSelect){
+if(!grid || !citySelect || !forecastStateSelect){
+
  console.error("Forecast DOM not found");
  return;
 }
@@ -3905,16 +3904,21 @@ TX:{
 
 
 
-// populate states
-stateSelect.innerHTML='<option value="">Select State</option>';
-Object.keys(FORECAST_POINTS).sort().forEach(s=>{
- stateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
-});
+forecastStateSelect.innerHTML='<option value="">Select State</option>';
+
+Object.keys(FORECAST_POINTS)
+  .sort()
+  .forEach(s=>{
+    forecastStateSelect.innerHTML+=`<option value="${s}">${s}</option>`;
+  });
+
 
 // populate cities
-stateSelect.addEventListener("change",()=>{
+forecastStateSelect.addEventListener("change",()=>{
+
  citySelect.innerHTML='<option value="">Select City</option>';
- const cities=FORECAST_POINTS[stateSelect.value];
+ const cities=FORECAST_POINTS[forecastStateSelect.value];
+
  if(!cities) return;
  Object.entries(cities).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([n,v])=>{
    citySelect.innerHTML+=`<option value="${v}">${n}</option>`;
@@ -4086,13 +4090,11 @@ function selectDefaultPortland(){
 
   const trySelect = setInterval(()=>{
 
-    // wait for states first
-    if(stateSelect.options.length > 1){
+    if(forecastStateSelect.options.length > 1){
 
-      stateSelect.value = "OR";
-      stateSelect.dispatchEvent(new Event("change"));
+      forecastStateSelect.value = "OR";
+      forecastStateSelect.dispatchEvent(new Event("change"));
 
-      // now wait for cities
       setTimeout(()=>{
 
         [...citySelect.options].forEach(o=>{
@@ -4110,6 +4112,7 @@ function selectDefaultPortland(){
   },200);
 
 }
+
 
 selectDefaultPortland();
 
