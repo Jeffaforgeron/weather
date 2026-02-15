@@ -1758,36 +1758,7 @@ html, body {
     font-weight:600;
   }
 }
-#menuToggle{
-  position: fixed;
-  top: 44px;
-  right: 12px;
-  z-index: 9999;
-  font-size:18px;
-  cursor:pointer;
-  opacity:.7;
-  transition:opacity .2s ease, transform .25s ease;
-}
 
-#menuToggle:hover{
-  opacity:1;
-}
-
-/* Mobile position */
-@media(max-width:768px){
-  #menuToggle{
-    top: 96px;
-    right: 50%;
-    transform: translateX(50%);
-  }
-}
-
-/* Hide when scrolling down */
-#menuToggle.hide{
-  transform: translateY(-60px);
-  opacity:0;
-  pointer-events:none;
-}
  
 </style>
 </head>
@@ -4214,21 +4185,7 @@ refreshBtn.onclick=fetchForecast;
 
 
 })();
-  let lastScroll = 0;
-const menu = document.getElementById("menuToggle");
 
-window.addEventListener("scroll", ()=>{
-
-  const current = window.pageYOffset;
-
-  if(current > lastScroll && current > 80){
-    menu.classList.add("hide");
-  }else{
-    menu.classList.remove("hide");
-  }
-
-  lastScroll = current;
-});
 
 </script>
 
