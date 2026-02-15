@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Message Jeff</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#020617;
+  color:#e5e7eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.card{
+  max-width:480px;
+  width:90%;
+  background:#0b1220;
+  padding:28px;
+  border-radius:14px;
+  box-shadow:0 0 30px rgba(56,189,248,.25);
+}
+
+h2{
+  margin-top:0;
+  color:#38bdf8;
+}
+
+p{
+  line-height:1.5;
+  color:#cbd5e1;
+}
+
+input, textarea{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#020617;
+  color:#fff;
+}
+
+button{
+  margin-top:14px;
+  padding:10px;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  background:#38bdf8;
+  color:#020617;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Message Jeff</h2>
+
+<p>
+Hey! Thanks for checking out my weather dashboard.<br><br>
+
+I built this to make weather information easier to access (and easier to visualize too). This is just the beginning, and your feedback genuinely helps shape where this goes.<br><br>
+
+Let me know what you like, what you don’t, and what you’d love to see added. Or feel free to just drop a note and say hi.
+<br><br>
+– Jeff
+</p>
+
+<form action="https://formspree.io/f/xdalglpgE" method="POST">
+
+<input type="text" name="name" placeholder="Your name (optional)">
+
+<input type="email" name="email" placeholder="Your email (optional)">
+
+<textarea name="message" rows="5" placeholder="Your message" required></textarea>
+
+<button type="submit">Send</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
