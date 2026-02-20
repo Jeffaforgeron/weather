@@ -72,7 +72,10 @@ select{
 <div class="subtitle">Simple daily tides</div>
 
 <div class="card">
-
+<div id="tideHeader" style="margin-bottom:14px;">
+  <div id="stationName" style="font-size:20px;font-weight:700;"></div>
+  <div id="todayDate" style="color:#9ca3af;"></div>
+</div>
 <select id="stationSelect">
   <option value="9439040">Astoria, OR</option>
   <option value="9435380">South Beach / Newport, OR</option>
@@ -92,13 +95,24 @@ select{
 <script>
 const tideBox = document.getElementById("tideData");
 const stationSelect = document.getElementById("stationSelect");
-
+const stationNameBox = document.getElementById("stationName");
+const todayDateBox = document.getElementById("todayDate");
 async function loadTides(){
 
   tideBox.innerHTML = "Loading…";
 
   const station = stationSelect.value;
+// Set station name
+stationNameBox.textContent =
+  stationSelect.options[stationSelect.selectedIndex].text;
 
+// Set today's date
+const todayReadable = new Date().toLocaleDateString(undefined,{
+  weekday:"long",
+  month:"long",
+  day:"numeric"
+});
+todayDateBox.textContent = todayReadable;
   const d = new Date();
   const today =
     d.getFullYear().toString() +
