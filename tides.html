@@ -199,7 +199,7 @@ const chartWrap = document.createElement("div");
 chartWrap.id = "tideChart";
 chartWrap.style.marginTop = "16px";
 tideBox.appendChild(chartWrap);
-j.predictions.forEach(t=>{
+j.predictions.filter(t=>t.type==="H" || t.type==="L").forEach(t=>{
 
   const row = document.createElement("div");
   row.className="tide-row";
