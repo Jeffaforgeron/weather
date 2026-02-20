@@ -327,7 +327,10 @@ ${timeLabels}
 <path d="${d}" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
 
 <!-- NOW dot ON the line -->
-<circle cx="${nowX}" cy="${nowY}" r="5" fill="#ffffff"/>
+<!-- NOW arrow -->
+<polygon
+  points="${nowX-6},${nowY-10} ${nowX+6},${nowY-10} ${nowX},${nowY}"
+  fill="#ffffff"/>
 
 <!-- NOW label ABOVE dot -->
 <text x="${nowX}" y="${nowY-12}" text-anchor="middle"
