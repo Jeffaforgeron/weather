@@ -235,53 +235,84 @@ function drawTideChart(predictions){
   const wrap = document.getElementById("tideChart");
   wrap.innerHTML = "";
 
-  const width = 700;
-  const height = 160;
-  const pad = 30;
+  const width = 800;
+  const height = 220;
+  const pad = 40;
 
-  // Convert data
-  const points = predictions.map(p=>{
+  const pts = predictions.map(p=>{
     return {
-      t: new Date(p.t.replace(" ","T")).getTime(),
-      v: parseFloat(p.v)
+      t:new Date(p.t.replace(" ","T")).getTime(),
+      v:parseFloat(p.v)
     };
   });
 
-  const minT = Math.min(...points.map(p=>p.t));
-  const maxT = Math.max(...points.map(p=>p.t));
-  const minV = Math.min(...points.map(p=>p.v));
-  const maxV = Math.max(...points.map(p=>p.v));
+  const minT=Math.min(...pts.map(p=>p.t));
+  const maxT=Math.max(...pts.map(p=>p.t));
+  const minV=Math.min(...pts.map(p=>p.v));
+  const maxV=Math.max(...pts.map(p=>p.v));
 
-  const x = t => pad + (t-minT)/(maxT-minT)*(width-2*pad);
-  const y = v => height-pad - (v-minV)/(maxV-minV)*(height-2*pad);
+  const x=t=>pad+(t-minT)/(maxT-minT)*(width-2*pad);
+  const y=v=>height-pad-(v-minV)/(maxV-minV)*(height-2*pad);
 
-  let path = "";
-  points.forEach((p,i)=>{
-    path += (i===0?"M":"L")+x(p.t)+","+y(p.v);
-  });
+  // Smooth curve (quadratic)
+  let d=`M ${x(pts[0].t)} ${y(pts[0].v)}`;
+  for(let i=1;i<pts.length;i++){
+    const xc=(x(pts[i-1].t)+x(pts[i].t))/2;
+    const yc=(y(pts[i-1].v)+y(pts[i].v))/2;
+    d+=` Q ${x(pts[i-1].t)} ${y(pts[i-1].v)} ${xc} ${yc}`;
+  }
 
-  const now = Date.now();
-  const nowX = x(Math.min(Math.max(now,minT),maxT));
+  const now=Date.now();
 
-  // find closest tide value to now
-  let closest = points[0];
-  points.forEach(p=>{
+  let closest=pts[0];
+  pts.forEach(p=>{
     if(Math.abs(p.t-now)<Math.abs(closest.t-now)) closest=p;
   });
 
-  const nowY = y(closest.v);
+  const nowX=x(closest.t);
+  const nowY=y(closest.v);
+  const nowFt=closest.v.toFixed(1);
 
-  wrap.innerHTML = `
+  wrap.innerHTML=`
 <svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}">
-  <path d="${path}" fill="none" stroke="#38bdf8" stroke-width="2"/>
 
-  <!-- NOW vertical marker -->
-  <line x1="${nowX}" x2="${nowX}" y1="10" y2="${height-10}" stroke="#ffffff" stroke-width="1"/>
+<defs>
+<filter id="glow">
+  <feGaussianBlur stdDeviation="4" result="blur"/>
+  <feMerge>
+    <feMergeNode in="blur"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+</filter>
+</defs>
 
-  <!-- NOW dot -->
-  <circle cx="${nowX}" cy="${nowY}" r="4" fill="#ffffff"/>
-</svg>
-`;
+<!-- axes -->
+<line x1="${pad}" x2="${pad}" y1="${pad}" y2="${height-pad}" stroke="#334155"/>
+<line x1="${pad}" x2="${width-pad}" y1="${height-pad}" y2="${height-pad}" stroke="#334155"/>
+
+<!-- y labels -->
+<text x="4" y="${y(maxV)+4}" fill="#94a3b8" font-size="10">${maxV.toFixed(1)}ft</text>
+<text x="4" y="${y(minV)+4}" fill="#94a3b8" font-size="10">${minV.toFixed(1)}ft</text>
+
+<!-- x labels -->
+<text x="${pad}" y="${height-8}" fill="#94a3b8" font-size="10">00z</text>
+<text x="${width-pad-20}" y="${height-8}" fill="#94a3b8" font-size="10">24h</text>
+
+<!-- glow line -->
+<path d="${d}" stroke="#38bdf8" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+<!-- main line -->
+<path d="${d}" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
+
+<!-- NOW dot -->
+<circle cx="${nowX}" cy="${nowY}" r="5" fill="#ffffff"/>
+
+<!-- NOW label -->
+<text x="${nowX+8}" y="${nowY-8}" fill="#38bdf8" font-size="12" filter="url(#glow)">
+NOW • ${nowFt} ft
+</text>
+
+</svg>`;
 }
 stateSelect.onchange = ()=>{
 
