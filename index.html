@@ -1679,16 +1679,20 @@ html, body {
   }
 }
 #hamburgerMenu{
-  position:fixed;
+  position:fixed !important;
   top:90px;
   right:20px;
   font-size:26px;
   cursor:pointer;
-  z-index:9999;
+  z-index:99999;
   background:#020617;
   padding:6px 10px;
   border-radius:8px;
+
+  /* CRITICAL: detach from layout transforms */
+  transform:none !important;
 }
+
 
 #menuDropdown{
   display:none;
@@ -1713,11 +1717,13 @@ html, body {
 
 @media (max-width:768px){
   #hamburgerMenu{
-    top:140px;
-    right:50%;
-    transform:translateX(50%);
+    top:120px;
+    right:16px;
+    left:auto;
+    transform:none !important;
   }
 }
+
 
 </style>
 </head>
