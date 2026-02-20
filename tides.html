@@ -145,6 +145,10 @@ todayDateBox.textContent = todayReadable;
 
     const r = await fetch(url);
     const j = await r.json();
+    // fallback for stations without 15-min data
+if(!j.predictions || j.predictions.length < 10){
+  j.predictions = hiloJson.predictions;
+}
     // get high/low data for summary + list
 const hiloUrl =
   "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter" +
