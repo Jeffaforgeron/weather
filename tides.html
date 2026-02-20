@@ -113,7 +113,7 @@ async function loadTides(){
 const station = citySelect.value;
 // Set station name
 stationNameBox.textContent =
-  stationSelect.options[stationSelect.selectedIndex].text;
+  citySelect.options[citySelect.selectedIndex].text;
 
 // Set today's date
 const todayReadable = new Date().toLocaleDateString(undefined,{
