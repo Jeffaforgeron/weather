@@ -236,7 +236,7 @@ function drawTideChart(predictions){
   wrap.innerHTML = "";
 
   const width = 800;
-  const height = 220;
+  const height = 240;
   const pad = 40;
 
   const pts = predictions.map(p=>{
@@ -254,7 +254,7 @@ function drawTideChart(predictions){
   const x=t=>pad+(t-minT)/(maxT-minT)*(width-2*pad);
   const y=v=>height-pad-(v-minV)/(maxV-minV)*(height-2*pad);
 
-  // Smooth curve (quadratic)
+  // Smooth curve
   let d=`M ${x(pts[0].t)} ${y(pts[0].v)}`;
   for(let i=1;i<pts.length;i++){
     const xc=(x(pts[i-1].t)+x(pts[i].t))/2;
@@ -272,6 +272,16 @@ function drawTideChart(predictions){
   const nowX=x(closest.t);
   const nowY=y(closest.v);
   const nowFt=closest.v.toFixed(1);
+
+  // 6 local time labels
+  let timeLabels="";
+  for(let i=0;i<6;i++){
+    const t=minT+(i/5)*(maxT-minT);
+    const dte=new Date(t);
+    const lbl=dte.toLocaleTimeString([], {hour:"numeric"});
+    const lx=x(t);
+    timeLabels+=`<text x="${lx-8}" y="${height-8}" fill="#94a3b8" font-size="10">${lbl}</text>`;
+  }
 
   wrap.innerHTML=`
 <svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}">
@@ -294,9 +304,7 @@ function drawTideChart(predictions){
 <text x="4" y="${y(maxV)+4}" fill="#94a3b8" font-size="10">${maxV.toFixed(1)}ft</text>
 <text x="4" y="${y(minV)+4}" fill="#94a3b8" font-size="10">${minV.toFixed(1)}ft</text>
 
-<!-- x labels -->
-<text x="${pad}" y="${height-8}" fill="#94a3b8" font-size="10">00z</text>
-<text x="${width-pad-20}" y="${height-8}" fill="#94a3b8" font-size="10">24h</text>
+${timeLabels}
 
 <!-- glow line -->
 <path d="${d}" stroke="#38bdf8" stroke-width="3" fill="none" filter="url(#glow)"/>
@@ -304,11 +312,12 @@ function drawTideChart(predictions){
 <!-- main line -->
 <path d="${d}" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
 
-<!-- NOW dot -->
+<!-- NOW dot ON the line -->
 <circle cx="${nowX}" cy="${nowY}" r="5" fill="#ffffff"/>
 
-<!-- NOW label -->
-<text x="${nowX+8}" y="${nowY-8}" fill="#38bdf8" font-size="12" filter="url(#glow)">
+<!-- NOW label ABOVE dot -->
+<text x="${nowX}" y="${nowY-12}" text-anchor="middle"
+ fill="#38bdf8" font-size="12" filter="url(#glow)">
 NOW • ${nowFt} ft
 </text>
 
