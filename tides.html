@@ -406,65 +406,105 @@ ${timeLabels}
 stateSelect.onchange = ()=>{
 
   citySelect.innerHTML = '<option value="">Select City</option>';
-if(stateSelect.value==="OR"){
 
-  citySelect.innerHTML += '<option value="9439040">Astoria, OR</option>';
-  citySelect.innerHTML += '<option value="9432373">Bandon, OR</option>';
-  citySelect.innerHTML += '<option value="9432780">Brookings, OR</option>';
-  citySelect.innerHTML += '<option value="9439040">Cannon Beach, OR</option>';
-  citySelect.innerHTML += '<option value="9432780">Coos Bay, OR</option>';
-  citySelect.innerHTML += '<option value="9437540">Garibaldi, OR</option>';
-  citySelect.innerHTML += '<option value="9430104">Gold Beach, OR</option>';
-  citySelect.innerHTML += '<option value="9435385">Lincoln City, OR</option>';
-  citySelect.innerHTML += '<option value="9439040">Manzanita, OR</option>';
-  citySelect.innerHTML += '<option value="9439040">Nehalem, OR</option>';
-  citySelect.innerHTML += '<option value="9435385">Newport, OR</option>';
-  citySelect.innerHTML += '<option value="9432780">North Bend, OR</option>';
-  citySelect.innerHTML += '<option value="9437540">Pacific City, OR</option>';
-  citySelect.innerHTML += '<option value="9431647">Port Orford, OR</option>';
-  citySelect.innerHTML += '<option value="9432780">Reedsport, OR</option>';
-  citySelect.innerHTML += '<option value="9439040">Seaside, OR</option>';
-  citySelect.innerHTML += '<option value="9437540">Tillamook, OR</option>';
-  citySelect.innerHTML += '<option value="9439040">Tolovana Park, OR</option>';
-  citySelect.innerHTML += '<option value="9435385">Waldport, OR</option>';
-  citySelect.innerHTML += '<option value="9432780">Winchester Bay, OR</option>';
-  citySelect.innerHTML += '<option value="9435385">Yachats, OR</option>';
+  const stations = {
 
-}
-// WASHINGTON
-if(stateSelect.value==="WA"){
+    OR: [
+      ["Astoria, OR","9439040"],
+      ["Bandon, OR","9432373"],
+      ["Brookings, OR","9432780"],
+      ["Cannon Beach, OR","9439040"],
+      ["Coos Bay, OR","9432780"],
+      ["Garibaldi, OR","9437540"],
+      ["Gold Beach, OR","9430104"],
+      ["Lincoln City, OR","9435385"],
+      ["Manzanita, OR","9439040"],
+      ["Nehalem, OR","9439040"],
+      ["Newport, OR","9435385"],
+      ["North Bend, OR","9432780"],
+      ["Pacific City, OR","9437540"],
+      ["Port Orford, OR","9431647"],
+      ["Reedsport, OR","9432780"],
+      ["Seaside, OR","9439040"],
+      ["Tillamook, OR","9437540"],
+      ["Tolovana Park, OR","9439040"],
+      ["Waldport, OR","9435385"],
+      ["Winchester Bay, OR","9432780"],
+      ["Yachats, OR","9435385"]
+    ],
 
-  citySelect.innerHTML += '<option value="9440910">Bellingham, WA</option>';
-  citySelect.innerHTML += '<option value="9442396">Port Angeles, WA</option>';
-  citySelect.innerHTML += '<option value="9443090">Port Townsend, WA</option>';
-  citySelect.innerHTML += '<option value="9444900">Seattle, WA</option>';
-  citySelect.innerHTML += '<option value="9445958">Tacoma, WA</option>';
-  citySelect.innerHTML += '<option value="9446484">Gig Harbor, WA</option>';
-  citySelect.innerHTML += '<option value="9447130">Everett, WA</option>';
-  citySelect.innerHTML += '<option value="9449880">La Push, WA</option>';
-  citySelect.innerHTML += '<option value="9441102">Neah Bay, WA</option>';
-}
-  // CALIFORNIA
-if(stateSelect.value==="CA"){
+    WA: [
+      ["Anacortes, WA","9449424"],
+      ["Bellingham, WA","9440910"],
+      ["Bremerton, WA","9445958"],
+      ["Des Moines, WA","9447769"],
+      ["Everett, WA","9447130"],
+      ["Gig Harbor, WA","9446484"],
+      ["La Push, WA","9442396"],
+      ["Neah Bay, WA","9441102"],
+      ["Oak Harbor, WA","9449274"],
+      ["Port Angeles, WA","9444090"],
+      ["Port Ludlow, WA","9445014"],
+      ["Port Orchard, WA","9445441"],
+      ["Port Townsend, WA","9443090"],
+      ["Seattle, WA","9444900"],
+      ["Tacoma, WA","9446484"],
+      ["Vashon, WA","9447130"]
+    ],
 
-  citySelect.innerHTML += '<option value="9414290">San Francisco, CA</option>';
-  citySelect.innerHTML += '<option value="9410170">San Diego, CA</option>';
-  citySelect.innerHTML += '<option value="9410230">La Jolla, CA</option>';
-  citySelect.innerHTML += '<option value="9410840">Santa Monica, CA</option>';
-  citySelect.innerHTML += '<option value="9410660">Los Angeles, CA</option>';
-  citySelect.innerHTML += '<option value="9413450">Monterey, CA</option>';
-  citySelect.innerHTML += '<option value="9412110">Crescent City, CA</option>';
-  citySelect.innerHTML += '<option value="9413745">Port San Luis, CA</option>';
-}
-  // HAWAII
-if(stateSelect.value==="HI"){
+    CA: [
+      ["Avila Beach, CA","9413745"],
+      ["Capitola, CA","9413450"],
+      ["Carlsbad, CA","9410230"],
+      ["Crescent City, CA","9412110"],
+      ["Dana Point, CA","9410170"],
+      ["Half Moon Bay, CA","9414290"],
+      ["Huntington Beach, CA","9410660"],
+      ["La Jolla, CA","9410230"],
+      ["Laguna Beach, CA","9410170"],
+      ["Long Beach, CA","9410660"],
+      ["Malibu, CA","9410840"],
+      ["Monterey, CA","9413450"],
+      ["Morro Bay, CA","9413745"],
+      ["Newport Beach, CA","9410170"],
+      ["Oceanside, CA","9410230"],
+      ["Pacifica, CA","9414290"],
+      ["Pismo Beach, CA","9413745"],
+      ["Redondo Beach, CA","9410660"],
+      ["San Diego, CA","9410170"],
+      ["San Francisco, CA","9414290"],
+      ["Santa Barbara, CA","9411340"],
+      ["Santa Cruz, CA","9413450"],
+      ["Santa Monica, CA","9410840"],
+      ["Ventura, CA","9411340"]
+    ],
 
-  citySelect.innerHTML += '<option value="1612340">Honolulu, HI</option>';
-  citySelect.innerHTML += '<option value="1615680">Kahului, HI</option>';
-  citySelect.innerHTML += '<option value="1611400">Hilo, HI</option>';
-  citySelect.innerHTML += '<option value="1617760">Nawiliwili, HI</option>';
-}
-  citySelect.disabled = !stateSelect.value;
+    HI: [
+      ["Hilo, HI","1611400"],
+      ["Honolulu, HI","1612340"],
+      ["Kahului, HI","1615680"],
+      ["Kawaihae, HI","1617433"],
+      ["Kealakekua, HI","1617840"],
+      ["Lahaina, HI","1615680"],
+      ["Nawiliwili, HI","1617760"],
+      ["Pearl Harbor, HI","1612340"],
+      ["Port Allen, HI","1612480"],
+      ["Waianae, HI","1612340"]
+    ]
+
+  };
+
+  const state = stateSelect.value;
+
+  if(stations[state]){
+    stations[state]
+      .sort((a,b)=>a[0].localeCompare(b[0]))
+      .forEach(s=>{
+        citySelect.innerHTML += `<option value="${s[1]}">${s[0]}</option>`;
+      });
+  }
+
+  citySelect.disabled = !state;
 };
   citySelect.onchange = loadTides;
   // Default to Astoria on page load
