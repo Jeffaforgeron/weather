@@ -110,7 +110,7 @@ async function loadTides(){
 
   tideBox.innerHTML = "Loading…";
 
-  const station = stationSelect.value;
+const station = citySelect.value;
 // Set station name
 stationNameBox.textContent =
   stationSelect.options[stationSelect.selectedIndex].text;
@@ -228,13 +228,16 @@ j.predictions.forEach(t=>{
 }
 
 stateSelect.onchange = ()=>{
-  if(stateSelect.value){
-    citySelect.disabled = false;
-  }else{
-    citySelect.disabled = true;
-    citySelect.innerHTML = '<option value="">Select City</option>';
+
+  citySelect.innerHTML = '<option value="">Select City</option>';
+
+  if(stateSelect.value==="OR"){
+    citySelect.innerHTML += '<option value="9439040">Astoria, OR</option>';
   }
+
+  citySelect.disabled = !stateSelect.value;
 };
+  citySelect.onchange = loadTides;
 </script>
 
 
