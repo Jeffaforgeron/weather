@@ -90,11 +90,6 @@ select{
 </div>
 
 <script>
-
-const tideBox = document.getElementById("tideData");
-const stationSelect = document.getElementById("stationSelect");
-
-<script>
 const tideBox = document.getElementById("tideData");
 const stationSelect = document.getElementById("stationSelect");
 
@@ -183,54 +178,6 @@ stationSelect.onchange = loadTides;
 loadTides();
 </script>
 
-  </div>
-`;
-
-tideBox.appendChild(summary);
-
-// Find next high and low
-const now = new Date();
-
-let nextHigh = null;
-let nextLow = null;
-
-j.predictions.forEach(p=>{
-  const tideTime = new Date(p.t.replace(" ", "T"));
-
-  if(tideTime > now){
-    if(p.type === "H" && !nextHigh){
-      nextHigh = p;
-    }
-    if(p.type === "L" && !nextLow){
-      nextLow = p;
-    }
-  }
-});
-
-    j.predictions.forEach(t=>{
-
-      const row = document.createElement("div");
-      row.className="tide-row";
-
-      row.innerHTML = `
-        <span class="label">${t.type === "H" ? "High Tide" : "Low Tide"} – ${t.t.slice(11,16)}</span>
-        <span class="value">${t.v} ft</span>
-      `;
-
-      tideBox.appendChild(row);
-
-    });
-
-  }catch{
-    tideBox.innerHTML="Tide data unavailable";
-  }
-
-}
-
-stationSelect.onchange = loadTides;
-loadTides();
-
-</script>
 
 </body>
 </html>
