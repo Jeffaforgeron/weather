@@ -172,19 +172,30 @@ if(nextHigh && nextLow){
 
     tideBox.appendChild(summary);
 
-    j.predictions.forEach(t=>{
+j.predictions.forEach(t=>{
 
-      const row = document.createElement("div");
-      row.className="tide-row";
+  const row = document.createElement("div");
+  row.className="tide-row";
 
-      row.innerHTML = `
-        <span class="label">${t.type==="H"?"High Tide":"Low Tide"} – ${t.t.slice(11,16)}</span>
-        <span class="value">${t.v} ft</span>
-      `;
+  const tideTime = new Date(t.t.replace(" ","T"));
+  const isFuture = tideTime > now;
 
-      tideBox.appendChild(row);
+  // Highlight next tide, dim past tides
+  if(isFuture && !row.classList.contains("nextTide")){
+    row.style.fontWeight="700";
+    row.style.color="#38bdf8";
+  }else if(!isFuture){
+    row.style.opacity=".4";
+  }
 
-    });
+  row.innerHTML = `
+    <span class="label">${t.type==="H"?"High Tide":"Low Tide"} – ${t.t.slice(11,16)}</span>
+    <span class="value">${t.v} ft</span>
+  `;
+
+  tideBox.appendChild(row);
+
+});
 
   }catch(e){
     console.error(e);
