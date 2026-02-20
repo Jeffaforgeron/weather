@@ -126,15 +126,7 @@ async function loadTides(){
     tideBox.innerHTML = "";
 
     const now = new Date();
-    // Determine rising or falling
-let trend = "—";
-
-if(nextHigh && nextLow){
-  const nextHighTime = new Date(nextHigh.t.replace(" ","T"));
-  const nextLowTime = new Date(nextLow.t.replace(" ","T"));
-
-  trend = nextHighTime < nextLowTime ? "Rising" : "Falling";
-}
+ 
     let nextHigh = null;
     let nextLow = null;
 
@@ -145,7 +137,16 @@ if(nextHigh && nextLow){
         if(p.type==="L" && !nextLow) nextLow = p;
       }
     });
+   // Determine rising or falling
+let trend = "—";
 
+if(nextHigh && nextLow){
+  const nextHighTime = new Date(nextHigh.t.replace(" ","T"));
+  const nextLowTime = new Date(nextLow.t.replace(" ","T"));
+  
+
+  trend = nextHighTime < nextLowTime ? "Rising" : "Falling";
+}
     const summary = document.createElement("div");
     summary.style.marginBottom="14px";
     summary.style.paddingBottom="10px";
