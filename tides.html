@@ -145,6 +145,22 @@ todayDateBox.textContent = todayReadable;
 
     const r = await fetch(url);
     const j = await r.json();
+    // get high/low data for summary + list
+const hiloUrl =
+  "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter" +
+  "?product=predictions" +
+  "&application=forgeron" +
+  "&begin_date=" + today +
+  "&range=24" +
+  "&datum=MLLW" +
+  "&station=" + station +
+  "&time_zone=lst_ldt" +
+  "&units=english" +
+  "&interval=hilo" +
+  "&format=json";
+
+const hiloResponse = await fetch(hiloUrl);
+const hiloJson = await hiloResponse.json();
 // Fallback if 15-min data not available
 if(!j.predictions || j.predictions.length === 0){
   const fallbackUrl =
@@ -171,7 +187,7 @@ if(!j.predictions || j.predictions.length === 0){
     let nextHigh = null;
     let nextLow = null;
 
-    j.predictions.forEach(p=>{
+hiloJson.predictions.forEach(p=>{
       const t = new Date(p.t.replace(" ","T"));
       if(t > now){
         if(p.type==="H" && !nextHigh) nextHigh = p;
@@ -217,7 +233,7 @@ const chartWrap = document.createElement("div");
 chartWrap.id = "tideChart";
 chartWrap.style.marginTop = "16px";
 tideBox.appendChild(chartWrap);
-j.predictions.filter(t=>t.type==="H" || t.type==="L").forEach(t=>{
+hiloJson.predictions.forEach(t=>{
 
   const row = document.createElement("div");
   row.className="tide-row";
