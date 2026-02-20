@@ -194,7 +194,11 @@ if(nextHigh && nextLow){
 `;
 
     tideBox.appendChild(summary);
-
+// Container for tide chart
+const chartWrap = document.createElement("div");
+chartWrap.id = "tideChart";
+chartWrap.style.marginTop = "16px";
+tideBox.appendChild(chartWrap);
 j.predictions.forEach(t=>{
 
   const row = document.createElement("div");
@@ -219,14 +223,66 @@ j.predictions.forEach(t=>{
   tideBox.appendChild(row);
 
 });
-
+drawTideChart(j.predictions);
   }catch(e){
     console.error(e);
     tideBox.innerHTML="Tide data unavailable";
   }
 
 }
+function drawTideChart(predictions){
 
+  const wrap = document.getElementById("tideChart");
+  wrap.innerHTML = "";
+
+  const width = 700;
+  const height = 160;
+  const pad = 30;
+
+  // Convert data
+  const points = predictions.map(p=>{
+    return {
+      t: new Date(p.t.replace(" ","T")).getTime(),
+      v: parseFloat(p.v)
+    };
+  });
+
+  const minT = Math.min(...points.map(p=>p.t));
+  const maxT = Math.max(...points.map(p=>p.t));
+  const minV = Math.min(...points.map(p=>p.v));
+  const maxV = Math.max(...points.map(p=>p.v));
+
+  const x = t => pad + (t-minT)/(maxT-minT)*(width-2*pad);
+  const y = v => height-pad - (v-minV)/(maxV-minV)*(height-2*pad);
+
+  let path = "";
+  points.forEach((p,i)=>{
+    path += (i===0?"M":"L")+x(p.t)+","+y(p.v);
+  });
+
+  const now = Date.now();
+  const nowX = x(Math.min(Math.max(now,minT),maxT));
+
+  // find closest tide value to now
+  let closest = points[0];
+  points.forEach(p=>{
+    if(Math.abs(p.t-now)<Math.abs(closest.t-now)) closest=p;
+  });
+
+  const nowY = y(closest.v);
+
+  wrap.innerHTML = `
+<svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}">
+  <path d="${path}" fill="none" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- NOW vertical marker -->
+  <line x1="${nowX}" x2="${nowX}" y1="10" y2="${height-10}" stroke="#ffffff" stroke-width="1"/>
+
+  <!-- NOW dot -->
+  <circle cx="${nowX}" cy="${nowY}" r="4" fill="#ffffff"/>
+</svg>
+`;
+}
 stateSelect.onchange = ()=>{
 
   citySelect.innerHTML = '<option value="">Select City</option>';
