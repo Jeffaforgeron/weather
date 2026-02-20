@@ -232,8 +232,32 @@ stateSelect.onchange = ()=>{
   citySelect.innerHTML = '<option value="">Select City</option>';
 
   if(stateSelect.value==="OR"){
-    citySelect.innerHTML += '<option value="9439040">Astoria, OR</option>';
-  }
+
+  citySelect.innerHTML += '<option value="9439040">Astoria, OR</option>';
+  citySelect.innerHTML += '<option value="">Bandon, OR</option>';
+  citySelect.innerHTML += '<option value="">Barview, OR</option>';
+  citySelect.innerHTML += '<option value="">Beverly Beach, OR</option>';
+  citySelect.innerHTML += '<option value="9432780">Coos Bay, OR</option>';
+  citySelect.innerHTML += '<option value="">Cannon Beach, OR</option>';
+  citySelect.innerHTML += '<option value="">Depoe Bay, OR</option>';
+  citySelect.innerHTML += '<option value="">Florence, OR</option>';
+  citySelect.innerHTML += '<option value="">Garibaldi, OR</option>';
+  citySelect.innerHTML += '<option value="">Gold Beach, OR</option>';
+  citySelect.innerHTML += '<option value="">Lincoln City, OR</option>';
+  citySelect.innerHTML += '<option value="">Manzanita, OR</option>';
+  citySelect.innerHTML += '<option value="">Nehalem, OR</option>';
+  citySelect.innerHTML += '<option value="9435380">Newport, OR</option>';
+  citySelect.innerHTML += '<option value="">North Bend, OR</option>';
+  citySelect.innerHTML += '<option value="">Pacific City, OR</option>';
+  citySelect.innerHTML += '<option value="">Port Orford, OR</option>';
+  citySelect.innerHTML += '<option value="">Reedsport, OR</option>';
+  citySelect.innerHTML += '<option value="">Seaside, OR</option>';
+  citySelect.innerHTML += '<option value="">Tillamook, OR</option>';
+  citySelect.innerHTML += '<option value="">Tolovana Park, OR</option>';
+  citySelect.innerHTML += '<option value="">Waldport, OR</option>';
+  citySelect.innerHTML += '<option value="">Winchester Bay, OR</option>';
+  citySelect.innerHTML += '<option value="">Yachats, OR</option>';
+}
 
   citySelect.disabled = !stateSelect.value;
 };
