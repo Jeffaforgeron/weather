@@ -335,10 +335,27 @@ const nowFt = interpV.toFixed(1);
 <line x1="${pad}" x2="${pad}" y1="${pad}" y2="${height-pad}" stroke="#334155"/>
 <line x1="${pad}" x2="${width-pad}" y1="${height-pad}" y2="${height-pad}" stroke="#334155"/>
 
-<!-- y labels -->
-<text x="4" y="${y(maxV)+4}" fill="#94a3b8" font-size="10">${maxV.toFixed(1)}ft</text>
-<text x="4" y="${y(minV)+4}" fill="#94a3b8" font-size="10">${minV.toFixed(1)}ft</text>
-
+<!-- Y grid lines + labels -->
+${[0, 0.33, 0.66, 1].map(p => {
+  const val = minV + p * (maxV - minV);
+  const yPos = y(val);
+  return `
+    <line x1="${pad}" x2="${width-pad}" y1="${yPos}" y2="${yPos}"
+      stroke="#1e293b" stroke-width="1" opacity="0.3"/>
+    <text x="4" y="${yPos+4}" fill="#94a3b8" font-size="10">
+      ${val.toFixed(1)} ft
+    </text>
+  `;
+}).join("")}
+<!-- Vertical grid lines -->
+${[0,1,2,3,4,5].map(i=>{
+  const t=minT+(i/5)*(maxT-minT);
+  const lx=x(t);
+  return `
+    <line x1="${lx}" x2="${lx}" y1="${pad}" y2="${height-pad}"
+      stroke="#1e293b" stroke-width="1" opacity="0.25"/>
+  `;
+}).join("")}
 ${timeLabels}
 
 <!-- glow line -->
