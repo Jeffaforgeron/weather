@@ -326,10 +326,12 @@ ${timeLabels}
 <!-- main line -->
 <path d="${d}" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
 
-<!-- NOW dot ON the line -->
-<!-- NOW arrow -->
-<polygon
-  <!-- NOW chevron arrow -->
+<!-- NOW marker -->
+
+<!-- small dot ON curve -->
+<circle cx="${nowX}" cy="${nowY}" r="3" fill="#38bdf8"/>
+
+<!-- chevron arrow -->
 <path
   d="M ${nowX-8} ${nowY-14} L ${nowX} ${nowY-4} L ${nowX+8} ${nowY-14}"
   stroke="#ffffff"
@@ -337,12 +339,16 @@ ${timeLabels}
   fill="none"
   stroke-linecap="round"
   stroke-linejoin="round"/>
-  fill="#ffffff"/>
 
-<!-- NOW label ABOVE dot -->
-<text x="${nowX}" y="${nowY-12}" text-anchor="middle"
- fill="#38bdf8" font-size="12" filter="url(#glow)">
-NOW • ${nowFt} ft
+<!-- NOW label -->
+<text
+  x="${nowX}"
+  y="${nowY-22}"
+  text-anchor="middle"
+  fill="#ffffff"
+  font-size="11"
+  style="text-shadow:0 0 6px #38bdf8">
+  NOW ${nowFt} ft
 </text>
 
 </svg>`;
