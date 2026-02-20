@@ -407,7 +407,39 @@ if(stateSelect.value==="OR"){
   citySelect.innerHTML += '<option value="9435385">Yachats, OR</option>';
 
 }
+// WASHINGTON
+if(stateSelect.value==="WA"){
 
+  citySelect.innerHTML += '<option value="9440910">Bellingham, WA</option>';
+  citySelect.innerHTML += '<option value="9442396">Port Angeles, WA</option>';
+  citySelect.innerHTML += '<option value="9443090">Port Townsend, WA</option>';
+  citySelect.innerHTML += '<option value="9444900">Seattle, WA</option>';
+  citySelect.innerHTML += '<option value="9445958">Tacoma, WA</option>';
+  citySelect.innerHTML += '<option value="9446484">Gig Harbor, WA</option>';
+  citySelect.innerHTML += '<option value="9447130">Everett, WA</option>';
+  citySelect.innerHTML += '<option value="9449880">La Push, WA</option>';
+  citySelect.innerHTML += '<option value="9441102">Neah Bay, WA</option>';
+}
+  // CALIFORNIA
+if(stateSelect.value==="CA"){
+
+  citySelect.innerHTML += '<option value="9414290">San Francisco, CA</option>';
+  citySelect.innerHTML += '<option value="9410170">San Diego, CA</option>';
+  citySelect.innerHTML += '<option value="9410230">La Jolla, CA</option>';
+  citySelect.innerHTML += '<option value="9410840">Santa Monica, CA</option>';
+  citySelect.innerHTML += '<option value="9410660">Los Angeles, CA</option>';
+  citySelect.innerHTML += '<option value="9413450">Monterey, CA</option>';
+  citySelect.innerHTML += '<option value="9412110">Crescent City, CA</option>';
+  citySelect.innerHTML += '<option value="9413745">Port San Luis, CA</option>';
+}
+  // HAWAII
+if(stateSelect.value==="HI"){
+
+  citySelect.innerHTML += '<option value="1612340">Honolulu, HI</option>';
+  citySelect.innerHTML += '<option value="1615680">Kahului, HI</option>';
+  citySelect.innerHTML += '<option value="1611400">Hilo, HI</option>';
+  citySelect.innerHTML += '<option value="1617760">Nawiliwili, HI</option>';
+}
   citySelect.disabled = !stateSelect.value;
 };
   citySelect.onchange = loadTides;
