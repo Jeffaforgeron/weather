@@ -126,6 +126,15 @@ async function loadTides(){
     tideBox.innerHTML = "";
 
     const now = new Date();
+    // Determine rising or falling
+let trend = "—";
+
+if(nextHigh && nextLow){
+  const nextHighTime = new Date(nextHigh.t.replace(" ","T"));
+  const nextLowTime = new Date(nextLow.t.replace(" ","T"));
+
+  trend = nextHighTime < nextLowTime ? "Rising" : "Falling";
+}
     let nextHigh = null;
     let nextLow = null;
 
@@ -142,14 +151,23 @@ async function loadTides(){
     summary.style.paddingBottom="10px";
     summary.style.borderBottom="1px solid rgba(255,255,255,.1)";
 
-    summary.innerHTML = `
-      <div style="font-size:18px;margin-bottom:6px;">
-        🌊 <strong>Next High:</strong> ${nextHigh ? nextHigh.t.slice(11,16)+" • "+nextHigh.v+" ft" : "—"}
-      </div>
-      <div style="font-size:18px;">
-        🌊 <strong>Next Low:</strong> ${nextLow ? nextLow.t.slice(11,16)+" • "+nextLow.v+" ft" : "—"}
-      </div>
-    `;
+ summary.innerHTML = `
+  <div style="font-size:20px;margin-bottom:10px;">
+    🌊 <strong>${trend}</strong>
+  </div>
+
+  <div style="font-size:18px;margin-bottom:6px;">
+    <strong>Next High:</strong> ${
+      nextHigh ? nextHigh.t.slice(11,16)+" • "+nextHigh.v+" ft" : "—"
+    }
+  </div>
+
+  <div style="font-size:18px;">
+    <strong>Next Low:</strong> ${
+      nextLow ? nextLow.t.slice(11,16)+" • "+nextLow.v+" ft" : "—"
+    }
+  </div>
+`;
 
     tideBox.appendChild(summary);
 
