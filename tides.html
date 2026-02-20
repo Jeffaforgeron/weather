@@ -145,7 +145,25 @@ todayDateBox.textContent = todayReadable;
 
     const r = await fetch(url);
     const j = await r.json();
+// Fallback if 15-min data not available
+if(!j.predictions || j.predictions.length === 0){
+  const fallbackUrl =
+    "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter" +
+    "?product=predictions" +
+    "&application=forgeron" +
+    "&begin_date=" + today +
+    "&range=24" +
+    "&datum=MLLW" +
+    "&station=" + station +
+    "&time_zone=lst_ldt" +
+    "&units=english" +
+    "&interval=hilo" +
+    "&format=json";
 
+  const fallbackResponse = await fetch(fallbackUrl);
+  const fallbackJson = await fallbackResponse.json();
+  j.predictions = fallbackJson.predictions;
+}
     tideBox.innerHTML = "";
 
     const now = new Date();
