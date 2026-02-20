@@ -149,7 +149,8 @@ let nextHigh = null;
 let nextLow = null;
 
 j.predictions.forEach(p=>{
-  const tideTime = new Date(p.t);
+  const tideTime = new Date(p.t.replace(" ", "T"));
+
   if(tideTime > now){
     if(p.type === "H" && !nextHigh){
       nextHigh = p;
