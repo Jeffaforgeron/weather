@@ -264,14 +264,28 @@ function drawTideChart(predictions){
 
   const now=Date.now();
 
-  let closest=pts[0];
-  pts.forEach(p=>{
-    if(Math.abs(p.t-now)<Math.abs(closest.t-now)) closest=p;
-  });
+ // Interpolate tide level at current time
+let before = pts[0];
+let after = pts[pts.length-1];
 
-  const nowX=x(closest.t);
-  const nowY=y(closest.v);
-  const nowFt=closest.v.toFixed(1);
+for(let i=0;i<pts.length-1;i++){
+  if(pts[i].t <= now && pts[i+1].t >= now){
+    before = pts[i];
+    after = pts[i+1];
+    break;
+  }
+}
+
+let interpV = before.v;
+
+if(after.t !== before.t){
+  const ratio = (now - before.t) / (after.t - before.t);
+  interpV = before.v + ratio * (after.v - before.v);
+}
+
+const nowX = x(Math.min(Math.max(now,minT),maxT));
+const nowY = y(interpV);
+const nowFt = interpV.toFixed(1);
 
   // 6 local time labels
   let timeLabels="";
