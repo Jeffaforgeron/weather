@@ -1678,11 +1678,59 @@ html, body {
     min-height:420px !important;
   }
 }
+#hamburgerMenu{
+  position:fixed;
+  top:90px;
+  right:20px;
+  font-size:26px;
+  cursor:pointer;
+  z-index:9999;
+  background:#020617;
+  padding:6px 10px;
+  border-radius:8px;
+}
+
+#menuDropdown{
+  display:none;
+  position:absolute;
+  right:0;
+  margin-top:8px;
+  background:#0b1220;
+  border-radius:8px;
+  min-width:140px;
+}
+
+#menuDropdown a{
+  display:block;
+  padding:10px;
+  color:white;
+  text-decoration:none;
+}
+
+#menuDropdown a:hover{
+  background:#020617;
+}
+
+@media (max-width:768px){
+  #hamburgerMenu{
+    top:140px;
+    right:50%;
+    transform:translateX(50%);
+  }
+}
 
 </style>
 </head>
 
 <body>
+<!-- MENU BUTTON -->
+<div id="hamburgerMenu">
+  ☰
+  <div id="menuDropdown">
+    <a href="index.html">Dashboard</a>
+    <a href="tides.html">🌊 Tides</a>
+  </div>
+</div>
 
 
   
@@ -4208,6 +4256,21 @@ refreshBtn.onclick=fetchForecast;
     <a class="in" href="https://www.linkedin.com/in/jeff-forgeron-447ab846" target="_blank">in</a>
   </div>
 </div>
+<script>
+const burger=document.getElementById("hamburgerMenu");
+const dropdown=document.getElementById("menuDropdown");
+
+burger.onclick=()=>{
+ dropdown.style.display=
+ dropdown.style.display==="block"?"none":"block";
+};
+
+document.addEventListener("click",e=>{
+ if(!burger.contains(e.target)){
+  dropdown.style.display="none";
+ }
+});
+</script>
 
 </body>
 
