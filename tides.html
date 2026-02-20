@@ -329,7 +329,14 @@ ${timeLabels}
 <!-- NOW dot ON the line -->
 <!-- NOW arrow -->
 <polygon
-  points="${nowX-6},${nowY-10} ${nowX+6},${nowY-10} ${nowX},${nowY}"
+  <!-- NOW chevron arrow -->
+<path
+  d="M ${nowX-8} ${nowY-14} L ${nowX} ${nowY-4} L ${nowX+8} ${nowY-14}"
+  stroke="#ffffff"
+  stroke-width="2"
+  fill="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"/>
   fill="#ffffff"/>
 
 <!-- NOW label ABOVE dot -->
