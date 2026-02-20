@@ -1660,28 +1660,19 @@ html, body {
   }
 }
 
-/* ===== DESKTOP FORECAST VISIBILITY FIX ===== */
+/* ===== FORECAST PANEL HEIGHT RESTORE (DESKTOP ONLY) ===== */
 @media (min-width:769px){
 
   #forecastPanel{
-    overflow: visible !important;
+    height:auto;
   }
 
   .forecast-tv{
-    overflow: visible !important;
-    min-height: auto !important;
-  }
-
-  #forecastGrid{
-    display:grid !important;
-  }
-
-  #hourlyWrap{
-    display:flex !important;
+    min-height:300px;
   }
 
 }
- 
+
 </style>
 </head>
 
