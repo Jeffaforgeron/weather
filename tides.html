@@ -80,7 +80,7 @@ select{
 <select id="stateSelect">
   <option value="">Select State</option>
   <option value="WA">Washington</option>
-  <option value="OR">Oregon</option>
+<option value="OR" selected>Oregon</option>
   <option value="CA">California</option>
   <option value="HI">Hawaii</option>
 </select>
@@ -266,6 +266,12 @@ if(stateSelect.value==="OR"){
   citySelect.disabled = !stateSelect.value;
 };
   citySelect.onchange = loadTides;
+  // Default to Astoria on page load
+stateSelect.value = "OR";
+stateSelect.onchange();
+
+citySelect.value = "9439040"; // Astoria
+loadTides();
 </script>
 
 
