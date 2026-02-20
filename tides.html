@@ -227,7 +227,14 @@ j.predictions.forEach(t=>{
 
 }
 
-
+stateSelect.onchange = ()=>{
+  if(stateSelect.value){
+    citySelect.disabled = false;
+  }else{
+    citySelect.disabled = true;
+    citySelect.innerHTML = '<option value="">Select City</option>';
+  }
+};
 </script>
 
 
