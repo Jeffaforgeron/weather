@@ -75,6 +75,7 @@ select{
 <div id="tideHeader" style="margin-bottom:14px;">
   <div id="stationName" style="font-size:20px;font-weight:700;"></div>
   <div id="todayDate" style="color:#9ca3af;"></div>
+  <div id="moonPhase" style="color:#94a3b8;font-size:13px;margin-top:4px;"></div>
 </div>
 <!-- STATE DROPDOWN -->
 <select id="stateSelect">
@@ -106,6 +107,28 @@ const stateSelect = document.getElementById("stateSelect");
 const citySelect = document.getElementById("citySelect");
 const stationNameBox = document.getElementById("stationName");
 const todayDateBox = document.getElementById("todayDate");
+  const moonBox = document.getElementById("moonPhase");
+
+function getMoonPhase(){
+
+  const now = new Date();
+  const synodicMonth = 29.53058867;
+  const knownNewMoon = new Date("2000-01-06T18:14:00Z");
+
+  const daysSince =
+    (now - knownNewMoon) / 86400000;
+
+  const phase = (daysSince % synodicMonth) / synodicMonth;
+
+  if(phase < 0.03) return "🌑 New Moon";
+  if(phase < 0.22) return "🌒 Waxing Crescent";
+  if(phase < 0.28) return "🌓 First Quarter";
+  if(phase < 0.47) return "🌔 Waxing Gibbous";
+  if(phase < 0.53) return "🌕 Full Moon";
+  if(phase < 0.72) return "🌖 Waning Gibbous";
+  if(phase < 0.78) return "🌗 Last Quarter";
+  return "🌘 Waning Crescent";
+}
 async function loadTides(){
 
   tideBox.innerHTML = "Loading…";
@@ -122,6 +145,7 @@ const todayReadable = new Date().toLocaleDateString(undefined,{
   day:"numeric"
 });
 todayDateBox.textContent = todayReadable;
+  moonBox.textContent = getMoonPhase();
   const d = new Date();
   const today =
     d.getFullYear().toString() +
