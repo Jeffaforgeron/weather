@@ -121,6 +121,44 @@ async function loadTides(){
     const j = await r.json();
 
     tideBox.innerHTML = "";
+    // Display next high/low summary
+const summary = document.createElement("div");
+summary.style.marginBottom = "14px";
+summary.style.paddingBottom = "10px";
+summary.style.borderBottom = "1px solid rgba(255,255,255,.1)";
+
+summary.innerHTML = `
+  <div style="font-size:18px; margin-bottom:6px;">
+    🌊 <strong>Next High:</strong> ${
+      nextHigh ? nextHigh.t.slice(11,16) + " • " + nextHigh.v + " ft" : "—"
+    }
+  </div>
+  <div style="font-size:18px;">
+    🌊 <strong>Next Low:</strong> ${
+      nextLow ? nextLow.t.slice(11,16) + " • " + nextLow.v + " ft" : "—"
+    }
+  </div>
+`;
+
+tideBox.appendChild(summary);
+
+// Find next high and low
+const now = new Date();
+
+let nextHigh = null;
+let nextLow = null;
+
+j.predictions.forEach(p=>{
+  const tideTime = new Date(p.t);
+  if(tideTime > now){
+    if(p.type === "H" && !nextHigh){
+      nextHigh = p;
+    }
+    if(p.type === "L" && !nextLow){
+      nextLow = p;
+    }
+  }
+});
 
     j.predictions.forEach(t=>{
 
