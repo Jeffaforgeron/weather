@@ -76,10 +76,18 @@ select{
   <div id="stationName" style="font-size:20px;font-weight:700;"></div>
   <div id="todayDate" style="color:#9ca3af;"></div>
 </div>
-<select id="stationSelect">
-  <option value="9439040">Astoria, OR</option>
-  <option value="9435380">South Beach / Newport, OR</option>
-  <option value="9432780">Charleston / Coos Bay, OR</option>
+<!-- STATE DROPDOWN -->
+<select id="stateSelect">
+  <option value="">Select State</option>
+  <option value="WA">Washington</option>
+  <option value="OR">Oregon</option>
+  <option value="CA">California</option>
+  <option value="HI">Hawaii</option>
+</select>
+
+<!-- CITY DROPDOWN -->
+<select id="citySelect" disabled>
+  <option value="">Select City</option>
 </select>
 
 <div id="tideData">
@@ -94,7 +102,8 @@ select{
 
 <script>
 const tideBox = document.getElementById("tideData");
-const stationSelect = document.getElementById("stationSelect");
+const stateSelect = document.getElementById("stateSelect");
+const citySelect = document.getElementById("citySelect");
 const stationNameBox = document.getElementById("stationName");
 const todayDateBox = document.getElementById("todayDate");
 async function loadTides(){
@@ -218,8 +227,7 @@ j.predictions.forEach(t=>{
 
 }
 
-stationSelect.onchange = loadTides;
-loadTides();
+
 </script>
 
 
