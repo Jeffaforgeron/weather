@@ -94,6 +94,10 @@ select{
 const tideBox = document.getElementById("tideData");
 const stationSelect = document.getElementById("stationSelect");
 
+<script>
+const tideBox = document.getElementById("tideData");
+const stationSelect = document.getElementById("stationSelect");
+
 async function loadTides(){
 
   tideBox.innerHTML = "Loading…";
@@ -101,47 +105,84 @@ async function loadTides(){
   const station = stationSelect.value;
 
   const d = new Date();
-const today =
-  d.getFullYear().toString() +
-  String(d.getMonth()+1).padStart(2,"0") +
-  String(d.getDate()).padStart(2,"0");
-
+  const today =
+    d.getFullYear().toString() +
+    String(d.getMonth()+1).padStart(2,"0") +
+    String(d.getDate()).padStart(2,"0");
 
   const url =
-`https://api.tidesandcurrents.noaa.gov/api/prod/datagetter
-?product=predictions
-&application=forgeron
-&begin_date=${today}
-&end_date=${today}
-&datum=MLLW
-&station=${station}
-&time_zone=lst_ldt
-&units=english
-&interval=hilo
-&format=json`;
+    "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter" +
+    "?product=predictions" +
+    "&application=forgeron" +
+    "&begin_date=" + today +
+    "&end_date=" + today +
+    "&datum=MLLW" +
+    "&station=" + station +
+    "&time_zone=lst_ldt" +
+    "&units=english" +
+    "&interval=hilo" +
+    "&format=json";
 
   try{
 
-    const r = await fetch(url.replace(/\n/g,""));
+    const r = await fetch(url);
     const j = await r.json();
 
     tideBox.innerHTML = "";
-    // Display next high/low summary
-const summary = document.createElement("div");
-summary.style.marginBottom = "14px";
-summary.style.paddingBottom = "10px";
-summary.style.borderBottom = "1px solid rgba(255,255,255,.1)";
 
-summary.innerHTML = `
-  <div style="font-size:18px; margin-bottom:6px;">
-    🌊 <strong>Next High:</strong> ${
-      nextHigh ? nextHigh.t.slice(11,16) + " • " + nextHigh.v + " ft" : "—"
-    }
-  </div>
-  <div style="font-size:18px;">
-    🌊 <strong>Next Low:</strong> ${
-      nextLow ? nextLow.t.slice(11,16) + " • " + nextLow.v + " ft" : "—"
-    }
+    const now = new Date();
+    let nextHigh = null;
+    let nextLow = null;
+
+    j.predictions.forEach(p=>{
+      const t = new Date(p.t.replace(" ","T"));
+      if(t > now){
+        if(p.type==="H" && !nextHigh) nextHigh = p;
+        if(p.type==="L" && !nextLow) nextLow = p;
+      }
+    });
+
+    const summary = document.createElement("div");
+    summary.style.marginBottom="14px";
+    summary.style.paddingBottom="10px";
+    summary.style.borderBottom="1px solid rgba(255,255,255,.1)";
+
+    summary.innerHTML = `
+      <div style="font-size:18px;margin-bottom:6px;">
+        🌊 <strong>Next High:</strong> ${nextHigh ? nextHigh.t.slice(11,16)+" • "+nextHigh.v+" ft" : "—"}
+      </div>
+      <div style="font-size:18px;">
+        🌊 <strong>Next Low:</strong> ${nextLow ? nextLow.t.slice(11,16)+" • "+nextLow.v+" ft" : "—"}
+      </div>
+    `;
+
+    tideBox.appendChild(summary);
+
+    j.predictions.forEach(t=>{
+
+      const row = document.createElement("div");
+      row.className="tide-row";
+
+      row.innerHTML = `
+        <span class="label">${t.type==="H"?"High Tide":"Low Tide"} – ${t.t.slice(11,16)}</span>
+        <span class="value">${t.v} ft</span>
+      `;
+
+      tideBox.appendChild(row);
+
+    });
+
+  }catch(e){
+    console.error(e);
+    tideBox.innerHTML="Tide data unavailable";
+  }
+
+}
+
+stationSelect.onchange = loadTides;
+loadTides();
+</script>
+
   </div>
 `;
 
