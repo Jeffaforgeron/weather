@@ -102,6 +102,91 @@ select{
 </div>
 
 <script>
+// City → nearest swell buoy
+const swellBuoyMap = {
+
+  // OREGON
+  "Astoria, OR":"46029",
+  "Cannon Beach, OR":"46029",
+  "Seaside, OR":"46029",
+  "Manzanita, OR":"46029",
+  "Nehalem, OR":"46029",
+
+  "Lincoln City, OR":"46089",
+  "Newport, OR":"46089",
+  "Waldport, OR":"46089",
+  "Yachats, OR":"46089",
+
+  "Coos Bay, OR":"46015",
+  "North Bend, OR":"46015",
+  "Bandon, OR":"46015",
+  "Reedsport, OR":"46015",
+
+  "Brookings, OR":"46027",
+  "Gold Beach, OR":"46027",
+  "Port Orford, OR":"46027",
+
+  // WASHINGTON
+  "Neah Bay, WA":"46087",
+  "La Push, WA":"46087",
+  "Port Angeles, WA":"46087",
+
+  "Seattle, WA":"46041",
+  "Everett, WA":"46041",
+  "Tacoma, WA":"46041",
+  "Gig Harbor, WA":"46041",
+  "Bremerton, WA":"46041",
+  "Anacortes, WA":"46041",
+  "Oak Harbor, WA":"46041",
+
+  // CALIFORNIA
+  "Crescent City, CA":"46027",
+
+  "Monterey, CA":"46042",
+  "Santa Cruz, CA":"46042",
+  "Capitola, CA":"46042",
+
+  "Pacifica, CA":"46026",
+  "Half Moon Bay, CA":"46026",
+  "San Francisco, CA":"46026",
+
+  "Santa Barbara, CA":"46053",
+  "Ventura, CA":"46053",
+
+  "Avila Beach, CA":"46011",
+  "Pismo Beach, CA":"46011",
+  "Morro Bay, CA":"46011",
+
+  "Santa Monica, CA":"46221",
+  "Malibu, CA":"46221",
+  "Redondo Beach, CA":"46221",
+  "Long Beach, CA":"46221",
+  "Huntington Beach, CA":"46221",
+  "Newport Beach, CA":"46221",
+  "Laguna Beach, CA":"46221",
+
+  "Oceanside, CA":"46224",
+  "Carlsbad, CA":"46224",
+
+  "San Diego, CA":"46232",
+  "Dana Point, CA":"46232",
+  "La Jolla, CA":"46232",
+
+  // HAWAII
+  "Honolulu, HI":"51000",
+  "Pearl Harbor, HI":"51000",
+  "Waianae, HI":"51000",
+
+  "Kahului, HI":"51003",
+  "Lahaina, HI":"51003",
+
+  "Hilo, HI":"51002",
+  "Kealakekua, HI":"51002",
+  "Kawaihae, HI":"51002",
+
+  "Nawiliwili, HI":"51001",
+  "Port Allen, HI":"51001"
+};
 const tideBox = document.getElementById("tideData");
 const stateSelect = document.getElementById("stateSelect");
 const citySelect = document.getElementById("citySelect");
@@ -134,6 +219,29 @@ async function loadTides(){
   tideBox.innerHTML = "Loading…";
 
 const station = citySelect.value;
+  const cityName = citySelect.options[citySelect.selectedIndex].text;
+const buoy = swellBuoyMap[cityName];
+  // fetch swell data
+let swellData = [];
+
+if(buoy){
+  try{
+    const swellResp = await fetch(
+      `https://www.ndbc.noaa.gov/data/realtime2/${buoy}.spec`
+    );
+    const swellText = await swellResp.text();
+
+    swellText.split("\n").slice(2,50).forEach(l=>{
+      const p=l.trim().split(/\s+/);
+      if(p.length>8){
+        swellData.push({
+          t:new Date(`${p[0]}-${p[1]}-${p[2]}T${p[3]}:00Z`).getTime(),
+          h:parseFloat(p[8])
+        });
+      }
+    });
+  }catch{}
+}
 // Set station name
 stationNameBox.textContent =
   citySelect.options[citySelect.selectedIndex].text;
@@ -268,14 +376,14 @@ hiloJson.predictions.forEach(t=>{
   tideBox.appendChild(row);
 
 });
-drawTideChart(j.predictions);
+drawTideChart(j.predictions, swellData);
   }catch(e){
     console.error(e);
     tideBox.innerHTML="Tide data unavailable";
   }
 
 }
-function drawTideChart(predictions){
+function drawTideChart(predictions, swell){
 
   const wrap = document.getElementById("tideChart");
   wrap.innerHTML = "";
