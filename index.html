@@ -3239,17 +3239,18 @@ const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end
 const oj = await obsResp.json();
 
 
-const temps=[];
-const labels=[];
-  // GET LAST 6 OBSERVATIONS
+const temps = [];
+const labels = [];
+
+// last 6 observations (hourly spaced)
 const past = oj.features
   .filter(o => o.properties.temperature.value)
   .slice(-6);
 
-// GET NEXT 6 FORECAST HOURS
+// next 6 forecast hours
 const future = hourlyJSON.properties.periods.slice(0,6);
 
-// ADD PAST TO CHART
+// past
 past.forEach(o=>{
   temps.push(o.properties.temperature.value*9/5+32);
   labels.push(
@@ -3258,6 +3259,47 @@ past.forEach(o=>{
       hour12:true
     })
   );
+});
+
+// future
+future.forEach((h,i)=>{
+  temps.push(h.temperature);
+  labels.push(`+${i+1}h`);
+});
+
+// current conditions (MOST IMPORTANT FIX)
+const latest = past[past.length-1].properties;
+
+ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
+ccWx.innerHTML = "Sky <span>"+latest.textDescription+"</span>";
+ccWind.innerHTML = "Wind <span>"+Math.round(latest.windSpeed.value*2.23694)+" mph</span>";
+ccHum.innerHTML = "Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
+ccDew.innerHTML = "Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
+
+// chart
+if(chart) chart.destroy();
+
+chart = new Chart(ctx,{
+  type:"line",
+  data:{
+    labels,
+    datasets:[{
+      data:temps,
+      borderWidth:3,
+      tension:.4,
+      pointRadius:0,
+      borderColor:"#38bdf8",
+      fill:false
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:"rgba(255,255,255,.04)"}}
+    }
+  }
 });
 
 // ADD FUTURE TO CHART
