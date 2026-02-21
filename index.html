@@ -3287,7 +3287,15 @@ const latest = past[past.length-1].properties;
 
 ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
 ccWx.innerHTML = "Sky <span>"+latest.textDescription+"</span>";
-ccWind.innerHTML = `Wind <span>${Math.round(latest.windSpeed?.value || 0)} mph</span>`;
+const windMps = latest.windSpeed?.value;
+const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
+
+const gustMps = latest.windGust?.value;
+const gustMph = gustMps != null ? Math.round(gustMps * 2.23694) : null;
+
+ccWind.innerHTML = gustMph
+  ? `Wind <span>${windMph} mph (gust ${gustMph})</span>`
+  : `Wind <span>${windMph} mph</span>`;
 ccHum.innerHTML = "Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
 ccDew.innerHTML = "Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
