@@ -3111,16 +3111,19 @@ async function loadCity(lat,lon){
 mapWrap.style.display="none";
 cityWrap.style.display="block";
 
-const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
-  const hourlyResp = await fetch(pj.properties.forecastHourly);
+const p = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+const pj = await p.json();
+
+// NEXT 12 HOURS
+const hourlyResp = await fetch(pj.properties.forecastHourly);
 const hourlyJSON = await hourlyResp.json();
 
 const nextTemps = hourlyJSON.properties.periods
   .slice(0,12)
   .map(h => h.temperature);
-  document.getElementById("ccConfidence").textContent =
+
+document.getElementById("ccConfidence").textContent =
   calcConfidence(nextTemps);
-const pj=await p.json();
   // ===== SUNRISE / SUNSET =====
 try {
   const sunResp = await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`);
