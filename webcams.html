@@ -143,11 +143,11 @@ const mountainCamBox = document.getElementById("mountainCamBox");
 
 const webcams = {
 
-  OR: [
-    ["Cannon Beach","https://cannonbeachphoto.com/oregon-coast-webcams/"],
-    ["Newport","https://www.skylinewebcams.com/en/webcam/united-states/oregon/newport/yaquina-bay-newport-oregon-coast.html"],
-    ["Bandon","https://placehold.co/800x450?text=Bandon"]
-  ],
+ OR: [
+  ["Cannon Beach","iframe|https://www.skylinewebcams.com/en/webcam/united-states/oregon/cannon-beach/cannon-beach.html"],
+  ["Newport","iframe|https://www.skylinewebcams.com/en/webcam/united-states/oregon/newport/yaquina-bay-newport-oregon-coast.html"],
+  ["Bandon","https://placehold.co/800x450?text=Bandon"]
+],
 
   WA: [
     ["La Push","https://placehold.co/800x450?text=La+Push"],
@@ -203,13 +203,30 @@ stateSelect.onchange = ()=>{
 
 citySelect.onchange = ()=>{
 
-  const url = citySelect.value;
+  const raw = citySelect.value;
   const name = citySelect.options[citySelect.selectedIndex].text;
 
- camBox.innerHTML = `
-  <div class="camTitle">${name}</div>
-  <img class="camFrame" src="${url}">
-`;
+  if(raw.startsWith("iframe|")){
+
+    const url = raw.replace("iframe|","");
+
+    camBox.innerHTML = `
+      <div class="camTitle">${name}</div>
+      <iframe
+        src="${url}"
+        style="width:100%;height:450px;border-radius:12px;border:none;"
+        allowfullscreen
+      ></iframe>
+    `;
+
+  } else {
+
+    camBox.innerHTML = `
+      <div class="camTitle">${name}</div>
+      <img class="camFrame" src="${raw}">
+    `;
+
+  }
 };
 
   mountainStateSelect.onchange = ()=>{
