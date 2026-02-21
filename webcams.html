@@ -43,16 +43,101 @@ h1{
 
 <body>
 
+<body>
+
 <h1>Webcams</h1>
-<div class="sub">Live Cameras</div>
+<div class="sub">Live coastal cameras (coming soon)</div>
 
 <div class="card">
-  🚧 Under Construction 🚧
+
+  <!-- STATE -->
+  <select id="stateSelect">
+    <option value="">Select State</option>
+    <option value="OR">Oregon</option>
+    <option value="WA">Washington</option>
+    <option value="CA">California</option>
+    <option value="HI">Hawaii</option>
+  </select>
+
+  <!-- CITY -->
+  <select id="citySelect" disabled>
+    <option value="">Select City</option>
+  </select>
+
+  <!-- CAMERA -->
+  <div id="camBox" style="margin-top:20px;text-align:center;">
+    <div style="color:#94a3b8">Select a city to view webcam</div>
+  </div>
+
 </div>
 
 <div class="footer">
 ← <a href="index.html" style="color:#38bdf8">Back to Dashboard</a>
 </div>
+
+<script>
+
+const stateSelect = document.getElementById("stateSelect");
+const citySelect = document.getElementById("citySelect");
+const camBox = document.getElementById("camBox");
+
+const webcams = {
+
+  OR: [
+    ["Cannon Beach","https://placehold.co/800x450?text=Cannon+Beach"],
+    ["Newport","https://placehold.co/800x450?text=Newport"],
+    ["Bandon","https://placehold.co/800x450?text=Bandon"]
+  ],
+
+  WA: [
+    ["La Push","https://placehold.co/800x450?text=La+Push"],
+    ["Ocean Shores","https://placehold.co/800x450?text=Ocean+Shores"]
+  ],
+
+  CA: [
+    ["Santa Cruz","https://placehold.co/800x450?text=Santa+Cruz"],
+    ["Monterey","https://placehold.co/800x450?text=Monterey"],
+    ["San Diego","https://placehold.co/800x450?text=San+Diego"]
+  ],
+
+  HI: [
+    ["Honolulu","https://placehold.co/800x450?text=Honolulu"],
+    ["Kahului","https://placehold.co/800x450?text=Kahului"]
+  ]
+};
+
+stateSelect.onchange = ()=>{
+
+  citySelect.innerHTML = '<option value="">Select City</option>';
+  camBox.innerHTML = '<div style="color:#94a3b8">Select a city to view webcam</div>';
+
+  const s = stateSelect.value;
+
+  if(webcams[s]){
+    webcams[s]
+      .sort((a,b)=>a[0].localeCompare(b[0]))
+      .forEach(c=>{
+        citySelect.innerHTML += `<option value="${c[1]}">${c[0]}</option>`;
+      });
+  }
+
+  citySelect.disabled = !s;
+};
+
+citySelect.onchange = ()=>{
+
+  const url = citySelect.value;
+  const name = citySelect.options[citySelect.selectedIndex].text;
+
+  camBox.innerHTML = `
+    <div style="margin-bottom:8px;font-weight:600">${name}</div>
+    <img src="${url}" style="width:100%;border-radius:10px;box-shadow:0 0 20px rgba(56,189,248,.25)">
+  `;
+};
+
+</script>
+
+</body>
 
 </body>
 </html>
