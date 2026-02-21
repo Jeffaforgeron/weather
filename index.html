@@ -3253,7 +3253,8 @@ oj.features.reverse().forEach(o=>{
 
   }
 });
-
+// ADD LABELS FOR NEXT 12 HOURS (needed for dashed projection)
+labels.push(...nextTemps.map((_,i)=>`+${i+1}h`));
 let latest;
 
 if(!oj.features.length){
