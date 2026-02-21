@@ -3121,7 +3121,7 @@ const hourlyJSON = await hourlyResp.json();
 const nextTemps = hourlyJSON.properties.periods
   .slice(0,12)
   .map(h => h.temperature);
-
+console.log("NEXT TEMPS:", nextTemps);
 document.getElementById("ccConfidence").textContent =
   calcConfidence(nextTemps);
   // ===== SUNRISE / SUNSET =====
