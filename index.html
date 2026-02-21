@@ -1726,7 +1726,12 @@ html, body {
   }
 }
 
-
+#ccConfidence{
+  padding:4px 8px;
+  border-radius:6px;
+  background:#020617;
+  box-shadow:0 0 10px rgba(56,189,248,.25);
+}
 </style>
 </head>
 
@@ -1902,8 +1907,10 @@ html, body {
 <div id="ccCityWrap" style="display:none;padding:14px;">
 
   <div class="cc-header">
+    <div id="ccConfidence" style="font-size:11px;color:#9ca3af;"></div>
     <div id="ccCity" class="cc-city"></div>
     <div id="ccUpdated" class="cc-updated"></div>
+    <div id="ccConfidence" style="font-size:11px;color:#9ca3af;"></div>
   </div>
 
   <div class="cc-main">
@@ -3086,7 +3093,18 @@ async function fetchRAWS(stationId){
 }
 
 
+function calcConfidence(nextTemps){
 
+  if(!nextTemps || nextTemps.length < 2) return "Confidence: —";
+
+  const max = Math.max(...nextTemps);
+  const min = Math.min(...nextTemps);
+  const spread = max - min;
+
+  if(spread < 3) return "🟢 Confidence: High";
+  if(spread < 6) return "🟡 Confidence: Moderate";
+  return "🔴 Confidence: Low";
+}
   
 async function loadCity(lat,lon){
 
@@ -3094,6 +3112,14 @@ mapWrap.style.display="none";
 cityWrap.style.display="block";
 
 const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+  const hourlyResp = await fetch(pj.properties.forecastHourly);
+const hourlyJSON = await hourlyResp.json();
+
+const nextTemps = hourlyJSON.properties.periods
+  .slice(0,12)
+  .map(h => h.temperature);
+  document.getElementById("ccConfidence").textContent =
+  calcConfidence(nextTemps);
 const pj=await p.json();
   // ===== SUNRISE / SUNSET =====
 try {
@@ -3435,21 +3461,34 @@ chart=new Chart(ctx,{
  type:"line",
  data:{
    labels,
-   datasets:[{
-     data:temps,
-     borderWidth:3,
-     tension:.4,
-     fill:true,
-     pointRadius:0,
-borderColor: window.currentTempLine || "#38bdf8",
-     backgroundColor:(ctx)=>{
-       const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
-       g.addColorStop(0,"rgba(250,204,21,.45)");
-       g.addColorStop(.5, window.currentTempGlow || "rgba(56,189,248,.25)");
-       g.addColorStop(1,"rgba(37,99,235,.15)");
-       return g;
-     }
-   }]
+datasets:[
+{
+  label:"Observed",
+  data:temps,
+  borderWidth:3,
+  tension:.4,
+  fill:true,
+  pointRadius:0,
+  borderColor: window.currentTempLine || "#38bdf8",
+  backgroundColor:(ctx)=>{
+    const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
+    g.addColorStop(0,"rgba(250,204,21,.45)");
+    g.addColorStop(.5, window.currentTempGlow || "rgba(56,189,248,.25)");
+    g.addColorStop(1,"rgba(37,99,235,.15)");
+    return g;
+  }
+},
+
+{
+  label:"Next 12 Hours",
+  data:[...Array(temps.length-1).fill(null), ...nextTemps],
+  borderDash:[6,6],
+  borderColor:"#4ade80",
+  tension:.4,
+  pointRadius:0,
+  fill:false
+}
+]
  },
 
  plugins:[tempLabelPlugin],   // 👈 ADD THIS LINE
@@ -4076,6 +4115,13 @@ async function fetchForecast(){
 
  const p=await fetch(`https://api.weather.gov/points/${lat},${lon}`);
  const pj=await p.json();
+   // ===== NEXT 12 HOURS (NWS ONLY) =====
+const hourlyResp = await fetch(pj.properties.forecastHourly);
+const hourlyJSON = await hourlyResp.json();
+
+const nextTemps = hourlyJSON.properties.periods
+  .slice(0,12)
+  .map(h => h.temperature);
 // ---- Set City Label + Elevation ----
 const cityName =
   citySelect.options[citySelect.selectedIndex]?.text || "Selected City";
