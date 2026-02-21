@@ -3240,230 +3240,31 @@ const oj = await obsResp.json();
 
 const temps=[];
 const labels=[];
-
-const pastObs = oj.features
-  .filter(o=>o.properties.temperature.value)
+  // GET LAST 6 OBSERVATIONS
+const past = oj.features
+  .filter(o => o.properties.temperature.value)
   .slice(-6);
 
-pastObs.forEach(o=>{
+// GET NEXT 6 FORECAST HOURS
+const future = hourlyJSON.properties.periods.slice(0,6);
+
+// ADD PAST TO CHART
+past.forEach(o=>{
   temps.push(o.properties.temperature.value*9/5+32);
   labels.push(
-    new Date(o.properties.timestamp).toLocaleTimeString([], {
+    new Date(o.properties.timestamp).toLocaleTimeString([],{
       hour:'numeric',
       hour12:true
     })
   );
 });
-  labels.push(...nextTemps.map((_,i)=>`+${i+1}h`));
-// ADD LABELS FOR NEXT 12 HOURS (needed for dashed projection)
-labels.push(...nextTemps.map((_,i)=>`+${i+1}h`));
-let latest;
 
-if(!oj.features.length){
-
-  // CWOP fallback (no history available)
-  const lr = await fetch(`${stationURL}/observations/latest`);
-  const lj = await lr.json();
-  latest = lj.properties;
-
-}else{
-
-  latest = oj.features[oj.features.length-1].properties;
-
-}
-
-
-if(latest.temperature?.value == null){
-
-if(chart){
-  chart.destroy();
-  chart = null;
-}
-
-ccTemp.textContent = "—";
-ccWx.innerHTML = "Sky <span>Station offline</span>";
-return;
-}
-
-
-const tempF = Math.round(latest.temperature.value*9/5+32);
-ccTemp.textContent = tempF + "°";
-applyTempTheme(tempF);
-
-ccFeels.textContent = latest.apparentTemperature?.value
-  ? "Feels Like " + Math.round(latest.apparentTemperature.value*9/5+32) + "°"
-  : "";
-
-ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
-latest.windSpeed = latest.windSpeed || latest.windGust;
-const windDir = latest.windDirection?.value
-  ? ["N","NE","E","SE","S","SW","W","NW"][Math.round(latest.windDirection.value/45)%8]
-  : "";
-latest.windSpeed = latest.windSpeed || latest.windGust;
-// Use sustained wind, not gusts
-let windMPH = "—";
-
-if(latest.windSpeed?.value != null){
-
-  const v = latest.windSpeed.value;
-  const unit = latest.windSpeed.unitCode;
-
-  // meters per second
-  if(unit && unit.includes("m_s-1")){
-    windMPH = Math.round(v * 2.23694);
-  }
-
-  // kilometers per hour
-  else if(unit && unit.includes("km_h-1")){
-    windMPH = Math.round(v * 0.621371);
-  }
-
-}
-
-
-
-
-ccWind.innerHTML = `Wind <span>${windMPH} mph ${windDir}</span>`;
-
-
-
-ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
-
-ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
-/* ===== PRECIP (PRO MODE) ===== */
-
-// Precip since midnight
-if(latest.precipitationSinceMidnight?.value != null){
-  const inches = latest.precipitationSinceMidnight.value * 39.3701;
-  ccRainDay.innerHTML = `Precip Today <span>${inches.toFixed(2)} in</span>`;
-}else{
-  ccRainDay.innerHTML = "Precip Today <span>—</span>";
-}
-
-// Precip last hour
-if(latest.precipitationLastHour?.value != null){
-  const hr = latest.precipitationLastHour.value * 39.3701;
-  ccRainMonth.innerHTML = `Last Hour <span>${hr.toFixed(2)} in</span>`;
-}else{
-  ccRainMonth.innerHTML = "Last Hour <span>—</span>";
-  /* ===== MONTHLY PRECIP (CLIMATE DATA) ===== */
-
-try{
-
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth()+1).padStart(2,"0");
-
-  const start = `${y}-${m}-01`;
-  const end = now.toISOString().slice(0,10);
-
-  const climateURL =
-   `https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=${station}&startDate=${start}&endDate=${end}&dataTypes=PRCP&units=standard&format=json`;
-
-  const clim = await fetch(climateURL);
-  const cj = await clim.json();
-
-  let total = 0;
-
-  cj.forEach(d=>{
-    if(d.PRCP) total += parseFloat(d.PRCP);
-  });
-
-  if(total>0){
-    ccRainMonth.innerHTML += `<br>Monthly <span>${total.toFixed(2)} in</span>`;
-  }
-
-}catch(e){
-  console.warn("Monthly precip unavailable");
-}
-
-}
-
-
-
-
-
-
-
-
-
-ccUpdated.textContent="Updated "+new Date(latest.timestamp).toLocaleTimeString();
-
-
-/* Chart */
-if(chart) chart.destroy();
-
-const ctx = ccCanvas.getContext("2d");
-
-// Broadcast-style glowing + pulsing temp labels
-const tempLabelPlugin = {
-  id: 'tempLabels',
-  afterDatasetsDraw(chart){
-    const {ctx} = chart;
-    const meta = chart.getDatasetMeta(0);
-    const data = chart.data.datasets[0].data;
-
-    if(!data.length) return;
-
-    const n = data.length - 1;
-
-    // indices ~ latest-10h, -6h, -2h
-    const idx2  = Math.max(0, Math.round(n * (10/12)));
-    const idx6  = Math.max(0, Math.round(n * (6/12)));
-    const idx10 = Math.max(0, Math.round(n * (2/12)));
-
-    const points = [idx10, idx6, idx2];
-
-    // subtle pulse
-    const pulse = Math.sin(Date.now()/600) * 2;
-
-    ctx.save();
-    ctx.font = "12px system-ui";           // slightly bigger
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#e5e7eb";
-
-    ctx.shadowColor = "rgba(56,189,248,.8)";
-    ctx.shadowBlur = 10;
-
-    points.forEach(i=>{
-      const pt = meta.data[i];
-      if(!pt) return;
-
-      const val = Math.round(data[i]);
-
-      // lift higher + pulse
-const mobile = window.innerWidth < 768;
-
-// target position (normal float)
-let y = pt.y - 32 + pulse;
-
-// HARD minimum distance above line (never touch)
-const minAboveLine = 26;
-y = Math.min(y, pt.y - minAboveLine);
-
-// Mobile ceiling (don’t escape canvas)
-if(mobile){
-  y = Math.max(y, 36);
-}
-
-ctx.fillText(val + "°", pt.x, y);
-
-
-
-
-    });
-
-    ctx.restore();
-  }
-};
-
-
-
-      
-
-
-
-chart=new Chart(ctx,{
+// ADD FUTURE TO CHART
+future.forEach((h,i)=>{
+  temps.push(h.temperature);
+  labels.push(`+${i+1}h`);
+});
+  chart=new Chart(ctx,{
  type:"line",
  data:{
    labels,
