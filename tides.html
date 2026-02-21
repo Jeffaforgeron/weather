@@ -393,6 +393,10 @@ function drawTideChart(predictions, swell){
   const pad = 40;
 
   const pts = predictions.map(p=>{
+    const swellPts = (swell || []).map(s => ({
+  t: s.t,
+  v: s.h
+}));
     return {
       t:new Date(p.t.replace(" ","T")).getTime(),
       v:parseFloat(p.v)
@@ -496,7 +500,19 @@ ${timeLabels}
 <!-- main line -->
 <path d="${d}" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
 
-
+${swellPts.length ? `
+<path d="${(()=>{
+ let sd=`M ${x(swellPts[0].t)} ${y(swellPts[0].v)}`;
+ for(let i=1;i<swellPts.length;i++){
+   sd+=` L ${x(swellPts[i].t)} ${y(swellPts[i].v)}`;
+ }
+ return sd;
+})()}"
+ stroke="#a855f7"
+ stroke-width="1.5"
+ fill="none"
+ opacity=".7"/>
+` : ""}
 
 <!-- NOW label -->
 <text
