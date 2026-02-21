@@ -3220,7 +3220,7 @@ ccWind.innerHTML = `Wind <span>${latest.windSpeed?.value}</span>`;
   ccTemp.textContent = Math.round(temp) + "°";
   ccHum.innerHTML = `Humidity <span>${obs.relative_humidity_value_1?.value != null ? Math.round(obs.relative_humidity_value_1.value)+"%" : "—"}</span>`;
   ccDew.innerHTML = `Dew Point <span>${obs.dew_point_temperature_value_1?.value != null ? Math.round(obs.dew_point_temperature_value_1.value)+"°" : "—"}</span>`;
-  ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value != null ? Math.round(obs.wind_speed_value_1.value)+" mph" : "—"}</span>`;
+ ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value}</span>`;
   ccWx.innerHTML = "Sky <span>Mountain Station</span>";
 
   return;
