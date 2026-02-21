@@ -3239,7 +3239,8 @@ const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end
 const oj = await obsResp.json();
 
 
-const temps = [];
+const pastTemps = [];
+const futureTemps = [];
 const labels = [];
 
 // last 6 observations (hourly spaced)
@@ -3261,7 +3262,7 @@ const future = hourlyJSON.properties.periods.slice(0,6);
 
 // past
 past.forEach(o=>{
-  temps.push(o.properties.temperature.value*9/5+32);
+  pastTemps.push(o.properties.temperature.value*9/5+32);
   labels.push(
     new Date(o.properties.timestamp).toLocaleTimeString([],{
       hour:'numeric',
@@ -3272,7 +3273,7 @@ past.forEach(o=>{
 
 // future
 future.forEach((h,i)=>{
-  temps.push(h.temperature);
+  futureTemps.push(h.temperature);
   labels.push(`+${i+1}h`);
 });
 
@@ -3292,14 +3293,31 @@ chart = new Chart(ctx,{
   type:"line",
   data:{
     labels,
-    datasets:[{
-      data:temps,
-      borderWidth:3,
-      tension:.4,
-      pointRadius:0,
-      borderColor:"#38bdf8",
-      fill:false
-    }]
+  datasets:[
+{
+  label:"Observed",
+  data: pastTemps,
+  borderWidth:3,
+  tension:.4,
+  pointRadius:3,           // 👈 dot at "now"
+  borderColor:"#38bdf8",
+  fill:false
+},
+{
+  label:"Next 6 Hours",
+  data:[
+    ...Array(pastTemps.length-1).fill(null),
+    pastTemps[pastTemps.length-1],
+    ...futureTemps
+  ],
+  borderDash:[6,6],
+  borderWidth:3,
+  tension:.4,
+  pointRadius:0,
+  borderColor:"#4ade80",
+  fill:false
+}
+]
   },
   options:{
     responsive:true,
