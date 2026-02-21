@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Webcams – Forgeron Weather</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  padding:40px 20px;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  text-align:center;
+}
+
+h1{
+  margin-bottom:10px;
+}
+
+.sub{
+  color:#94a3b8;
+  margin-bottom:40px;
+}
+
+.card{
+  max-width:600px;
+  margin:0 auto;
+  background:#0b1220;
+  border-radius:12px;
+  padding:40px 20px;
+  box-shadow:0 0 30px rgba(56,189,248,.25);
+}
+
+.footer{
+  margin-top:40px;
+  font-size:12px;
+  color:#64748b;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Webcams</h1>
+<div class="sub">Live coastal cameras</div>
+
+<div class="card">
+  🚧 Under Construction 🚧
+</div>
+
+<div class="footer">
+← <a href="index.html" style="color:#38bdf8">Back to Dashboard</a>
+</div>
+
+</body>
+</html>
