@@ -100,7 +100,24 @@ select{
   </div>
 
 </div>
+<div class="card" style="margin-top:24px;">
 
+  <h2 style="margin-top:0;margin-bottom:12px;font-size:18px;">
+    🏔 Live Mountain Cameras
+  </h2>
+
+  <select id="mountainSelect">
+    <option value="">Select Location</option>
+    <option value="Mt Hood">Mt Hood</option>
+    <option value="Mount Bachelor">Mount Bachelor</option>
+    <option value="Crystal Mountain">Crystal Mountain</option>
+  </select>
+
+  <div id="mountainCamBox" style="margin-top:18px;text-align:center;">
+    <div style="color:#94a3b8">Select a mountain to view webcam</div>
+  </div>
+
+</div>
 <div class="footer">
 ← <a href="index.html" style="color:#38bdf8">Back to Dashboard</a>
 </div>
@@ -110,6 +127,8 @@ select{
 const stateSelect = document.getElementById("stateSelect");
 const citySelect = document.getElementById("citySelect");
 const camBox = document.getElementById("camBox");
+  const mountainSelect = document.getElementById("mountainSelect");
+const mountainCamBox = document.getElementById("mountainCamBox");
 
 const webcams = {
 
@@ -164,7 +183,22 @@ citySelect.onchange = ()=>{
   <img class="camFrame" src="${url}">
 `;
 };
+mountainSelect.onchange = ()=>{
 
+  const name = mountainSelect.value;
+
+  if(!name){
+    mountainCamBox.innerHTML =
+      '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
+    return;
+  }
+
+  mountainCamBox.innerHTML = `
+    <div class="camTitle">${name}</div>
+    <img class="camFrame"
+      src="https://placehold.co/800x450?text=${encodeURIComponent(name)}">
+  `;
+};
 </script>
 
 
