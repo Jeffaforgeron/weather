@@ -3241,18 +3241,20 @@ const oj = await obsResp.json();
 const temps=[];
 const labels=[];
 
-oj.features.reverse().forEach(o=>{
-  if(o.properties.temperature.value){
-    temps.push(o.properties.temperature.value*9/5+32);
-    labels.push(
-  new Date(o.properties.timestamp).toLocaleTimeString([], {
-    hour: 'numeric',
-    hour12: true
-  })
-);
+const pastObs = oj.features
+  .filter(o=>o.properties.temperature.value)
+  .slice(-6);
 
-  }
+pastObs.forEach(o=>{
+  temps.push(o.properties.temperature.value*9/5+32);
+  labels.push(
+    new Date(o.properties.timestamp).toLocaleTimeString([], {
+      hour:'numeric',
+      hour12:true
+    })
+  );
 });
+  labels.push(...nextTemps.map((_,i)=>`+${i+1}h`));
 // ADD LABELS FOR NEXT 12 HOURS (needed for dashed projection)
 labels.push(...nextTemps.map((_,i)=>`+${i+1}h`));
 let latest;
@@ -3483,11 +3485,12 @@ datasets:[
   }
 },
 
+
 {
-  label:"Next 12 Hours",
+  label:"Next 6 Hours",
 
   data:[
-    ...Array(labels.length - nextTemps.length - 1).fill(null),
+    ...Array(temps.length-1).fill(null),
     temps[temps.length-1],
     ...nextTemps
   ],
@@ -4130,7 +4133,7 @@ const hourlyResp = await fetch(pj.properties.forecastHourly);
 const hourlyJSON = await hourlyResp.json();
 
 const nextTemps = hourlyJSON.properties.periods
-  .slice(0,12)
+  .slice(0,6)
   .map(h => h.temperature);
 // ---- Set City Label + Elevation ----
 const cityName =
