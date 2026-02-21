@@ -3192,7 +3192,9 @@ if(chart){
 
     ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
     ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
-    ccWind.innerHTML="Wind <span>"+Math.round(latest.windSpeed.value*2.23694)+" mph</span>";
+    const windMps = latest.windSpeed?.value;
+const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
+ccWind.innerHTML = `Wind <span>${windMph} mph</span>`;
     ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
     ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
