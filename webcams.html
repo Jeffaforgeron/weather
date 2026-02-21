@@ -106,11 +106,23 @@ select{
     🏔 Live Mountain Cameras
   </h2>
 
-  <select id="mountainSelect">
-    <option value="">Select Location</option>
-    <option value="Mt Hood">Mt Hood</option>
-    <option value="Mount Bachelor">Mount Bachelor</option>
-    <option value="Crystal Mountain">Crystal Mountain</option>
+  <div class="card" style="margin-top:24px;">
+
+  <h2 style="margin-top:0;margin-bottom:12px;font-size:18px;">
+    🏔 Live Mountain Cameras
+  </h2>
+
+  <!-- STATE -->
+  <select id="mountainStateSelect">
+    <option value="">Select State</option>
+    <option value="OR">Oregon</option>
+    <option value="WA">Washington</option>
+    <option value="CA">California</option>
+  </select>
+
+  <!-- MOUNTAIN -->
+  <select id="mountainLocationSelect" disabled>
+    <option value="">Select Mountain</option>
   </select>
 
   <div id="mountainCamBox" style="margin-top:18px;text-align:center;">
@@ -118,16 +130,15 @@ select{
   </div>
 
 </div>
-<div class="footer">
-← <a href="index.html" style="color:#38bdf8">Back to Dashboard</a>
-</div>
 
 <script>
 
 const stateSelect = document.getElementById("stateSelect");
 const citySelect = document.getElementById("citySelect");
 const camBox = document.getElementById("camBox");
-  const mountainSelect = document.getElementById("mountainSelect");
+const mountainStateSelect = document.getElementById("mountainStateSelect");
+const mountainLocationSelect = document.getElementById("mountainLocationSelect");
+const mountainCamBox = document.getElementById("mountainCamBox");
 const mountainCamBox = document.getElementById("mountainCamBox");
 
 const webcams = {
@@ -154,7 +165,24 @@ const webcams = {
     ["Kahului","https://placehold.co/800x450?text=Kahului"]
   ]
 };
+const mountainCams = {
 
+  OR: [
+    ["Mt Hood","https://placehold.co/800x450?text=Mt+Hood"],
+    ["Mount Bachelor","https://placehold.co/800x450?text=Mount+Bachelor"]
+  ],
+
+  WA: [
+    ["Crystal Mountain","https://placehold.co/800x450?text=Crystal+Mountain"],
+    ["Stevens Pass","https://placehold.co/800x450?text=Stevens+Pass"]
+  ],
+
+  CA: [
+    ["Mammoth Mountain","https://placehold.co/800x450?text=Mammoth+Mountain"],
+    ["Lake Tahoe","https://placehold.co/800x450?text=Lake+Tahoe"]
+  ]
+
+};
 stateSelect.onchange = ()=>{
 
   citySelect.innerHTML = '<option value="">Select City</option>';
@@ -199,6 +227,48 @@ mountainSelect.onchange = ()=>{
       src="https://placehold.co/800x450?text=${encodeURIComponent(name)}">
   `;
 };
+  mountainStateSelect.onchange = ()=>{
+
+  mountainLocationSelect.innerHTML =
+    '<option value="">Select Mountain</option>';
+
+  mountainCamBox.innerHTML =
+    '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
+
+  const s = mountainStateSelect.value;
+
+  if(mountainCams[s]){
+    mountainCams[s]
+      .sort((a,b)=>a[0].localeCompare(b[0]))
+      .forEach(m=>{
+        mountainLocationSelect.innerHTML +=
+          `<option value="${m[1]}">${m[0]}</option>`;
+      });
+  }
+
+  mountainLocationSelect.disabled = !s;
+};
+
+  mountainLocationSelect.onchange = ()=>{
+
+  const url = mountainLocationSelect.value;
+  const name =
+    mountainLocationSelect.options[
+      mountainLocationSelect.selectedIndex
+    ].text;
+
+  if(!url){
+    mountainCamBox.innerHTML =
+      '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
+    return;
+  }
+
+  mountainCamBox.innerHTML = `
+    <div class="camTitle">${name}</div>
+    <img class="camFrame" src="${url}">
+  `;
+};
+  
 </script>
 
 
