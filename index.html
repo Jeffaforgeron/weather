@@ -3243,8 +3243,17 @@ const temps = [];
 const labels = [];
 
 // last 6 observations (hourly spaced)
-const past = oj.features
+const past = [...oj.features]
   .filter(o => o.properties.temperature.value)
+  .sort((a,b)=>new Date(a.properties.timestamp)-new Date(b.properties.timestamp))
+  .reduce((acc,o)=>{
+    const hr = new Date(o.properties.timestamp).getHours();
+    if(!acc.map[hr]){
+      acc.map[hr]=true;
+      acc.list.push(o);
+    }
+    return acc;
+  },{map:{},list:[]}).list
   .slice(-6);
 
 // next 6 forecast hours
