@@ -3293,8 +3293,7 @@ ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
 ccWx.innerHTML = "Sky <span>"+latest.textDescription+"</span>";
 const windMps = latest.windSpeed?.value;
 const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
-const windMps = latest.windSpeed?.value;
-const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
+
 
 ccWind.innerHTML = `Wind <span>${windMph} mph</span>`;
 const gustMps = latest.windGust?.value;
