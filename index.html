@@ -2317,6 +2317,7 @@ const mapWrap=document.getElementById("ccMapWrap");
 const cityWrap=document.getElementById("ccCityWrap");
 
 const ccCanvas = document.getElementById("ccChart");
+  const ctx = ccCanvas.getContext("2d");
 
 let chart;
 function applyTempTheme(tempF){
@@ -3305,7 +3306,7 @@ datasets:[
 ]
  },
 
- plugins:[tempLabelPlugin],   // 👈 ADD THIS LINE
+  // 👈 ADD THIS LINE
 
  options:{
   responsive:true,
