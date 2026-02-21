@@ -3484,8 +3484,15 @@ datasets:[
 },
 
 {
+ {
   label:"Next 12 Hours",
-  data:[...Array(temps.length-1).fill(null), ...nextTemps],
+
+  data:[
+    ...Array(labels.length - nextTemps.length - 1).fill(null),
+    temps[temps.length-1],
+    ...nextTemps
+  ],
+
   borderDash:[6,6],
   borderColor:"#4ade80",
   tension:.4,
