@@ -3243,7 +3243,10 @@ const start=new Date(Date.now()-12*3600000).toISOString();
 
 const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
 const oj = await obsResp.json();
-
+// === GET TRUE LATEST OBSERVATION (for current conditions) ===
+const latestResp = await fetch(`${stationURL}/observations/latest`);
+const latestJSON = await latestResp.json();
+const latest = latestJSON.properties;
 
 const pastTemps = [];
 const futureTemps = [];
@@ -3284,17 +3287,20 @@ future.forEach((h,i)=>{
 });
 
 // current conditions (MOST IMPORTANT FIX)
-const latest = past[past.length-1].properties;
+
 
 ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
 ccWx.innerHTML = "Sky <span>"+latest.textDescription+"</span>";
 const windMps = latest.windSpeed?.value;
 const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
+const windMps = latest.windSpeed?.value;
+const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
 
+ccWind.innerHTML = `Wind <span>${windMph} mph</span>`;
 const gustMps = latest.windGust?.value;
 const gustMph = gustMps != null ? Math.round(gustMps * 2.23694) : null;
 
-ccWind.innerHTML = `Wind <span>${Math.round(latest.windSpeed.value * 2.23694)} mph</span>`;
+
 ccHum.innerHTML = "Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
 ccDew.innerHTML = "Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
