@@ -3312,34 +3312,55 @@ document.getElementById("ccUpdated").textContent =
 if(chart) chart.destroy();
 Chart.register({
   id: "tempLabels",
+
   afterDatasetsDraw(chart){
 
-  const ctx = chart.ctx;
-  const yScale = chart.scales.y;
+    const ctx = chart.ctx;
+    const yScale = chart.scales.y;
 
-  ctx.save();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "11px system-ui";
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "11px system-ui";
 
-  // ===== PAST OBS (dataset 0) =====
-  const pastMeta = chart.getDatasetMeta(0);
-  const pastData = chart.data.datasets[0].data;
+    // ===== PAST (dataset 0) =====
+    const pastMeta = chart.getDatasetMeta(0);
+    const pastData = chart.data.datasets[0].data;
 
-  [0,2,4].forEach(i => {
-    if(!pastMeta.data[i] || pastData[i] == null) return;
+    [0,2,4].forEach(i => {
 
-    const pt = pastMeta.data[i];
-    const val = pastData[i];
+      if(!pastMeta.data[i] || pastData[i] == null) return;
 
-    const frac = (val - yScale.min) / (yScale.max - yScale.min);
-    const yOffset = frac > 0.6 ? 14 : -10;
+      const pt = pastMeta.data[i];
+      const val = pastData[i];
 
-    ctx.fillText(
-      Math.round(val) + "°",
-      pt.x - 8,
-      pt.y + yOffset
-    );
-  });
+      const frac = (val - yScale.min) / (yScale.max - yScale.min);
+      const yOffset = frac > 0.6 ? 14 : -10;
+
+      ctx.fillText(Math.round(val)+"°", pt.x-8, pt.y+yOffset);
+    });
+
+    // ===== FUTURE (dataset 1) =====
+    const futureMeta = chart.getDatasetMeta(1);
+    const futureData = chart.data.datasets[1].data;
+
+    const start = pastData.length - 1; // where forecast begins
+
+    [start+1, start+3, start+5].forEach(i => {
+
+      if(!futureMeta.data[i] || futureData[i] == null) return;
+
+      const pt = futureMeta.data[i];
+      const val = futureData[i];
+
+      const frac = (val - yScale.min) / (yScale.max - yScale.min);
+      const yOffset = frac > 0.6 ? 14 : -10;
+
+      ctx.fillText(Math.round(val)+"°", pt.x-8, pt.y+yOffset);
+    });
+
+    ctx.restore();
+  }
+});
 
  // ===== FUTURE FORECAST (dataset 1) =====
 const futureMeta = chart.getDatasetMeta(1);
