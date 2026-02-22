@@ -3195,10 +3195,7 @@ if(chart){
 const wind = Math.round(latest.windSpeed?.value || 0);
 const gust = latest.windGust?.value ? Math.round(latest.windGust.value) : null;
 
-const windMps = latest.windSpeed?.value;
-const windMph = windMps != null ? Math.round(windMps * 2.23694) : "—";
-
-ccWind.innerHTML = `Wind <span>${windMph} mph</span>`;
+ccWind.innerHTML = `Wind <span>${Math.round(latest.windSpeed?.value || 0)} mph</span>`;
     ccHum.innerHTML="Humidity <span>"+Math.round(latest.relativeHumidity.value)+"%</span>";
     ccDew.innerHTML="Dew Point <span>"+Math.round(latest.dewpoint.value*9/5+32)+"°</span>";
 
