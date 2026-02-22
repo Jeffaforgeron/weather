@@ -3282,6 +3282,8 @@ ccTemp.textContent =
 ccWx.innerHTML =
   "Sky <span>" + latest.textDescription + "</span>";
 
+// Wind (NOAA gives meters/sec — convert once to mph)
+
 const sustained =
   latest.windSpeed?.value != null
     ? Math.round(latest.windSpeed.value * 2.23694)
