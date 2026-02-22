@@ -176,18 +176,10 @@ const webcams = {
 };
 const mountainCams = {
 
- OR: [
-    [
-      "Timberline Lodge (Mt Hood)",
-      {
-        type: "image",
-        src: "https://timberlinelodge.com/snowcameras/lodge.jpg",
-        liveUrl: "https://timberlinelodge.com/snowcameras/"
-      }
-    ],
-
-    ["Mount Bachelor","https://placehold.co/800x450?text=Mount+Bachelor"]
-  ],
+OR: [
+  ["Timberline Lodge (Mt Hood)","https://timberlinelodge.com/snowcameras/lodge.jpg"],
+  ["Mount Bachelor","https://placehold.co/800x450?text=Mount+Bachelor"]
+],
 
   WA: [
     ["Crystal Mountain","https://placehold.co/800x450?text=Crystal+Mountain"],
@@ -257,12 +249,12 @@ citySelect.onchange = ()=>{
   const s = mountainStateSelect.value;
 
   if(mountainCams[s]){
-    mountainCams[s]
-      .sort((a,b)=>a[0].localeCompare(b[0]))
-      .forEach(m=>{
-        mountainLocationSelect.innerHTML +=
-          `<option value="${m[1]}">${m[0]}</option>`;
-      });
+   mountainCams[s]
+  .sort((a,b)=>a[0].localeCompare(b[0]))
+  .forEach(m=>{
+  mountainLocationSelect.innerHTML +=
+    `<option value="${m[1]}">${m[0]}</option>`;
+});
   }
 
   mountainLocationSelect.disabled = !s;
@@ -270,36 +262,21 @@ citySelect.onchange = ()=>{
 
 mountainLocationSelect.onchange = ()=>{
 
-  const data = mountainLocationSelect.value;
+  const url = mountainLocationSelect.value;
   const name =
     mountainLocationSelect.options[
       mountainLocationSelect.selectedIndex
     ].text;
 
-  if(!data){
+  if(!url){
     mountainCamBox.innerHTML =
       '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
     return;
   }
 
-  // If it’s an object
-  if(typeof data === "object"){
-    mountainCamBox.innerHTML = `
-      <div class="camTitle">${name}</div>
-      <img class="camFrame" src="${data.src}">
-      <div style="margin-top:8px;">
-        <a href="${data.liveUrl}" target="_blank" style="color:#38bdf8;font-size:14px;">
-          🔴 View Live Cam
-        </a>
-      </div>
-    `;
-    return;
-  }
-
-  // Otherwise assume it’s just a URL
   mountainCamBox.innerHTML = `
     <div class="camTitle">${name}</div>
-    <img class="camFrame" src="${data}">
+    <img class="camFrame" src="${url}">
   `;
 };
   
