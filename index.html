@@ -3346,7 +3346,8 @@ chart = new Chart(ctx,{
    plugins:{
   legend:{display:false},
 
-afterDatasetsDraw(chart){
+afterDatasetsDraw(chart
+                 console.log("LABEL DRAWING");
   const ctx = chart.ctx;
 const yScale = chart.scales.y;
 
