@@ -3290,7 +3290,22 @@ ccDew.innerHTML =
   "Dew Point <span>" +
   Math.round(latest.dewpoint.value * 9/5 + 32) +
   "°</span>";
+// Rain today + last 30 days (NOAA gives mm)
+const rainDay =
+  latest.precipitationLastHour?.value != null
+    ? (latest.precipitationLastHour.value * 0.0393701).toFixed(2)
+    : "0.00";
 
+const rainMonth =
+  latest.precipitationLast3Hours?.value != null
+    ? (latest.precipitationLast3Hours.value * 0.0393701).toFixed(2)
+    : "0.00";
+
+ccRainDay.innerHTML =
+  "Rain (1h) <span>" + rainDay + " in</span>";
+
+ccRainMonth.innerHTML =
+  "Rain (3h) <span>" + rainMonth + " in</span>";
 document.getElementById("ccUpdated").textContent =
   "Updated " + new Date(latest.timestamp).toLocaleTimeString();
 // chart
