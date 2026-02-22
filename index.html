@@ -3322,85 +3322,40 @@ Chart.register({
     ctx.fillStyle = "#ffffff";
     ctx.font = "11px system-ui";
 
-    // ===== PAST (dataset 0) =====
+    // PAST (dataset 0)
     const pastMeta = chart.getDatasetMeta(0);
     const pastData = chart.data.datasets[0].data;
 
-    [0,2,4].forEach(i => {
+    [0,2,4].forEach(i=>{
+      if(!pastMeta.data[i] || pastData[i]==null) return;
 
-      if(!pastMeta.data[i] || pastData[i] == null) return;
+      const pt=pastMeta.data[i];
+      const val=pastData[i];
+      const frac=(val-yScale.min)/(yScale.max-yScale.min);
+      const yOffset=frac>.6?14:-10;
 
-      const pt = pastMeta.data[i];
-      const val = pastData[i];
-
-      const frac = (val - yScale.min) / (yScale.max - yScale.min);
-      const yOffset = frac > 0.6 ? 14 : -10;
-
-      ctx.fillText(Math.round(val)+"°", pt.x-8, pt.y+yOffset);
+      ctx.fillText(Math.round(val)+"°",pt.x-8,pt.y+yOffset);
     });
 
-    // ===== FUTURE (dataset 1) =====
-    const futureMeta = chart.getDatasetMeta(1);
-    const futureData = chart.data.datasets[1].data;
+    // FUTURE (dataset 1)
+    const futureMeta=chart.getDatasetMeta(1);
+    const futureData=chart.data.datasets[1].data;
 
-    const start = pastData.length - 1; // where forecast begins
+    const start=pastData.length-1;
 
-    [start+1, start+3, start+5].forEach(i => {
+    [start+1,start+3,start+5].forEach(i=>{
+      if(!futureMeta.data[i]||futureData[i]==null) return;
 
-      if(!futureMeta.data[i] || futureData[i] == null) return;
+      const pt=futureMeta.data[i];
+      const val=futureData[i];
+      const frac=(val-yScale.min)/(yScale.max-yScale.min);
+      const yOffset=frac>.6?14:-10;
 
-      const pt = futureMeta.data[i];
-      const val = futureData[i];
-
-      const frac = (val - yScale.min) / (yScale.max - yScale.min);
-      const yOffset = frac > 0.6 ? 14 : -10;
-
-      ctx.fillText(Math.round(val)+"°", pt.x-8, pt.y+yOffset);
+      ctx.fillText(Math.round(val)+"°",pt.x-8,pt.y+yOffset);
     });
 
     ctx.restore();
   }
-});
-
- // ===== FUTURE FORECAST (dataset 1) =====
-const futureMeta = chart.getDatasetMeta(1);
-const futureData = chart.data.datasets[1].data;
-
-const start = pastTemps.length - 1;
-
-[start+1, start+3, start+5].forEach(i => {
-
-  if(!futureMeta.data[i] || futureData[i] == null) return;
-
-  const pt = futureMeta.data[i];
-  const val = futureData[i];
-
-  const frac = (val - yScale.min) / (yScale.max - yScale.min);
-  const yOffset = frac > 0.6 ? 14 : -10;
-
-  ctx.fillText(
-    Math.round(val) + "°",
-    pt.x - 8,
-    pt.y + yOffset
-  );
-});
-    if(!futureMeta.data[i] || futureData[i] == null) return;
-
-    const pt = futureMeta.data[i];
-    const val = futureData[i];
-
-    const frac = (val - yScale.min) / (yScale.max - yScale.min);
-    const yOffset = frac > 0.6 ? 14 : -10;
-
-    ctx.fillText(
-      Math.round(val) + "°",
-      pt.x - 8,
-      pt.y + yOffset
-    );
-  });
-
-  ctx.restore();
-}
 });
 chart = new Chart(ctx,{
   type:"line",
