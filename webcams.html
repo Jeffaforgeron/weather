@@ -262,21 +262,36 @@ citySelect.onchange = ()=>{
 
 mountainLocationSelect.onchange = ()=>{
 
-  const url = mountainLocationSelect.value;
+  const raw = mountainLocationSelect.value;
   const name =
     mountainLocationSelect.options[
       mountainLocationSelect.selectedIndex
     ].text;
 
-  if(!url){
+  if(!raw){
     mountainCamBox.innerHTML =
       '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
     return;
   }
 
+  // CLICK-TO-OPEN LINK (Palm Springs, etc)
+  if(raw.startsWith("link|")){
+
+    const url = raw.replace("link|","");
+
+    mountainCamBox.innerHTML = `
+      <div class="camTitle">${name}</div>
+      <a href="${url}" target="_blank">
+        <img class="camFrame" src="https://placehold.co/800x450?text=Click+to+open+${encodeURIComponent(name)}">
+      </a>
+    `;
+    return;
+  }
+
+  // NORMAL IMAGE (Timberline)
   mountainCamBox.innerHTML = `
     <div class="camTitle">${name}</div>
-    <img class="camFrame" src="${url}">
+    <img class="camFrame" src="${raw}">
   `;
 };
   
