@@ -3345,7 +3345,8 @@ chart = new Chart(ctx,{
     responsive:true,
    plugins:{
   legend:{display:false},
-afterDatasetsDraw(chart){
+tempLabels:{
+  afterDatasetsDraw(chart){
 
   const ctx = chart.ctx;
   const yScale = chart.scales.y;
@@ -3391,9 +3392,9 @@ afterDatasetsDraw(chart){
 
   });
 
-  ctx.restore();
-}
-   },
+ctx.restore();
+    }
+  },
     scales:{
       x:{grid:{display:false}},
       y:{grid:{color:"rgba(255,255,255,.04)"}}
