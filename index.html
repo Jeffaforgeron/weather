@@ -3192,8 +3192,13 @@ if(chart){
 
     ccTemp.textContent = Math.round(latest.temperature.value*9/5+32)+"°";
     ccWx.innerHTML="Sky <span>"+latest.textDescription+"</span>";
-const sustained = Math.round(latest.windSpeed?.value || 0);
-const gust = latest.windGust?.value ? Math.round(latest.windGust.value) : null;
+const sustained = latest.windSpeed?.value != null
+  ? Math.round(latest.windSpeed.value * 2.23694)
+  : 0;
+
+const gust = latest.windGust?.value != null
+  ? Math.round(latest.windGust.value * 2.23694)
+  : null;
 
 ccWind.innerHTML = gust
   ? `Wind <span>${sustained} mph (gust ${gust})</span>`
@@ -3222,7 +3227,7 @@ ccWind.innerHTML = gust
   ccTemp.textContent = Math.round(temp) + "°";
   ccHum.innerHTML = `Humidity <span>${obs.relative_humidity_value_1?.value != null ? Math.round(obs.relative_humidity_value_1.value)+"%" : "—"}</span>`;
   ccDew.innerHTML = `Dew Point <span>${obs.dew_point_temperature_value_1?.value != null ? Math.round(obs.dew_point_temperature_value_1.value)+"°" : "—"}</span>`;
- ccWind.innerHTML = `Wind <span>${obs.wind_speed_value_1?.value}</span>`;
+ccWind.innerHTML = `Wind <span>${Math.round(obs.wind_speed_value_1?.value || 0)} mph</span>`;
   ccWx.innerHTML = "Sky <span>Mountain Station</span>";
 
   return;
