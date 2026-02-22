@@ -3247,13 +3247,12 @@ const end=new Date().toISOString();
 const start=new Date(Date.now()-12*3600000).toISOString();
 
 const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
+  const latestResp = await fetch(`${stationURL}/observations/latest`);
+const latestJSON = await latestResp.json();
+const latest = latestJSON.properties;
 const oj = await obsResp.json();
 // === GET TRUE LATEST OBSERVATION (for current conditions) ===
-const latestFeature = oj.features
-  .sort((a,b)=>new Date(a.properties.timestamp)-new Date(b.properties.timestamp))
-  .pop();
 
-const latest = latestFeature.properties;
 
 const pastTemps = [];
 const futureTemps = [];
