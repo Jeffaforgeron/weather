@@ -3224,9 +3224,7 @@ const end=new Date().toISOString();
 const start=new Date(Date.now()-12*3600000).toISOString();
 
 const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
-  const latestResp = await fetch(`${stationURL}/observations/latest`);
-
-const latest = latestJSON.properties;
+  
 const oj = await obsResp.json();
 // === GET TRUE LATEST OBSERVATION (for current conditions) ===
 
