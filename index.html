@@ -3199,7 +3199,8 @@ const sustained = latest.windSpeed?.value != null
 const gust = latest.windGust?.value != null
   ? Math.round(latest.windGust.value * 2.23694)
   : null;
-
+console.log("OBS TIME:", latest.timestamp);
+console.log("WIND m/s:", latest.windSpeed?.value);
 ccWind.innerHTML = gust
   ? `Wind <span>${sustained} mph (gust ${gust})</span>`
   : `Wind <span>${sustained} mph</span>`;
