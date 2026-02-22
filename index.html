@@ -3281,12 +3281,12 @@ ccWx.innerHTML =
 
 const sustained =
   latest.windSpeed?.value != null
-    ? Math.round(latest.windSpeed.value * 2.23694)
+    ? Math.round(latest.windSpeed.value / 1.60934)
     : 0;
 
 const gust =
   latest.windGust?.value != null
-    ? Math.round(latest.windGust.value * 2.23694)
+    ? Math.round(latest.windGust.value / 1.60934)
     : null;
 
 ccWind.innerHTML = gust
