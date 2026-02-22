@@ -3285,15 +3285,22 @@ ccWx.innerHTML =
 
 // Wind (NOAA gives meters/sec — convert once to mph)
 
-const sustained =
-  latest.windSpeed?.value != null
-    ? Math.round(latest.windSpeed.value * 2.23694)
-    : 0;
-console.log(latest.windSpeed);
-const gust =
-  latest.windGust?.value != null
-    ? Math.round(latest.windGust.value * 2.23694)
-    : null;
+// Wind (NOAA is giving km/h — convert to mph)
+
+const windValue = latest.windSpeed?.value;
+const gustValue = latest.windGust?.value;
+
+let sustained = 0;
+let gust = null;
+
+// km/h → mph
+if (windValue != null) {
+  sustained = Math.round(windValue * 0.621371);
+}
+
+if (gustValue != null) {
+  gust = Math.round(gustValue * 0.621371);
+}
 
 ccWind.innerHTML = gust
   ? `Wind <span>${sustained} mph (gust ${gust})</span>`
