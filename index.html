@@ -3275,7 +3275,8 @@ future.forEach((h,i)=>{
 const latestResp = await fetch(`${stationURL}/observations/latest`);
 const latestJSON = await latestResp.json();
 const latest = latestJSON.properties;
-
+console.log("WIND OBJECT:", latest.windSpeed);
+console.log("GUST OBJECT:", latest.windGust);
 ccTemp.textContent =
   Math.round(latest.temperature.value * 9/5 + 32) + "°";
 
