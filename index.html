@@ -3345,58 +3345,55 @@ chart = new Chart(ctx,{
     responsive:true,
    plugins:{
   legend:{display:false},
+afterDatasetsDraw(chart){
 
-afterDatasetsDraw(chart
-                 console.log("LABEL DRAWING");
   const ctx = chart.ctx;
-const yScale = chart.scales.y;
+  const yScale = chart.scales.y;
 
-ctx.save();
-ctx.fillStyle = "#e5e7eb";
-ctx.font = "10px system-ui";
+  ctx.save();
+  ctx.fillStyle = "#e5e7eb";
+  ctx.font = "10px system-ui";
 
-chart.data.datasets.forEach((ds, di) => {
+  chart.data.datasets.forEach((ds) => {
 
-  const meta = chart.getDatasetMeta(di);
-  if (!meta || !meta.data.length) return;
+    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(ds));
+    if (!meta || !meta.data.length) return;
 
-  const pts = [];
+    const pts = [];
 
-  meta.data.forEach((pt, i) => {
-    if (ds.data[i] != null) {
-      pts.push({ pt, val: ds.data[i] });
-    }
+    meta.data.forEach((pt, i) => {
+      if (ds.data[i] != null) pts.push({ pt, val: ds.data[i] });
+    });
+
+    if (pts.length < 4) return;
+
+    const step = Math.floor(pts.length / 4);
+
+    [step, step*2, step*3].forEach(i => {
+
+      const p = pts[i];
+      if (!p) return;
+
+      const temp = Math.round(p.val) + "°";
+
+      const frac =
+        (p.val - yScale.min) / (yScale.max - yScale.min);
+
+      const yOffset = frac > 0.6 ? 14 : -8;
+
+      ctx.fillText(
+        temp,
+        p.pt.x - 8,
+        p.pt.y + yOffset
+      );
+
+    });
+
   });
 
-  if (pts.length < 4) return;
-
-  const step = Math.floor(pts.length / 4);
-
-  [step, step*2, step*3].forEach(i => {
-
-    const p = pts[i];
-    if (!p) return;
-
-    const temp = Math.round(p.val) + "°";
-
-    const frac =
-      (p.val - yScale.min) / (yScale.max - yScale.min);
-
-    const yOffset = frac > 0.6 ? 14 : -8;
-
-    ctx.fillText(
-      temp,
-      p.pt.x - 8,
-      p.pt.y + yOffset
-    );
-
-  });
-
-});
-
-ctx.restore();
+  ctx.restore();
 }
-},
+   },
     scales:{
       x:{grid:{display:false}},
       y:{grid:{color:"rgba(255,255,255,.04)"}}
