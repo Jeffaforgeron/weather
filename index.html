@@ -3341,11 +3341,28 @@ Chart.register({
     );
   });
 
-  // ===== FUTURE FORECAST (dataset 1) =====
-  const futureMeta = chart.getDatasetMeta(1);
-  const futureData = chart.data.datasets[1].data;
+ // ===== FUTURE FORECAST (dataset 1) =====
+const futureMeta = chart.getDatasetMeta(1);
+const futureData = chart.data.datasets[1].data;
 
-  [1,3,5].forEach(i => {
+const start = pastTemps.length - 1;
+
+[start+1, start+3, start+5].forEach(i => {
+
+  if(!futureMeta.data[i] || futureData[i] == null) return;
+
+  const pt = futureMeta.data[i];
+  const val = futureData[i];
+
+  const frac = (val - yScale.min) / (yScale.max - yScale.min);
+  const yOffset = frac > 0.6 ? 14 : -10;
+
+  ctx.fillText(
+    Math.round(val) + "°",
+    pt.x - 8,
+    pt.y + yOffset
+  );
+});
     if(!futureMeta.data[i] || futureData[i] == null) return;
 
     const pt = futureMeta.data[i];
