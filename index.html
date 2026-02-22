@@ -1732,6 +1732,18 @@ html, body {
   background:#020617;
   box-shadow:0 0 10px rgba(56,189,248,.25);
 }
+
+  .temp-label-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:#e5e7eb;
+  margin-bottom:4px;
+}
+
+.future-label{
+  opacity:.7;
+}
 </style>
 </head>
 
@@ -1918,7 +1930,10 @@ html, body {
     <div class="cc-left">
       <div id="ccTemp" class="cc-temp">—</div>
       <div id="ccFeels" class="cc-feels"></div>
-      <div class="chart-title">Temperature – Past 6 Hours</div>
+      <div class="temp-label-row">
+  <span>Temperature – Past 6 Hours</span>
+  <span class="future-label">NWS – Next 6 Hours</span>
+</div>
       <canvas id="ccChart"></canvas>
     </div>
 
