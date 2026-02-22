@@ -3348,53 +3348,52 @@ chart = new Chart(ctx,{
 
 afterDatasetsDraw(chart){
   const ctx = chart.ctx;
-  const yScale = chart.scales.y;
+const yScale = chart.scales.y;
 
-  ctx.save();
-  ctx.fillStyle = "#e5e7eb";
-  ctx.font = "10px system-ui";
+ctx.save();
+ctx.fillStyle = "#e5e7eb";
+ctx.font = "10px system-ui";
 
-  chart.data.datasets.forEach((ds) => {
+chart.data.datasets.forEach((ds, di) => {
 
-    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(ds));
-    if (!meta || !meta.data.length) return;
+  const meta = chart.getDatasetMeta(di);
+  if (!meta || !meta.data.length) return;
 
-    // grab only real points
-    const points = meta.data
-      .map((pt, i) => ({ pt, val: ds.data[i] }))
-      .filter(p => p.val != null);
+  const pts = [];
 
-    if (points.length < 3) return;
+  meta.data.forEach((pt, i) => {
+    if (ds.data[i] != null) {
+      pts.push({ pt, val: ds.data[i] });
+    }
+  });
 
-    // we want 3 labels
-    const step = Math.floor(points.length / 4);
+  if (pts.length < 4) return;
 
-    [step, step*2, step*3].forEach(idx => {
+  const step = Math.floor(pts.length / 4);
 
-      const p = points[idx];
-      if (!p) return;
+  [step, step*2, step*3].forEach(i => {
 
-      const temp = Math.round(p.val) + "°";
+    const p = pts[i];
+    if (!p) return;
 
-      // how high on chart (0 = bottom, 1 = top)
-      const frac =
-        (p.val - yScale.min) / (yScale.max - yScale.min);
+    const temp = Math.round(p.val) + "°";
 
-      // near top → draw below
-      // near bottom → draw above
-      const yOffset = frac > 0.6 ? 12 : -6;
+    const frac =
+      (p.val - yScale.min) / (yScale.max - yScale.min);
 
-      ctx.fillText(
-        temp,
-        p.pt.x - 8,
-        p.pt.y + yOffset
-      );
+    const yOffset = frac > 0.6 ? 14 : -8;
 
-    });
+    ctx.fillText(
+      temp,
+      p.pt.x - 8,
+      p.pt.y + yOffset
+    );
 
   });
 
-  ctx.restore();
+});
+
+ctx.restore();
 }
 },
     scales:{
