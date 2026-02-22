@@ -3094,18 +3094,7 @@ async function fetchRAWS(stationId){
 }
 
 
-function calcConfidence(nextTemps){
 
-  if(!nextTemps || nextTemps.length < 2) return "Confidence: —";
-
-  const max = Math.max(...nextTemps);
-  const min = Math.min(...nextTemps);
-  const spread = max - min;
-
-  if(spread < 3) return "🟢 Confidence: High";
-  if(spread < 6) return "🟡 Confidence: Moderate";
-  return "🔴 Confidence: Low";
-}
   
 async function loadCity(lat,lon){
 
@@ -3123,8 +3112,7 @@ const nextTemps = hourlyJSON.properties.periods
   .slice(0,12)
   .map(h => h.temperature);
 console.log("NEXT TEMPS:", nextTemps);
-document.getElementById("ccConfidence").textContent =
-  calcConfidence(nextTemps);
+
   // ===== SUNRISE / SUNSET =====
 try {
   const sunResp = await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`);
