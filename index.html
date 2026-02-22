@@ -3310,7 +3310,49 @@ document.getElementById("ccUpdated").textContent =
   "Updated " + new Date(latest.timestamp).toLocaleTimeString();
 // chart
 if(chart) chart.destroy();
+Chart.register({
+  id: "tempLabels",
+  afterDatasetsDraw(chart){
 
+    const ctx = chart.ctx;
+    const yScale = chart.scales.y;
+
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "11px system-ui";
+
+    [0,1].forEach(di => {
+
+      const meta = chart.getDatasetMeta(di);
+      const data = chart.data.datasets[di].data;
+
+      if(!meta || !meta.data.length) return;
+
+      [1,3,5].forEach(i => {
+
+        if(data[i] == null) return;
+
+        const pt = meta.data[i];
+        const val = data[i];
+
+        const frac =
+          (val - yScale.min) / (yScale.max - yScale.min);
+
+        const yOffset = frac > 0.6 ? 14 : -10;
+
+        ctx.fillText(
+          Math.round(val) + "°",
+          pt.x - 8,
+          pt.y + yOffset
+        );
+
+      });
+
+    });
+
+    ctx.restore();
+  }
+});
 chart = new Chart(ctx,{
   type:"line",
   data:{
@@ -3345,19 +3387,7 @@ chart = new Chart(ctx,{
     responsive:true,
    plugins:{
   legend:{display:false},
-tempLabels:{
- afterDatasetsDraw(chart){
 
-  const ctx = chart.ctx;
-
-  ctx.save();
-  ctx.fillStyle = "red";
-  ctx.font = "20px Arial";
-
-  ctx.fillText("TEST", 100, 100);
-
-  ctx.restore();
-}
   },
 
 },
