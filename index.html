@@ -3346,40 +3346,56 @@ chart = new Chart(ctx,{
    plugins:{
   legend:{display:false},
 
-  afterDatasetsDraw(chart){
-    const ctx = chart.ctx;
-    ctx.save();
-    ctx.fillStyle="#e5e7eb";
-    ctx.font="10px system-ui";
+afterDatasetsDraw(chart){
+  const ctx = chart.ctx;
+  const yScale = chart.scales.y;
 
-    chart.data.datasets.forEach((ds,di)=>{
-      const meta = chart.getDatasetMeta(di);
+  ctx.save();
+  ctx.fillStyle = "#e5e7eb";
+  ctx.font = "10px system-ui";
 
-      meta.data.forEach((pt,i)=>{
+  chart.data.datasets.forEach((ds) => {
 
-        // Past temps – label all
-        if(di===0){
-          ctx.fillText(
-            Math.round(ds.data[i])+"°",
-            pt.x-6,
-            pt.y-8
-          );
-        }
+    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(ds));
+    if (!meta || !meta.data.length) return;
 
-        // Future temps – label every other
-        if(di===1 && i%2===0 && ds.data[i]!=null){
-          ctx.fillText(
-            Math.round(ds.data[i])+"°",
-            pt.x-6,
-            pt.y-8
-          );
-        }
+    // grab only real points
+    const points = meta.data
+      .map((pt, i) => ({ pt, val: ds.data[i] }))
+      .filter(p => p.val != null);
 
-      });
+    if (points.length < 3) return;
+
+    // we want 3 labels
+    const step = Math.floor(points.length / 4);
+
+    [step, step*2, step*3].forEach(idx => {
+
+      const p = points[idx];
+      if (!p) return;
+
+      const temp = Math.round(p.val) + "°";
+
+      // how high on chart (0 = bottom, 1 = top)
+      const frac =
+        (p.val - yScale.min) / (yScale.max - yScale.min);
+
+      // near top → draw below
+      // near bottom → draw above
+      const yOffset = frac > 0.6 ? 12 : -6;
+
+      ctx.fillText(
+        temp,
+        p.pt.x - 8,
+        p.pt.y + yOffset
+      );
+
     });
 
-    ctx.restore();
-  }
+  });
+
+  ctx.restore();
+}
 },
     scales:{
       x:{grid:{display:false}},
