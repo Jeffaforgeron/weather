@@ -3243,7 +3243,11 @@ const start=new Date(Date.now()-12*3600000).toISOString();
 const obsResp = await fetch(`${stationURL}/observations?start=${start}&end=${end}`);
 const oj = await obsResp.json();
 // === GET TRUE LATEST OBSERVATION (for current conditions) ===
-const latest = oj.features.slice(-1)[0].properties;
+const latestFeature = oj.features
+  .sort((a,b)=>new Date(a.properties.timestamp)-new Date(b.properties.timestamp))
+  .pop();
+
+const latest = latestFeature.properties;
 
 const pastTemps = [];
 const futureTemps = [];
