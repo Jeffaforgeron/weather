@@ -73,6 +73,21 @@ select{
   color:#64748b;
   font-size:12px;
 }
+.camFilter{
+  background:#0b1220;
+  color:#38bdf8;
+  border:1px solid #38bdf8;
+  padding:6px 12px;
+  margin:0 6px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.camFilter:hover{
+  background:#38bdf8;
+  color:#020617;
+}  
 </style>
 
 </head>
@@ -94,6 +109,12 @@ select{
 </div>
 <div class="card">
   <h2 style="margin-top:0;">🗺 Live Camera Network</h2>
+  <div style="margin-bottom:12px;text-align:center;">
+  <button onclick="setFilter('all')" class="camFilter">All</button>
+  <button onclick="setFilter('coastal')" class="camFilter">Coastal</button>
+  <button onclick="setFilter('mountain')" class="camFilter">Mountain</button>
+  <button onclick="setFilter('city')" class="camFilter">City</button>
+</div>
   <div id="map" style="height:500px;border-radius:14px;"></div>
 </div>
 
@@ -111,6 +132,7 @@ const webcams = [
     name: "Yaquina Bay – Newport, OR",
     lat: 44.62,
     lon: -124.05,
+    type: "coastal",
     source: "iframe",
     url: "https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
   },
@@ -118,6 +140,7 @@ const webcams = [
     name: "Timberline Lodge – Mt Hood, OR",
     lat: 45.33,
     lon: -121.71,
+    type: "mountain",
     source: "image",
     url: "https://timberlinelodge.com/snowcameras/lodge.jpg"
   }
@@ -138,37 +161,55 @@ L.tileLayer(
 ).addTo(map);
 
 // Add markers
-let activeMarker = null;
+let markers = [];
+let currentFilter = "all";
 
-webcams.forEach(cam => {
+function renderMarkers(){
 
-  const marker = L.circleMarker(
-    [cam.lat, cam.lon],
-    {
-      radius: 9,
-      color: "#38bdf8",
-      fillColor: "#38bdf8",
-      fillOpacity: 1,
-      weight: 2
-    }
-  ).addTo(map);
+  // Remove old markers
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
 
-  marker.on("click", () => {
+  webcams.forEach(cam => {
 
-    // Reset previous marker
-    if(activeMarker){
-      activeMarker.setStyle({ radius: 9 });
+    if(currentFilter !== "all" && cam.type !== currentFilter){
+      return;
     }
 
-    // Enlarge clicked marker
-    marker.setStyle({ radius: 13 });
-    activeMarker = marker;
+    const marker = L.circleMarker(
+      [cam.lat, cam.lon],
+      {
+        radius: 9,
+        color: "#38bdf8",
+        fillColor: "#38bdf8",
+        fillOpacity: 1,
+        weight: 2
+      }
+    ).addTo(map);
 
-    map.setView([cam.lat, cam.lon], 8);
-    loadCamera(cam);
+    marker.on("click", () => {
+
+      if(activeMarker){
+        activeMarker.setStyle({ radius: 9 });
+      }
+
+      marker.setStyle({ radius: 13 });
+      activeMarker = marker;
+
+      map.setView([cam.lat, cam.lon], 8);
+      loadCamera(cam);
+    });
+
+    markers.push(marker);
   });
+}
 
-});
+function setFilter(type){
+  currentFilter = type;
+  renderMarkers();
+}
+
+renderMarkers();
 
 function loadCamera(cam){
 
