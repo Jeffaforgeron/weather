@@ -276,7 +276,19 @@ const webcams = [
     type: "mountain",
     source: "image",
     url: "https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-yosfalls/latest.jpg"
-  }
+  },
+ {
+  name: "Toro Peak – CA",
+  lat: 33.523,
+  lon: -116.423,
+  type: "mountain",
+  source: "multi",
+  views: [
+    { label: "North", url: "https://cdn.hpwren.ucsd.edu/RT/tp-n-mobo-c.jpg" },
+    { label: "East", url: "https://cdn.hpwren.ucsd.edu/RT/tp-e-mobo-c.jpg" },
+    { label: "West", url: "https://cdn.hpwren.ucsd.edu/RT/tp-w-mobo-c.jpg" }
+  ]
+} 
 ];
 
 
@@ -393,8 +405,41 @@ else if(cam.source === "image"){
       </div>
     `;
   }
-}
+  else if(cam.source === "multi"){
 
+  let buttons = "";
+
+  cam.views.forEach(view => {
+    buttons += `
+      <button onclick="switchView('${view.url}')"
+        style="
+          margin:4px;
+          padding:6px 12px;
+          border-radius:20px;
+          border:1px solid #38bdf8;
+          background:#0b1220;
+          color:#38bdf8;
+          cursor:pointer;
+        ">
+        ${view.label}
+      </button>
+    `;
+  });
+
+  camBox.innerHTML = `
+    <div class="camTitle">${cam.name}</div>
+    <div style="margin-bottom:10px;">${buttons}</div>
+    <img id="multiCamImage" class="camFrame"
+         src="${cam.views[0].url}">
+  `;
+}
+}
+function switchView(url){
+  const img = document.getElementById("multiCamImage");
+  if(img){
+    img.src = url;
+  }
+}
 </script>
 
 <div class="footer">
