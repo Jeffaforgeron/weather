@@ -5,6 +5,12 @@
 <title>Webcams – Forgeron Weather</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 body{
@@ -86,215 +92,85 @@ select{
 ">
 🚧 UNDER CONSTRUCTION — cameras coming soon
 </div>
-
 <div class="card">
-<h2 style="margin-top:0;margin-bottom:12px;font-size:18px;">
-  🌊 Live Coastal Cameras
-</h2>
-  <!-- STATE -->
-  <select id="stateSelect">
-    <option value="">Select State</option>
-    <option value="OR">Oregon</option>
-    <option value="WA">Washington</option>
-    <option value="CA">California</option>
-    <option value="HI">Hawaii</option>
-  </select>
-
-  <!-- CITY -->
-  <select id="citySelect" disabled>
-    <option value="">Select City</option>
-  </select>
-
-  <!-- CAMERA -->
-  <div id="camBox" style="margin-top:20px;text-align:center;">
-    <div style="color:#94a3b8">Select a city to view webcam</div>
-  </div>
-
+  <h2 style="margin-top:0;">🗺 Live Camera Network</h2>
+  <div id="map" style="height:500px;border-radius:14px;"></div>
 </div>
 
-
-
-
-  <div class="card" style="margin-top:24px;">
-
-  <h2 style="margin-top:0;margin-bottom:12px;font-size:18px;">
-    🏔 Live Mountain Cameras
-  </h2>
-
-  <!-- STATE -->
-  <select id="mountainStateSelect">
-    <option value="">Select State</option>
-    <option value="OR">Oregon</option>
-    <option value="WA">Washington</option>
-    <option value="CA">California</option>
-  </select>
-
-  <!-- MOUNTAIN -->
-  <select id="mountainLocationSelect" disabled>
-    <option value="">Select Mountain</option>
-  </select>
-
-  <div id="mountainCamBox" style="margin-top:18px;text-align:center;">
-    <div style="color:#94a3b8">Select a mountain to view webcam</div>
+<div class="card" style="margin-top:24px;">
+  <div id="camBox" style="text-align:center;">
+    <div style="color:#94a3b8">
+      Click a camera marker on the map
+    </div>
   </div>
-
 </div>
-
 <script>
 
-const stateSelect = document.getElementById("stateSelect");
-const citySelect = document.getElementById("citySelect");
+const webcams = [
+  {
+    name: "Yaquina Bay – Newport, OR",
+    lat: 44.62,
+    lon: -124.05,
+    source: "iframe",
+    url: "https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
+  },
+  {
+    name: "Timberline Lodge – Mt Hood, OR",
+    lat: 45.33,
+    lon: -121.71,
+    source: "image",
+    url: "https://timberlinelodge.com/snowcameras/lodge.jpg"
+  }
+];
+
 const camBox = document.getElementById("camBox");
-const mountainStateSelect = document.getElementById("mountainStateSelect");
-const mountainLocationSelect = document.getElementById("mountainLocationSelect");
-const mountainCamBox = document.getElementById("mountainCamBox");
 
+// Create map
+const map = L.map('map').setView([39.5, -98.35], 4);
 
-const webcams = {
-
-  OR: [
-    [
-      "Newport – Yaquina Bay",
-      "iframe|https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
-    ]
-  ]
-
-};
-const mountainCams = {
-
-  OR: [
-    [
-      "Timberline Lodge (Mt Hood)",
-      "https://timberlinelodge.com/snowcameras/lodge.jpg"
-    ]
-  ],
-  // California (Palm Springs Tramway)
-CA: [
-  [
-    "Palm Springs Tram – Long Valley",
-    "link|https://pstramway.com/long-valley-cam/"
-  ]
-]
-
-
-};
-stateSelect.onchange = ()=>{
-
-  citySelect.innerHTML = '<option value="">Select City</option>';
-  camBox.innerHTML = '<div style="color:#94a3b8">Select a city to view webcam</div>';
-
-  const s = stateSelect.value;
-
-  if(webcams[s]){
-    webcams[s]
-      .sort((a,b)=>a[0].localeCompare(b[0]))
-      .forEach(c=>{
-        citySelect.innerHTML += `<option value="${c[1]}">${c[0]}</option>`;
-      });
+// Add map tiles
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {
+    attribution: '&copy; OpenStreetMap contributors'
   }
+).addTo(map);
 
-  citySelect.disabled = !s;
-};
+// Add markers
+webcams.forEach(cam => {
 
-citySelect.onchange = ()=>{
+  const marker = L.circleMarker(
+    [cam.lat, cam.lon],
+    {
+      radius: 8,
+      color: "#38bdf8",
+      fillColor: "#38bdf8",
+      fillOpacity: 0.9
+    }
+  ).addTo(map);
 
-  const raw = citySelect.value;
-  const name = citySelect.options[citySelect.selectedIndex].text;
-
-  // LIVE IFRAME
-  if(raw.startsWith("iframe|")){
-
-    const url = raw.replace("iframe|","");
-
-    camBox.innerHTML = `
-      <div class="camTitle">${name}</div>
-      <iframe
-        src="${url}"
-        style="width:100%;height:450px;border-radius:12px;border:none;"
-        allowfullscreen
-      ></iframe>
-    `;
-    return;
-  }
-
-  // CLICK-TO-OPEN LINK
-  if(raw.startsWith("link|")){
-
-    const url = raw.replace("link|","");
-
-    camBox.innerHTML = `
-      <div class="camTitle">${name}</div>
-      <a href="${url}" target="_blank">
-        <img class="camFrame" src="https://placehold.co/800x450?text=Click+to+open+${encodeURIComponent(name)}">
-      </a>
-    `;
-    return;
-  }
-
-  // NORMAL IMAGE
-  camBox.innerHTML = `
-    <div class="camTitle">${name}</div>
-    <img class="camFrame" src="${raw}">
-  `;
-};
-
-  mountainStateSelect.onchange = ()=>{
-
-  mountainLocationSelect.innerHTML =
-    '<option value="">Select Mountain</option>';
-
-  mountainCamBox.innerHTML =
-    '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
-
-  const s = mountainStateSelect.value;
-
-  if(mountainCams[s]){
-   mountainCams[s]
-  .sort((a,b)=>a[0].localeCompare(b[0]))
-  .forEach(m=>{
-  mountainLocationSelect.innerHTML +=
-    `<option value="${m[1]}">${m[0]}</option>`;
+  marker.on("click", () => loadCamera(cam));
 });
-  }
 
-  mountainLocationSelect.disabled = !s;
-};
+function loadCamera(cam){
 
-mountainLocationSelect.onchange = ()=>{
-
-  const raw = mountainLocationSelect.value;
-  const name =
-    mountainLocationSelect.options[
-      mountainLocationSelect.selectedIndex
-    ].text;
-
-  if(!raw){
-    mountainCamBox.innerHTML =
-      '<div style="color:#94a3b8">Select a mountain to view webcam</div>';
-    return;
-  }
-
-  // CLICK-TO-OPEN LINK (Palm Springs, etc)
-  if(raw.startsWith("link|")){
-
-    const url = raw.replace("link|","");
-
-    mountainCamBox.innerHTML = `
-      <div class="camTitle">${name}</div>
-      <a href="${url}" target="_blank">
-        <img class="camFrame" src="https://placehold.co/800x450?text=Click+to+open+${encodeURIComponent(name)}">
-      </a>
+  if(cam.source === "iframe"){
+    camBox.innerHTML = `
+      <div class="camTitle">${cam.name}</div>
+      <iframe src="${cam.url}"
+        style="width:100%;height:450px;border-radius:12px;border:none;">
+      </iframe>
     `;
-    return;
   }
 
-  // NORMAL IMAGE (Timberline)
-  mountainCamBox.innerHTML = `
-    <div class="camTitle">${name}</div>
-    <img class="camFrame" src="${raw}">
-  `;
-};
-  
+  if(cam.source === "image"){
+    camBox.innerHTML = `
+      <div class="camTitle">${cam.name}</div>
+      <img class="camFrame" src="${cam.url}?t=${Date.now()}">
+    `;
+  }
+}
+
 </script>
 
 <div class="footer">
