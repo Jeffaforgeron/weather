@@ -150,7 +150,10 @@ weight: 2
     }
   ).addTo(map);
 
-  marker.on("click", () => loadCamera(cam));
+  marker.on("click", () => {
+  map.setView([cam.lat, cam.lon], 8);
+  loadCamera(cam);
+});
 });
 
 function loadCamera(cam){
