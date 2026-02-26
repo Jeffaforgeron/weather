@@ -142,10 +142,11 @@ webcams.forEach(cam => {
   const marker = L.circleMarker(
     [cam.lat, cam.lon],
     {
-      radius: 8,
-      color: "#38bdf8",
-      fillColor: "#38bdf8",
-      fillOpacity: 0.9
+      radius: 9,
+color: "#38bdf8",
+fillColor: "#38bdf8",
+fillOpacity: 1,
+weight: 2
     }
   ).addTo(map);
 
