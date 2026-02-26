@@ -360,12 +360,20 @@ function loadCamera(cam){
     `;
   }
 
-  else if(cam.source === "image"){
-    camBox.innerHTML = `
-      <div class="camTitle">${cam.name}</div>
-      <img class="camFrame" src="${cam.url}?t=${Date.now()}">
-    `;
-  }
+else if(cam.source === "image"){
+
+  // Do not add cache-buster for Pixelcaster feeds
+  const needsTimestamp = !cam.url.includes("pixelcaster");
+
+  const imageUrl = needsTimestamp
+    ? `${cam.url}?t=${Date.now()}`
+    : cam.url;
+
+  camBox.innerHTML = `
+    <div class="camTitle">${cam.name}</div>
+    <img class="camFrame" src="${imageUrl}">
+  `;
+}
 
   else if(cam.source === "link"){
     camBox.innerHTML = `
