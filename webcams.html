@@ -337,10 +337,29 @@ function loadCamera(cam){
     `;
   }
 
-  if(cam.source === "image"){
+  else if(cam.source === "image"){
     camBox.innerHTML = `
       <div class="camTitle">${cam.name}</div>
       <img class="camFrame" src="${cam.url}?t=${Date.now()}">
+    `;
+  }
+
+  else if(cam.source === "link"){
+    camBox.innerHTML = `
+      <div class="camTitle">${cam.name}</div>
+      <div style="margin-top:20px;">
+        <a href="${cam.url}" target="_blank" style="
+          display:inline-block;
+          padding:12px 20px;
+          background:#38bdf8;
+          color:#020617;
+          border-radius:8px;
+          font-weight:600;
+          text-decoration:none;
+        ">
+          Open Live Camera →
+        </a>
+      </div>
     `;
   }
 }
