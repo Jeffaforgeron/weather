@@ -143,7 +143,7 @@ const webcams = [
     type: "mountain",
     source: "image",
     url: "https://timberlinelodge.com/snowcameras/lodge.jpg"
-  }
+  },
     // 🌊 COASTAL
 
   {
@@ -215,7 +215,7 @@ const webcams = [
     name: "Vail Mountain – CO",
     lat: 39.6403,
     lon: -106.3742,
-    type: "link",
+    type: "mountain",
     source: "link",
     url: "https://www.vail.com/the-mountain/mountain-conditions/mountain-cams.aspx"
   },
@@ -275,6 +275,7 @@ L.tileLayer(
 ).addTo(map);
 
 // Add markers
+let activeMarker = null;  
 let markers = [];
 let currentFilter = "all";
 
