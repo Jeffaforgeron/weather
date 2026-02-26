@@ -128,6 +128,8 @@ select{
 <script>
 
 const webcams = [
+  // 🌊 COASTAL
+
   {
     name: "Yaquina Bay – Newport, OR",
     lat: 44.62,
@@ -136,6 +138,27 @@ const webcams = [
     source: "iframe",
     url: "https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
   },
+
+  {
+    name: "Seaside Promenade – OR",
+    lat: 45.9932,
+    lon: -123.9226,
+    type: "coastal",
+    source: "link",
+    url: "https://www.seasideor.com/webcam/"
+  },
+
+  {
+    name: "Astoria / Columbia River – OR",
+    lat: 46.1879,
+    lon: -123.8313,
+    type: "coastal",
+    source: "link",
+    url: "https://www.portofastoria.com/live-cameras"
+  },
+
+  // 🏔 MOUNTAIN
+
   {
     name: "Timberline Lodge – Mt Hood, OR",
     lat: 45.33,
@@ -143,7 +166,28 @@ const webcams = [
     type: "mountain",
     source: "image",
     url: "https://timberlinelodge.com/snowcameras/lodge.jpg"
+  },
+
+  {
+    name: "Mt Bachelor – OR",
+    lat: 43.9794,
+    lon: -121.6886,
+    type: "mountain",
+    source: "link",
+    url: "https://www.mtbachelor.com/the-mountain/webcams"
+  },
+
+  // 🏙 CITY
+
+  {
+    name: "Portland Skyline – OR",
+    lat: 45.5152,
+    lon: -122.6784,
+    type: "city",
+    source: "link",
+    url: "https://www.kgw.com/portland-webcams"
   }
+
 ];
 
 const camBox = document.getElementById("camBox");
