@@ -125,6 +125,14 @@ select{
 </div>
 <div class="card">
   <h2 style="margin-top:0;">🗺 Live Camera Network</h2>
+  <div style="
+text-align:center;
+font-size:14px;
+color:#94a3b8;
+margin-bottom:10px;
+">
+Tap a blue marker to open a live webcam
+</div>
   <div style="margin-bottom:12px;text-align:center;">
   <button onclick="setFilter('all')" class="camFilter">All</button>
   <button onclick="setFilter('coastal')" class="camFilter">Coastal</button>
@@ -367,7 +375,7 @@ function renderMarkers(){
     const marker = L.circleMarker(
       [cam.lat, cam.lon],
       {
-        radius: 9,
+        radius: window.innerWidth < 700 ? 12 : 9,
         color: "#38bdf8",
         fillColor: "#38bdf8",
         fillOpacity: 1,
@@ -385,7 +393,13 @@ function renderMarkers(){
       activeMarker = marker;
 
       map.setView([cam.lat, cam.lon], 8);
-      loadCamera(cam);
+      camBox.innerHTML = `
+  <div style="padding:30px;color:#94a3b8;">
+    Loading camera...
+  </div>
+`;
+
+loadCamera(cam);
     });
 
     markers.push(marker);
