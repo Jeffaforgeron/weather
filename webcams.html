@@ -88,6 +88,19 @@ select{
   background:#38bdf8;
   color:#020617;
 }  
+.webcamMap{
+  height:500px;
+  border-radius:14px;
+}
+
+/* Mobile fix */
+@media (max-width:700px){
+
+  .webcamMap{
+    height:60vh;
+  }
+
+}  
 </style>
 
 </head>
@@ -115,7 +128,7 @@ select{
   <button onclick="setFilter('mountain')" class="camFilter">Mountain</button>
   <button onclick="setFilter('city')" class="camFilter">City</button>
 </div>
-  <div id="map" style="height:500px;border-radius:14px;"></div>
+  <div id="map" class="webcamMap"></div>
 </div>
 
 <div class="card" style="margin-top:24px;">
