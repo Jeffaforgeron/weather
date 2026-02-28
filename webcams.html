@@ -151,226 +151,296 @@ Tap a blue marker to open a live webcam
 </div>
 <script>
 
+
 const webcams = [
-  // 🌊 COASTAL
 
-  {
-    name: "Yaquina Bay – Newport, OR",
-    lat: 44.62,
-    lon: -124.05,
-    type: "coastal",
-    source: "iframe",
-    url: "https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
-  },
-
-
-  // 🏔 MOUNTAIN
-
-  {
-    name: "Timberline Lodge – Mt Hood, OR",
-    lat: 45.33,
-    lon: -121.71,
-    type: "mountain",
-    source: "image",
-    url: "https://timberlinelodge.com/snowcameras/lodge.jpg"
-  },
-
-   //  City 
-  
-    {
-    name: "Portland Downtown – OR",
-    lat: 45.5231,
-    lon: -122.6765,
-    type: "city",
-    source: "image",
-    url: "https://webpubcontent.gray.tv/kptv/cams/shriners.jpg"
-  },
-  {
-  name: "Salem – OR",
-  lat: 44.9429,
-  lon: -123.0351,
-  type: "city",
-  source: "image",
-  url: "https://webpubcontent.gray.tv/kptv/cams/salem.jpg"
-},
 {
-  name: "Vancouver – WA",
-  lat: 45.6387,
-  lon: -122.6615,
-  type: "city",
-  source: "image",
-  url: "https://webpubcontent.gray.tv/kptv/cams/Maryhill.jpg"
+  name:"Yaquina Bay – Newport, OR",
+  lat:44.62,
+  lon:-124.05,
+  type:"coastal",
+  source:"iframe",
+  url:"https://ipcamlive.com/player/player.php?alias=yaquinabaybridge"
 },
-  {
-    name: "Seaside – OR",
-    lat: 45.9932,
-    lon: -123.9226,
-    type: "coastal",
-    source: "image",
-    url: "https://webpubcontent.gray.tv/kptv/cams/Seaside.jpg"
-  },
+
 {
-  name: "Lincoln City – OR",
-  lat: 44.9582,
-  lon: -124.0170,
-  type: "coastal",
-  source: "image",
-  url: "https://webpubcontent.gray.tv/kptv/cams/snap_c1.jpg"
+  name:"Seaside – OR",
+  lat:45.9932,
+  lon:-123.9226,
+  type:"coastal",
+  source:"image",
+  url:"https://webpubcontent.gray.tv/kptv/cams/Seaside.jpg"
 },
-    {
-    name: "Florence – OR",
-    lat: 43.9828,
-    lon: -124.1095,
-    type: "coastal",
-    source: "image",
-    url: "https://ftp2.kezi.com/kezi_cams/original7.jpg"
-  },
 
-  {
-    name: "Eugene – OR",
-    lat: 44.0521,
-    lon: -123.0868,
-    type: "city",
-    source: "image",
-    url: "https://images.weatherstem.com/skycamera/lane/uo/cumulus/snapshot.jpg"
-  },
-    {
-    name: "Joseph – OR",
-    lat: 45.3298,
-    lon: -117.2274,
-    type: "city",
-    source: "image",
-    url: "https://www.josephoregonweather.com/josephwxcam.jpg"
-  },
-  {
-    name: "Sunriver – OR",
-    lat: 43.8659,
-    lon: -121.4122,
-    type: "city",
-    source: "image",
-    url: "https://portlandweather.com/assets/images/cameras/SunriverCam.jpeg"
-  },
-  {
-    name: "Mt St. Helens – WA",
-    lat: 46.1912,
-    lon: -122.1944,
-    type: "mountain",
-    source: "image",
-    url: "https://volcanoes.usgs.gov/vsc/captures/st_helens/jro-webcam.jpg"
-  },
-  {
-    name: "Seattle – Lumen Field, WA",
-    lat: 47.5952,
-    lon: -122.3316,
-    type: "city",
-    source: "image",
-    url: "https://komonews.com/resources/ftptransfer/komo/maps/ColumbiaCam.jpg"
-  },
-  {
-    name: "Snoqualmie Pass – WA",
-    lat: 47.4278,
-    lon: -121.4186,
-    type: "mountain",
-    source: "image",
-    url: "https://komonews.com/resources/ftptransfer/komo/maps/Snoqualmie_ski_cam.jpg"
-  },
-  {
-    name: "Seattle Waterfront – WA",
-    lat: 47.6053,
-    lon: -122.3381,
-    type: "city",
-    source: "image",
-    url: "https://komonews.com/resources/ftptransfer/komo/maps/Seattle_Cam_BigFish.jpg"
-  },
-  {
-    name: "SeaTac Tower – WA",
-    lat: 47.4490,
-    lon: -122.3094,
-    type: "city",
-    source: "image",
-    url: "https://komonews.com/resources/ftptransfer/komo/maps/SeaTac_Tower_Cam.jpg"
-  },
-    {
-    name: "Mammoth Mountain – CA",
-    lat: 37.6308,
-    lon: -119.0326,
-    type: "mountain",
-    source: "image",
-    url: "https://media.mammothresorts.com/mmsa/mammoth/cams/Village_Village_1280x720.jpg"
-  },
-  {
-    name: "Yosemite – Half Dome, CA",
-    lat: 37.7460,
-    lon: -119.5320,
-    type: "mountain",
-    source: "image",
-    url: "https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-halfdome/latest.jpg"
-  },
-  {
-    name: "Yosemite – El Capitan/Turtleback, CA",
-    lat: 37.7338,
-    lon: -119.6374,
-    type: "mountain",
-    source: "image",
-    url: "https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-turtleback/latest.jpg"
-  },
-    
-  {
-    name: "Yosemite Falls – CA",
-    lat: 37.7578,
-    lon: -119.5966,
-    type: "mountain",
-    source: "image",
-    url: "https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-yosfalls/latest.jpg"
-  },
-  {
- name:"Otter Rock, OR",
- type:"coast",
- lat:44.7443,
- lon:-124.0687,
- cameras:[
-   {label:"North View", img:"https://portlandweather.com/assets/images/cameras/IAOCNVLiveCam.jpeg"},
-   {label:"South View", img:"https://portlandweather.com/assets/images/cameras/IAOCORLiveCam.jpeg"}
- ]
+{
+  name:"Lincoln City – OR",
+  lat:44.9582,
+  lon:-124.0170,
+  type:"coastal",
+  source:"image",
+  url:"https://webpubcontent.gray.tv/kptv/cams/snap_c1.jpg"
 },
-  { name:"Gearhart, OR", type:"coast", lat:46.0248, lon:-123.9115, img:"https://portlandweather.com/assets/images/cameras/GBSLiveCam.jpeg" },
-{ name:"Depoe Bay, OR", type:"coast", lat:44.8090, lon:-124.0554, img:"https://portlandweather.com/assets/images/cameras/ChannelHouseLiveCam.jpeg" },
 
-{ name:"Turner, OR", type:"city", lat:44.8454, lon:-122.9587, img:"https://portlandweather.com/assets/images/cameras/WVVLiveCam.jpeg" },
-{ name:"Gresham, OR", type:"city", lat:45.5001, lon:-122.4300, img:"https://portlandweather.com/assets/images/cameras/PCCGOLiveCam.jpeg" },
-{ name:"Camas, WA", type:"city", lat:45.5871, lon:-122.3995, img:"https://portlandweather.com/assets/images/cameras/CamasMeadowsLiveCam.jpeg" },
+{
+  name:"Florence – OR",
+  lat:43.9828,
+  lon:-124.1095,
+  type:"coastal",
+  source:"image",
+  url:"https://ftp2.kezi.com/kezi_cams/original7.jpg"
+},
 
-{ name:"Sunriver, OR", type:"city", lat:43.8780, lon:-121.4395, img:"https://portlandweather.com/assets/images/cameras/SunriverCam.jpeg" },
-{ name:"Woodland, WA", type:"city", lat:45.9046, lon:-122.7434, img:"https://portlandweather.com/assets/images/cameras/LewisRiverGolfLiveCam.jpeg" },
-{ name:"Silverton, OR", type:"city", lat:45.0057, lon:-122.7834, img:"https://portlandweather.com/assets/images/cameras/OregonGardenLiveCam.jpeg" },
+{
+  name:"Gearhart, OR",
+  lat:46.0248,
+  lon:-123.9115,
+  type:"coastal",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/GBSLiveCam.jpeg"
+},
 
-{ name:"Welches, OR", type:"mountain", lat:45.3318, lon:-121.9600, img:"https://portlandweather.com/assets/images/cameras/MtHoodOregonResort.jpeg" },
+{
+  name:"Depoe Bay, OR",
+  lat:44.8090,
+  lon:-124.0554,
+  type:"coastal",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/ChannelHouseLiveCam.jpeg"
+},
 
-{ name:"Oregon City, OR", type:"city", lat:45.3573, lon:-122.6068, img:"https://portlandweather.com/assets/images/cameras/OregonTrailLiveCam.jpeg" },
-
-{ name:"Hood River, OR", type:"city", lat:45.7054, lon:-121.5215, img:"https://portlandweather.com/assets/images/cameras/ICGLiveCam.jpeg" },
-
-{ name:"Sisters, OR", type:"mountain", lat:44.2909, lon:-121.5490, img:"https://portlandweather.com/assets/images/cameras/ALGCLiveCam.jpeg" },
-
-{ name:"Carson, WA", type:"city", lat:45.7251, lon:-121.8190, img:"https://portlandweather.com/assets/images/cameras/ALGCLiveCam.jpeg" },
-
-{ name:"Kelso, WA", type:"city", lat:46.1468, lon:-122.9084, img:"https://portlandweather.com/assets/images/cameras/ThreeRiversGolfLiveCam.jpeg" },
-
-{ name:"Kah-Nee-Ta Resort, OR", type:"city", lat:44.8646, lon:-121.2061, img:"https://portlandweather.com/assets/images/cameras/KNTHSRLiveCam.jpeg" },
- {
-  name: "Toro Peak – CA",
-  lat: 33.523,
-  lon: -116.423,
-  type: "mountain",
-  source: "multi",
-  views: [
-    { label: "North", url: "https://cdn.hpwren.ucsd.edu/RT/tp-n-mobo-c.jpg" },
-    { label: "East", url: "https://cdn.hpwren.ucsd.edu/RT/tp-e-mobo-c.jpg" },
-    { label: "West", url: "https://cdn.hpwren.ucsd.edu/RT/tp-w-mobo-c.jpg" }
+{
+  name:"Otter Rock – OR",
+  lat:44.7443,
+  lon:-124.0687,
+  type:"coastal",
+  source:"multi",
+  views:[
+    {label:"North View",url:"https://portlandweather.com/assets/images/cameras/IAOCNVLiveCam.jpeg"},
+    {label:"South View",url:"https://portlandweather.com/assets/images/cameras/IAOCORLiveCam.jpeg"}
   ]
-} 
-];
+},
 
+{
+  name:"Timberline Lodge – Mt Hood",
+  lat:45.33,
+  lon:-121.71,
+  type:"mountain",
+  source:"image",
+  url:"https://timberlinelodge.com/snowcameras/lodge.jpg"
+},
+
+{
+  name:"Welches – OR",
+  lat:45.3318,
+  lon:-121.9600,
+  type:"mountain",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/MtHoodOregonResort.jpeg"
+},
+
+{
+  name:"Sisters – OR",
+  lat:44.2909,
+  lon:-121.5490,
+  type:"mountain",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/ALGCLiveCam.jpeg"
+},
+
+{
+  name:"Mt St Helens – WA",
+  lat:46.1912,
+  lon:-122.1944,
+  type:"mountain",
+  source:"image",
+  url:"https://volcanoes.usgs.gov/vsc/captures/st_helens/jro-webcam.jpg"
+},
+
+{
+  name:"Mammoth Mountain – CA",
+  lat:37.6308,
+  lon:-119.0326,
+  type:"mountain",
+  source:"image",
+  url:"https://media.mammothresorts.com/mmsa/mammoth/cams/Village_Village_1280x720.jpg"
+},
+
+{
+  name:"Yosemite – Half Dome",
+  lat:37.7460,
+  lon:-119.5320,
+  type:"mountain",
+  source:"image",
+  url:"https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-halfdome/latest.jpg"
+},
+
+{
+  name:"Yosemite – El Capitan",
+  lat:37.7338,
+  lon:-119.6374,
+  type:"mountain",
+  source:"image",
+  url:"https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-turtleback/latest.jpg"
+},
+
+{
+  name:"Yosemite Falls",
+  lat:37.7578,
+  lon:-119.5966,
+  type:"mountain",
+  source:"image",
+  url:"https://cdn.pixelcaster.com/public.pixelcaster.com/snapshots/yosemite-yosfalls/latest.jpg"
+},
+
+{
+  name:"Toro Peak – CA",
+  lat:33.523,
+  lon:-116.423,
+  type:"mountain",
+  source:"multi",
+  views:[
+    {label:"North",url:"https://cdn.hpwren.ucsd.edu/RT/tp-n-mobo-c.jpg"},
+    {label:"East",url:"https://cdn.hpwren.ucsd.edu/RT/tp-e-mobo-c.jpg"},
+    {label:"West",url:"https://cdn.hpwren.ucsd.edu/RT/tp-w-mobo-c.jpg"}
+  ]
+},
+
+{
+  name:"Portland Downtown – OR",
+  lat:45.5231,
+  lon:-122.6765,
+  type:"city",
+  source:"image",
+  url:"https://webpubcontent.gray.tv/kptv/cams/shriners.jpg"
+},
+
+{
+  name:"Salem – OR",
+  lat:44.9429,
+  lon:-123.0351,
+  type:"city",
+  source:"image",
+  url:"https://webpubcontent.gray.tv/kptv/cams/salem.jpg"
+},
+
+{
+  name:"Vancouver – WA",
+  lat:45.6387,
+  lon:-122.6615,
+  type:"city",
+  source:"image",
+  url:"https://webpubcontent.gray.tv/kptv/cams/Maryhill.jpg"
+},
+
+{
+  name:"Eugene – OR",
+  lat:44.0521,
+  lon:-123.0868,
+  type:"city",
+  source:"image",
+  url:"https://images.weatherstem.com/skycamera/lane/uo/cumulus/snapshot.jpg"
+},
+
+{
+  name:"Joseph – OR",
+  lat:45.3298,
+  lon:-117.2274,
+  type:"city",
+  source:"image",
+  url:"https://www.josephoregonweather.com/josephwxcam.jpg"
+},
+
+{
+  name:"Gresham – OR",
+  lat:45.5001,
+  lon:-122.4300,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/PCCGOLiveCam.jpeg"
+},
+
+{
+  name:"Turner – OR",
+  lat:44.8454,
+  lon:-122.9587,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/WVVLiveCam.jpeg"
+},
+
+{
+  name:"Silverton – OR",
+  lat:45.0057,
+  lon:-122.7834,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/OregonGardenLiveCam.jpeg"
+},
+
+{
+  name:"Oregon City – OR",
+  lat:45.3573,
+  lon:-122.6068,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/OregonTrailLiveCam.jpeg"
+},
+
+{
+  name:"Woodland – WA",
+  lat:45.9046,
+  lon:-122.7434,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/LewisRiverGolfLiveCam.jpeg"
+},
+
+{
+  name:"Kelso – WA",
+  lat:46.1468,
+  lon:-122.9084,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/ThreeRiversGolfLiveCam.jpeg"
+},
+
+{
+  name:"Camas – WA",
+  lat:45.5871,
+  lon:-122.3995,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/CamasMeadowsLiveCam.jpeg"
+},
+
+{
+  name:"Hood River – OR",
+  lat:45.7054,
+  lon:-121.5215,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/ICGLiveCam.jpeg"
+},
+
+{
+  name:"Sunriver – OR",
+  lat:43.8780,
+  lon:-121.4395,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/SunriverCam.jpeg"
+},
+
+{
+  name:"Kah-Nee-Ta Resort – OR",
+  lat:44.8646,
+  lon:-121.2061,
+  type:"city",
+  source:"image",
+  url:"https://portlandweather.com/assets/images/cameras/KNTHSRLiveCam.jpeg"
+}
+
+];
 
 
 
