@@ -1748,8 +1748,8 @@ html, body {
 /* Floating hamburger menu */
 
 #menuDropdown{
-  position:absolute;
-  top:60px;
+  position:fixed;
+  top:85px;
   right:20px;
   width:220px;
   background:#0b1220;
@@ -1758,7 +1758,7 @@ html, body {
   padding:10px;
   display:none;
   flex-direction:column;
-  z-index:1000;
+  z-index:2000;
 }
 
 #menuDropdown a{
@@ -1781,7 +1781,7 @@ html, body {
 <!-- MENU BUTTON -->
 <div id="hamburgerMenu">
   ☰
- <div id="menuDropdown" style="display:flex;flex-direction:column;">
+ <div id="menuDropdown">
     <a href="index.html">Dashboard</a>
     <a href="tides.html">Tides</a>
     <a href="webcams.html">Webcams</a>
