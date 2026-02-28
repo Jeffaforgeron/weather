@@ -12,6 +12,7 @@
 
 
   gtag('config', 'G-DNM3ESS2FJ');
+  
 </script>
 
   
@@ -1744,6 +1745,35 @@ html, body {
 .future-label{
   opacity:.7;
 }
+/* Floating hamburger menu */
+
+#menuDropdown{
+  position:absolute;
+  top:60px;
+  right:20px;
+  width:220px;
+  background:#0b1220;
+  border-radius:14px;
+  box-shadow:0 0 30px rgba(56,189,248,.25);
+  padding:10px;
+  display:none;
+  flex-direction:column;
+  z-index:1000;
+}
+
+#menuDropdown a{
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  color:#e5e7eb;
+  font-size:14px;
+  display:block;
+}
+
+#menuDropdown a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}  
 </style>
 </head>
 
@@ -1751,7 +1781,7 @@ html, body {
 <!-- MENU BUTTON -->
 <div id="hamburgerMenu">
   ☰
-  <div id="menuDropdown">
+ <div id="menuDropdown" style="display:flex;flex-direction:column;">
     <a href="index.html">Dashboard</a>
     <a href="tides.html">Tides</a>
     <a href="webcams.html">Webcams</a>
