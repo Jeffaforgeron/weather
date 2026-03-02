@@ -1,1 +1,163 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About – Forgeron Weather</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+  margin:0;
+  padding:20px;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#9ca3af;
+  margin-bottom:30px;
+}
+
+.card{
+  max-width:800px;
+  margin:0 auto 24px auto;
+  background:#0b1220;
+  border-radius:14px;
+  padding:22px;
+  box-shadow:0 0 40px rgba(56,189,248,.25);
+}
+
+.profilePic{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  display:block;
+  margin:0 auto 18px auto;
+  object-fit:cover;
+}
+
+.bio{
+  line-height:1.6;
+  color:#cbd5f5;
+}
+
+h2{
+  margin-top:0;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+input, textarea{
+  background:#020617;
+  color:#e5e7eb;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;
+  padding:10px;
+  font-size:14px;
+}
+
+textarea{
+  min-height:120px;
+}
+
+button{
+  margin-top:8px;
+  padding:12px;
+  background:#38bdf8;
+  color:#020617;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:.85;
+}
+
+.footer{
+  text-align:center;
+  margin-top:30px;
+  color:#64748b;
+  font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>About</h1>
+<div class="subtitle">Who built this weather platform</div>
+
+
+<div class="card">
+
+<img class="profilePic" src="YOURPHOTO.jpg">
+
+<div class="bio">
+
+<p>
+My name is <b>Jeff Forgeron</b>. I am a meteorologist working in the energy industry where weather forecasts are used to help balance power supply and demand in real time.
+</p>
+
+<p>
+I built this website to make weather information easier to access and easier to understand. Most weather websites scatter important data across dozens of pages. My goal is to bring the most useful tools together into a simple dashboard.
+</p>
+
+<p>
+The site focuses on real-time conditions, webcams, tide forecasts, and quick access to National Weather Service forecasts so users can quickly understand what the weather is doing right now.
+</p>
+
+<p>
+This project is still evolving. New tools, locations, and features will continue to be added over time.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Contact / Suggestions</h2>
+
+<p style="color:#9ca3af;">
+Have an idea for a new feature, webcam, or tool? Send it below.
+</p>
+
+<form action="https://formsubmit.co/Jeffaforgeron@gmail.com" method="POST">
+
+<input type="text" name="name" placeholder="Your Name" required>
+
+<input type="email" name="email" placeholder="Your Email" required>
+
+<textarea name="message" placeholder="Your suggestion or feedback..." required></textarea>
+
+<input type="hidden" name="_captcha" value="false">
+
+<button type="submit">Send Message</button>
+
+</form>
+
+</div>
+
+
+<div class="footer">
+← <a href="index.html" style="color:#38bdf8">Back to Dashboard</a>
+</div>
+
+</body>
+</html>
