@@ -3216,30 +3216,53 @@ if(!station){
 
 /* RAWS station */
 if(typeof station === "object" && station.type === "raws"){
-if(chart){
-  chart.destroy();
-  chart = null;
-}
-
 
   let raws = await fetchRAWS(station.id);
 
-// fallback if RAWS fails
-// Try main station
-let raws = await fetchRAWS(station.id);
+  // If RAWS fails → try backup
+  if(!raws && station.backup){
 
-// If it fails → try backup
-if(!raws && station.backup){
+    if(typeof station.backup === "string"){
+      return loadCityFromMETAR(station.backup);
+    }
 
-  if(typeof station.backup === "string"){
-    return loadCityFromMETAR(station.backup);
   }
 
-}
+  // Still no data
+  if(!raws){
+    alert("Mountain station offline");
+    return;
+  }
 
-// If STILL no data → show error
-if(!raws){
-  alert("Mountain station offline");
+  const obs = raws.OBSERVATIONS;
+
+  const temp =
+    obs.air_temp_value_1?.value ??
+    obs.air_temp_value_2?.value;
+
+  if(temp == null){
+    alert("Temperature unavailable");
+    return;
+  }
+
+  ccTemp.textContent = Math.round(temp) + "°";
+
+  ccHum.innerHTML =
+    `Humidity <span>${
+      obs.relative_humidity_value_1?.value != null
+        ? Math.round(obs.relative_humidity_value_1.value) + "%"
+        : "—"
+    }</span>`;
+
+  ccDew.innerHTML =
+    `Dew Point <span>${
+      obs.dew_point_temperature_value_1?.value != null
+        ? Math.round(obs.dew_point_temperature_value_1.value) + "°"
+        : "—"
+    }</span>`;
+
+  ccWx.innerHTML = "Sky <span>Mountain Station</span>";
+
   return;
 }
 }
