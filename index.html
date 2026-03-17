@@ -2550,7 +2550,7 @@ const CITY_STATIONS = {
 
  // ===== COACHELLA + MOUNTAINS =====
 
-"33.7222,-116.3745": "KTRM", // Palm Desert
+"33.7222,-116.3745": { id:"KTRM", backup:"KPSP" }, // Palm Desert
 "33.7206,-116.2156": "KTRM", // Indio
 "33.6634,-116.3100": "KTRM", // La Quinta
 "33.7805,-116.4668": "KPSP", // Cathedral City
@@ -2576,7 +2576,11 @@ const CITY_STATIONS = {
 
 
 
-"33.81528,-116.64194": { id:"MSJC1", type:"raws" },
+"33.81528,-116.64194": {
+  id:"MSJC1",
+  type:"raws",
+  backup:"KPSP"
+},
  // ===== ARIZONA =====
 
 // Phoenix (METAR)
@@ -3220,14 +3224,18 @@ if(chart){
 
   let raws = await fetchRAWS(station.id);
 
-  // fallback to airport if RAWS dead
-
-  
-
-  if(!raws){
-    alert("Mountain station offline");
-    return;
+// fallback if RAWS fails
+if(!raws && station.backup){
+  if(typeof station.backup === "string"){
+    return loadCityFromMETAR(station.backup);
   }
+}
+
+// still dead
+if(!raws){
+  alert("Mountain station offline");
+  return;
+}
 
   const obs = raws.OBSERVATIONS;
   const temp =
