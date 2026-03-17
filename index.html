@@ -3234,44 +3234,8 @@ if(typeof station === "object" && station.type === "raws"){
     return;
   }
 
-  const obs = raws.OBSERVATIONS;
 
-  const temp =
-    obs.air_temp_value_1?.value ??
-    obs.air_temp_value_2?.value;
 
-  if(temp == null){
-    alert("Temperature unavailable");
-    return;
-  }
-
-  ccTemp.textContent = Math.round(temp) + "°";
-
-  ccHum.innerHTML =
-    `Humidity <span>${
-      obs.relative_humidity_value_1?.value != null
-        ? Math.round(obs.relative_humidity_value_1.value) + "%"
-        : "—"
-    }</span>`;
-
-  ccDew.innerHTML =
-    `Dew Point <span>${
-      obs.dew_point_temperature_value_1?.value != null
-        ? Math.round(obs.dew_point_temperature_value_1.value) + "°"
-        : "—"
-    }</span>`;
-
-  ccWx.innerHTML = "Sky <span>Mountain Station</span>";
-
-  return;
-}
-}
-
-// still dead
-if(!raws){
-  alert("Mountain station offline");
-  return;
-}
 
   const obs = raws.OBSERVATIONS;
   const temp =
