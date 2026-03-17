@@ -3499,7 +3499,28 @@ if(!ccSelect.value){
 
   
 
+async function loadCityFromMETAR(stationId){
 
+  const stationURL = `https://api.weather.gov/stations/${stationId}`;
+  const latestResp = await fetch(`${stationURL}/observations/latest`);
+  const latestJSON = await latestResp.json();
+  const latest = latestJSON.properties;
+
+  ccTemp.textContent =
+    Math.round(latest.temperature.value * 9/5 + 32) + "°";
+
+  ccWx.innerHTML =
+    "Sky <span>" + latest.textDescription + "</span>";
+
+  ccWind.innerHTML =
+    "Wind <span>" + Math.round(latest.windSpeed.value * 0.621371) + " mph</span>";
+
+  ccHum.innerHTML =
+    "Humidity <span>" + Math.round(latest.relativeHumidity.value) + "%</span>";
+
+  ccDew.innerHTML =
+    "Dew Point <span>" + Math.round(latest.dewpoint.value * 9/5 + 32) + "°</span>";
+}
   
   
 </script>
