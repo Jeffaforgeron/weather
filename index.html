@@ -3225,10 +3225,23 @@ if(chart){
   let raws = await fetchRAWS(station.id);
 
 // fallback if RAWS fails
+// Try main station
+let raws = await fetchRAWS(station.id);
+
+// If it fails → try backup
 if(!raws && station.backup){
+
   if(typeof station.backup === "string"){
     return loadCityFromMETAR(station.backup);
   }
+
+}
+
+// If STILL no data → show error
+if(!raws){
+  alert("Mountain station offline");
+  return;
+}
 }
 
 // still dead
